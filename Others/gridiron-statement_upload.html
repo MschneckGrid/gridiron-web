@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gridiron Statement Processor</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f6f9; color: #2d3748; }
+  
+  .header {
+    background: linear-gradient(135deg, #1a365d 0%, #2d4a7a 100%);
+    padding: 18px 32px;
+    display: flex; align-items: center; gap: 16px;
+    border-bottom: 3px solid #92700a;
+  }
+  .header-brand { font-family: 'Courier New', monospace; font-size: 11px; font-weight: 700;
+    letter-spacing: 2.5px; text-transform: uppercase; color: #d4a843; }
+  .header-title { font-size: 20px; font-weight: 700; color: #fff; }
+  .header-status { margin-left: auto; font-size: 12px; color: #a0aec0; font-family: monospace; }
+
+  .container { max-width: 1100px; margin: 24px auto; padding: 0 24px; }
+
+  .drop-zone {
+    border: 3px dashed #cbd5e0; border-radius: 16px; padding: 48px;
+    text-align: center; background: #fff; transition: all 0.2s;
+    cursor: pointer; position: relative;
+  }
+  .drop-zone.dragover { border-color: #92700a; background: #fefce8; }
+  .drop-zone.processing { border-color: #3182ce; background: #ebf8ff; }
+  .drop-zone h2 { font-size: 20px; color: #4a5568; margin-bottom: 8px; }
+  .drop-zone p { color: #718096; font-size: 14px; }
+  .drop-zone input { display: none; }
+  .drop-icon { font-size: 48px; margin-bottom: 16px; }
+
+  /* Auth overlay */
+  .auth-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, #1a365d 0%, #2d4a7a 50%, #1a365d 100%);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10000;
+  }
+  .auth-overlay.hidden { display: none; }
+  .auth-box {
+    background: #fff; border-radius: 16px; padding: 40px; width: 400px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .auth-box h2 { color: #1a365d; margin-bottom: 4px; font-size: 22px; }
+  .auth-box .auth-subtitle { color: #718096; font-size: 13px; margin-bottom: 24px; }
+  .auth-box .brand-line { font-family: 'Courier New', monospace; font-size: 10px; 
+    letter-spacing: 2.5px; text-transform: uppercase; color: #92700a; margin-bottom: 16px; }
+  .auth-input {
+    width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px;
+    font-size: 14px; margin-bottom: 12px; transition: border-color 0.15s;
+  }
+  .auth-input:focus { outline: none; border-color: #92700a; }
+  .auth-btn {
+    width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px;
+    font-weight: 700; cursor: pointer; transition: all 0.15s; margin-bottom: 8px;
+  }
+  .auth-btn-primary { background: #1a365d; color: #fff; }
+  .auth-btn-primary:hover { background: #2d4a7a; }
+  .auth-btn-link { background: none; color: #718096; font-size: 12px; }
+  .auth-error { color: #e53e3e; font-size: 13px; margin-bottom: 12px; display: none; }
+  .auth-success { color: #38a169; font-size: 13px; margin-bottom: 12px; display: none; }
+  .signout-btn {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    color: #e2e8f0; padding: 6px 14px; border-radius: 6px; font-size: 12px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .signout-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .results { margin-top: 24px; }
+  
+  .card {
+    background: #fff; border-radius: 12px; padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 16px;
+    border-left: 4px solid #92700a;
+  }
+  .card.error { border-left-color: #e53e3e; }
+  .card.success { border-left-color: #38a169; }
+  .card.pending { border-left-color: #3182ce; }
+  
+  .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .card-title { font-size: 16px; font-weight: 700; }
+  .card-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 12px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-new { background: #ebf8ff; color: #2b6cb0; }
+  .badge-update { background: #fefce8; color: #92700a; }
+  .badge-match { background: #f0fff4; color: #276749; }
+  .badge-error { background: #fff5f5; color: #c53030; }
+
+  .data-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px; margin-bottom: 16px;
+  }
+  .data-item { background: #f7fafc; border-radius: 8px; padding: 12px; }
+  .data-label { font-size: 11px; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .data-value { font-size: 16px; font-weight: 700; font-family: 'Courier New', monospace; }
+  .data-value.currency { color: #2d3748; }
+  .data-value.mismatch { color: #e53e3e; }
+
+  .existing-row { 
+    background: #f7fafc; border-radius: 8px; padding: 12px; margin-bottom: 8px;
+    display: flex; gap: 24px; font-size: 13px; align-items: center;
+  }
+  .existing-label { font-size: 11px; color: #718096; text-transform: uppercase; }
+  .existing-value { font-family: monospace; font-weight: 600; }
+
+  .actions { display: flex; gap: 12px; margin-top: 16px; }
+  .btn {
+    padding: 10px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;
+    border: none; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-primary { background: #1a365d; color: #fff; }
+  .btn-primary:hover { background: #2d4a7a; }
+  .btn-primary:disabled { background: #a0aec0; cursor: not-allowed; }
+  .btn-secondary { background: #edf2f7; color: #4a5568; }
+  .btn-secondary:hover { background: #e2e8f0; }
+  .btn-danger { background: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+  .btn-success { background: #38a169; color: #fff; }
+  .btn-success:hover { background: #2f855a; }
+
+  .summary-bar {
+    background: #1a365d; color: #fff; border-radius: 12px; padding: 16px 24px;
+    display: flex; gap: 32px; align-items: center; margin-bottom: 24px;
+  }
+  .summary-stat { text-align: center; }
+  .summary-num { font-size: 24px; font-weight: 700; font-family: monospace; }
+  .summary-label { font-size: 11px; color: #a0aec0; text-transform: uppercase; }
+
+  .log { 
+    background: #1a202c; color: #a0aec0; border-radius: 8px; padding: 16px;
+    font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto;
+    margin-top: 16px; display: none;
+  }
+  .log.visible { display: block; }
+  .log-entry { padding: 2px 0; }
+  .log-entry.success { color: #68d391; }
+  .log-entry.error { color: #fc8181; }
+  .log-entry.info { color: #63b3ed; }
+
+  .multi-drop { font-size: 12px; color: #a0aec0; margin-top: 8px; }
+  
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #fff;
+    border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  
+  .editable {
+    background: transparent; border: 1px solid transparent; border-radius: 4px;
+    font-family: 'Courier New', monospace; font-size: 16px; font-weight: 700;
+    padding: 2px 4px; width: 100%; color: #2d3748;
+  }
+  .editable:hover { border-color: #cbd5e0; }
+  .editable:focus { border-color: #3182ce; outline: none; background: #fff; }
+</style>
+</head>
+<body>
+
+<!-- Auth Login Overlay -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="brand-line">Gridiron Partners</div>
+    <h2 id="authTitle">Sign In</h2>
+    <p class="auth-subtitle" id="authSubtitle">Enter your credentials to access the Statement Processor</p>
+    <div class="auth-error" id="authError"></div>
+    <div class="auth-success" id="authSuccess"></div>
+    <input type="email" class="auth-input" id="authEmail" placeholder="Email address" autocomplete="email">
+    <input type="password" class="auth-input" id="authPassword" placeholder="Password" autocomplete="current-password">
+    <button class="auth-btn auth-btn-primary" id="authSubmit" onclick="handleAuth()">Sign In</button>
+  </div>
+</div>
+
+<div class="header">
+  <span class="header-brand">GRIDIRON</span>
+  <span class="header-title">Statement Processor</span>
+  <span class="header-status" id="statusText">Ready — drop PDF statements to begin</span>
+  <span id="userEmail" style="color:#a0aec0;font-size:12px;margin-left:8px;"></span>
+  <button class="signout-btn" id="signoutBtn" onclick="handleSignOut()" style="display:none;">Sign Out</button>
+</div>
+
+<div class="container">
+  <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <div class="drop-icon">📄</div>
+    <h2>Drop Custodian Statements Here</h2>
+    <p>Supports US Bank, PNC, Goldman Sachs, BNY, FNB, Somerset Trust, Fifth Third</p>
+    <p class="multi-drop">Drop multiple PDFs at once — each will be processed and matched to the correct client</p>
+    <div style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="event.stopPropagation()">
+      <label style="font-size:12px;color:#718096;">PDF Password:</label>
+      <input type="password" id="pdfPassword" placeholder="Leave blank if none" 
+        style="padding:6px 12px;border:1px solid #cbd5e0;border-radius:6px;font-size:13px;width:200px;"
+        onclick="event.stopPropagation()">
+    </div>
+    <input type="file" id="fileInput" accept=".pdf" multiple>
+  </div>
+
+  <div id="summaryBar" class="summary-bar" style="display:none;">
+    <div class="summary-stat">
+      <div class="summary-num" id="sumProcessed">0</div>
+      <div class="summary-label">Processed</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-num" id="sumMatched">0</div>
+      <div class="summary-label">Matched</div>
+    </div>
+    <div class="summary-stat">
+      <div class="summary-num" id="sumReady">0</div>
+      <div class="summary-label">Ready to Insert</div>
+    </div>
+    <div style="margin-left:auto;" class="actions">
+      <button class="btn btn-success" id="btnInsertAll" onclick="insertAll()" style="display:none;">
+        ✓ Insert All into Supabase
+      </button>
+      <button class="btn btn-secondary" onclick="clearAll()">Clear All</button>
+    </div>
+  </div>
+
+  <div class="results" id="results"></div>
+  
+  <div class="log" id="logPanel">
+    <div style="margin-bottom:8px;font-weight:700;color:#fff;">Processing Log</div>
+  </div>
+</div>
+
+<script type="module">
+// ============================================
+// SUPABASE CONFIG + AUTH
+// ============================================
+const SUPABASE_URL = 'https://nzinvxticgyjobkqxxhl.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aW52eHRpY2d5am9ia3F4eGhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5NTUwOTIsImV4cCI6MjA4NDUzMTA5Mn0.YhaW1zesBaEC6lRMWx6_gyZN5Uhh8FX2wgahunHQfok';
+
+// Create Supabase client (from CDN global)
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let authToken = null; // Will hold the session access_token
+
+async function sbFetch(path, opts = {}) {
+  const token = authToken || SUPABASE_KEY;
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || 'return=representation',
+      ...opts.headers
+    },
+    method: opts.method || 'GET',
+    body: opts.body ? JSON.stringify(opts.body) : undefined
+  });
+  return r.json();
+}
+
+// --- Auth UI Logic (exposed to window for onclick handlers) ---
+
+window.handleAuth = async function() {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const errorEl = document.getElementById('authError');
+  errorEl.style.display = 'none';
+
+  if (!email || !password) {
+    errorEl.textContent = 'Please enter both email and password.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  document.getElementById('authSubmit').disabled = true;
+  document.getElementById('authSubmit').textContent = 'Signing in...';
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    await onAuthSuccess(data.session);
+  } catch(e) {
+    errorEl.textContent = e.message || 'Authentication failed.';
+    errorEl.style.display = 'block';
+  }
+  
+  document.getElementById('authSubmit').disabled = false;
+  document.getElementById('authSubmit').textContent = 'Sign In';
+};
+
+// Allow Enter key to submit
+document.getElementById('authPassword').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') window.handleAuth();
+});
+document.getElementById('authEmail').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('authPassword').focus();
+});
+
+window.handleSignOut = async function() {
+  await supabase.auth.signOut();
+  authToken = null;
+  document.getElementById('authOverlay').classList.remove('hidden');
+  document.getElementById('signoutBtn').style.display = 'none';
+  document.getElementById('userEmail').textContent = '';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
+};
+
+async function onAuthSuccess(session) {
+  authToken = session.access_token;
+  document.getElementById('authOverlay').classList.add('hidden');
+  document.getElementById('signoutBtn').style.display = '';
+  document.getElementById('userEmail').textContent = session.user.email;
+  // Now safe to load client data
+  await initApp();
+}
+
+// Listen for token refresh
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session) authToken = session.access_token;
+});
+
+// Check for existing session on load
+async function checkExistingSession() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    await onAuthSuccess(session);
+  }
+  // else: overlay stays visible, user must sign in
+}
+
+// ============================================
+// CLIENT MAPPING (loaded from Supabase on init)
+// ============================================
+let CLIENTS = [];
+let CLIENT_MAP = {}; // account_number -> client record
+
+async function loadClients() {
+  try {
+    CLIENTS = await sbFetch('clients?select=client_id,client_name,custodian,account_number,strategy_id&order=client_name');
+    // Build lookup by account number fragments
+    CLIENTS.forEach(c => {
+      if (c.account_number) {
+        // Store various forms of the account number for matching
+        const clean = c.account_number.replace(/[\*\-\s]/g, '');
+        CLIENT_MAP[clean] = c;
+        // Also store last 4-6 digits
+        const last6 = clean.slice(-6);
+        const last4 = clean.slice(-4);
+        if (!CLIENT_MAP[last6]) CLIENT_MAP[last6] = c;
+        if (!CLIENT_MAP[last4]) CLIENT_MAP[last4] = c;
+        // Store the raw account number too
+        CLIENT_MAP[c.account_number.trim()] = c;
+      }
+    });
+    log('Loaded ' + CLIENTS.length + ' clients from Supabase', 'success');
+  } catch(e) {
+    log('Failed to load clients: ' + e.message, 'error');
+  }
+}
+
+// ============================================
+// PDF TEXT EXTRACTION
+// ============================================
+const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs');
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
+
+async function extractPdfText(arrayBuffer) {
+  const password = document.getElementById('pdfPassword')?.value || undefined;
+  const loadingParams = { data: arrayBuffer };
+  if (password) loadingParams.password = password;
+  
+  let pdf;
+  try {
+    pdf = await pdfjsLib.getDocument(loadingParams).promise;
+  } catch(e) {
+    if (e.name === 'PasswordException') {
+      throw new Error('PDF is password-protected. Enter the password and try again.');
+    }
+    throw e;
+  }
+  
+  const pages = [];
+  for (let i = 1; i <= Math.min(pdf.numPages, 10); i++) { // First 10 pages have all summary data
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const text = content.items.map(item => item.str).join(' ');
+    pages.push(text);
+  }
+  return { fullText: pages.join('\n'), pages, numPages: pdf.numPages };
+}
+
+// ============================================
+// CUSTODIAN PARSERS
+// ============================================
+function cleanAmount(str) {
+  if (!str) return 0;
+  str = str.toString().trim();
+  const negative = str.includes('(') || str.startsWith('-') || str.includes('- ');
+  str = str.replace(/[$,()]/g, '').replace(/^-\s*/, '').trim();
+  const num = parseFloat(str);
+  return isNaN(num) ? 0 : (negative ? -num : num);
+}
+
+function parseUSBank(fullText) {
+  const result = { custodian: 'US Bank', raw: {} };
+  
+  // Account number
+  const acctMatch = fullText.match(/Account\s*Number[:\s]*(\d[\d\-]+)/i);
+  result.account_number = acctMatch ? acctMatch[1].trim() : null;
+  
+  // Account name - look for text between account number and "GRIDIRON"
+  const nameMatch = fullText.match(/Account\s*Number[:\s]*[\d\-]+\s+([\s\S]*?)(?:GRIDIRON|This statement)/i);
+  if (nameMatch) {
+    result.account_name = nameMatch[1].replace(/\s+/g, ' ').trim();
+  }
+  
+  // Period dates
+  const periodMatch = fullText.match(/period\s+from\s+(\w+\s+\d+,?\s+\d{4})\s+to\s+(\w+\s+\d+,?\s+\d{4})/i);
+  if (periodMatch) {
+    result.period_start = periodMatch[1];
+    result.period_end = periodMatch[2];
+    // Parse end date to get month_end_date
+    const d = new Date(periodMatch[2]);
+    if (!isNaN(d)) {
+      result.month_end_date = d.toISOString().slice(0, 10);
+    }
+  }
+  
+  // Beginning Market And Cost
+  const begMatch = fullText.match(/Beginning\s+Market\s+And\s+Cost\s+([\d,]+\.\d{2})/i);
+  result.beginning_balance = begMatch ? cleanAmount(begMatch[1]) : null;
+  
+  // Ending Market And Cost
+  const endMatch = fullText.match(/Ending\s+Market\s+And\s+Cost\s+([\d,]+\.\d{2})/i);
+  result.ending_balance = endMatch ? cleanAmount(endMatch[1]) : null;
+  
+  // Look for deposits/withdrawals in Other Activity
+  // US Bank uses "Cash Deposit" for contributions and "Cash Withdrawal" for withdrawals
+  const depositMatch = fullText.match(/(?:Cash\s+Deposit|Contribution|Deposit)\s+.*?([\d,]+\.\d{2})/gi);
+  const withdrawMatch = fullText.match(/(?:Cash\s+Withdrawal|Withdrawal|Distribution)\s+.*?([\d,]+\.\d{2})/gi);
+  
+  // For now, look at the Cash Reconciliation section for external flows
+  // Miscellaneous Receipts of $1.16 is NOT a contribution — it's accrued interest
+  // Real contributions would show up differently
+  result.contributions = 0;
+  result.withdrawals = 0;
+  
+  // Check for explicit contribution/withdrawal patterns
+  const contribMatch = fullText.match(/(?:Total\s+)?(?:Cash\s+)?(?:Contributions?|Deposits?)\s+([\d,]+\.\d{2})/i);
+  const withdrMatch = fullText.match(/(?:Total\s+)?(?:Cash\s+)?(?:Withdrawals?|Distributions?)\s+(?:-\s*)?([\d,]+\.\d{2})/i);
+  if (contribMatch) result.contributions = cleanAmount(contribMatch[1]);
+  if (withdrMatch) result.withdrawals = cleanAmount(withdrMatch[1]);
+  
+  return result;
+}
+
+function parsePNC(fullText) {
+  const result = { custodian: 'PNC', raw: {} };
+  
+  // Account number
+  const acctMatch = fullText.match(/Account\s*(?:number|#)[:\s]*([\d\-\*\s]+)/i);
+  result.account_number = acctMatch ? acctMatch[1].replace(/\s+/g, '').trim() : null;
+  
+  // Period dates
+  const periodMatch = fullText.match(/(\w+\s+\d+,?\s+\d{4})\s*[-–]\s*(\w+\s+\d+,?\s+\d{4})/);
+  if (periodMatch) {
+    result.period_start = periodMatch[1];
+    result.period_end = periodMatch[2];
+    const d = new Date(periodMatch[2]);
+    if (!isNaN(d)) result.month_end_date = d.toISOString().slice(0, 10);
+  }
+  
+  // Beginning market value
+  const begMatch = fullText.match(/Beginning\s+market\s+value\s+\$?([\d,]+\.\d{2})/i);
+  result.beginning_balance = begMatch ? cleanAmount(begMatch[1]) : null;
+  
+  // Ending market value
+  const endMatch = fullText.match(/Ending\s+market\s+value\s+\$?([\d,]+\.\d{2})/i);
+  result.ending_balance = endMatch ? cleanAmount(endMatch[1]) : null;
+  
+  // Contributions and withdrawals
+  const contribMatch = fullText.match(/(?:Total\s+)?Contributions?\s+\$?([\d,]+\.\d{2})/i);
+  const withdrMatch = fullText.match(/(?:Total\s+)?Withdrawals?\s+\$?([\d,]+\.\d{2})/i);
+  result.contributions = contribMatch ? cleanAmount(contribMatch[1]) : 0;
+  result.withdrawals = withdrMatch ? cleanAmount(withdrMatch[1]) : 0;
+  
+  // Account name
+  const nameMatch = fullText.match(/(?:Account\s*name|For the account of)[:\s]*([\s\S]*?)(?:Account|Statement|Period)/i);
+  if (nameMatch) result.account_name = nameMatch[1].replace(/\s+/g, ' ').trim();
+  
+  return result;
+}
+
+function parseGoldman(fullText) {
+  const result = { custodian: 'Goldman', raw: {} };
+  
+  const acctMatch = fullText.match(/(?:Account|Acct)[:\s#]*([\w\d\*]+)/i);
+  result.account_number = acctMatch ? acctMatch[1].trim() : null;
+  
+  const periodMatch = fullText.match(/(\w+\s+\d+,?\s+\d{4})\s*(?:[-–]|to|through)\s*(\w+\s+\d+,?\s+\d{4})/i);
+  if (periodMatch) {
+    result.period_start = periodMatch[1];
+    result.period_end = periodMatch[2];
+    const d = new Date(periodMatch[2]);
+    if (!isNaN(d)) result.month_end_date = d.toISOString().slice(0, 10);
+  }
+  
+  const begMatch = fullText.match(/(?:Beginning|Opening)\s+(?:Market\s+)?(?:Value|Balance)\s+\$?([\d,]+\.\d{2})/i);
+  result.beginning_balance = begMatch ? cleanAmount(begMatch[1]) : null;
+  
+  const endMatch = fullText.match(/(?:Ending|Closing)\s+(?:Market\s+)?(?:Value|Balance)\s+\$?([\d,]+\.\d{2})/i);
+  result.ending_balance = endMatch ? cleanAmount(endMatch[1]) : null;
+  
+  const contribMatch = fullText.match(/(?:Contributions?|Deposits?)\s+\$?([\d,]+\.\d{2})/i);
+  const withdrMatch = fullText.match(/(?:Withdrawals?|Distributions?)\s+\$?([\d,]+\.\d{2})/i);
+  result.contributions = contribMatch ? cleanAmount(contribMatch[1]) : 0;
+  result.withdrawals = withdrMatch ? cleanAmount(withdrMatch[1]) : 0;
+  
+  return result;
+}
+
+function parseFifthThird(fullText) {
+  const result = { custodian: 'Fifth Third', raw: {} };
+  
+  // Account number — "Investment Account 34-34-002-7861644"
+  const acctMatch = fullText.match(/Investment\s+Account\s+([\d][\d\-]+\d)/i);
+  result.account_number = acctMatch ? acctMatch[1].trim() : null;
+  
+  // Account name — look for the client name near top (e.g. "CEMENT 886&404-GRIDIRON" or full name)
+  const nameMatch = fullText.match(/Investment\s+Account\s+[\d\-]+\s+([A-Z][A-Z\s&\#\d,.'()\/\-]+(?:GRIDIRON|PENSION|FUND|TRUST|PLAN)[\w\s\-]*)/i);
+  if (nameMatch) {
+    result.account_name = nameMatch[1].replace(/\s+/g, ' ').trim();
+  }
+  
+  // Period dates — "01/01/2026 - 01/31/2026"
+  const periodMatch = fullText.match(/(\d{2}\/\d{2}\/\d{4})\s*[-–]\s*(\d{2}\/\d{2}\/\d{4})/);
+  if (periodMatch) {
+    result.period_start = periodMatch[1];
+    result.period_end = periodMatch[2];
+    // Parse MM/DD/YYYY end date
+    const parts = periodMatch[2].split('/');
+    const d = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
+    if (!isNaN(d)) {
+      result.month_end_date = d.toISOString().slice(0, 10);
+    }
+  }
+  
+  // --- Balance extraction ---
+  // For GIPS-compliant performance measurement, we need market values INCLUDING accrued income.
+  // The Account Reconciliation section has these: "Market Value Beginning/End of Period"
+  // The Investment Allocation Summary "Total Account Value" does NOT include accrued.
+  
+  // Strategy 1 (preferred): Account Reconciliation — includes accrued income
+  const reconBegMatch = fullText.match(/Market\s+Value\s+Beginning\s+of\s+Period.*?\$?([\d,]+\.\d{2})/i);
+  const reconEndMatch = fullText.match(/Market\s+Value\s+End\s+of\s+Period.*?\$?([\d,]+\.\d{2})/i);
+  
+  if (reconBegMatch) result.beginning_balance = cleanAmount(reconBegMatch[1]);
+  if (reconEndMatch) result.ending_balance = cleanAmount(reconEndMatch[1]);
+  
+  // Strategy 2: Investment Allocation Summary "Total Account Value" (fallback — excludes accrued)
+  if (!result.beginning_balance || !result.ending_balance) {
+    const totalAcctMatch = fullText.match(/Total\s+Account\s+Value\s+\$?([\d,]+\.\d{2})\s+\$?([\d,]+\.\d{2})/i);
+    if (totalAcctMatch) {
+      if (!result.beginning_balance) result.beginning_balance = cleanAmount(totalAcctMatch[1]);
+      if (!result.ending_balance) result.ending_balance = cleanAmount(totalAcctMatch[2]);
+    }
+  }
+  
+  // Strategy 3: Account Summary "Beginning Balance" / "Ending Balance" — Total Portfolio Value column
+  if (!result.beginning_balance) {
+    const begMatch = fullText.match(/Beginning\s+Balance\s+\$?([\d,]+\.\d{2})\s+\$?([\d,]+\.\d{2})\s+\$?([\d,]+\.\d{2})/i);
+    if (begMatch) result.beginning_balance = cleanAmount(begMatch[3]);
+  }
+  if (!result.ending_balance) {
+    const endMatch = fullText.match(/Ending\s+Balance\s+\$?([\d,]+\.\d{2})\s+\$?([\d,]+\.\d{2})\s+\$?([\d,]+\.\d{2})/i);
+    if (endMatch) result.ending_balance = cleanAmount(endMatch[3]);
+  }
+  
+  // --- External cash flows ---
+  // Fifth Third "Distributions" in the Account Summary = fees (admin expenses, management fees)
+  // These are NOT external withdrawals for Modified Dietz purposes.
+  // Real external flows appear in the Account Overview as "Total Contributions" / "Total Withdrawals"
+  // or in Account Activity as "Other Receipts" (transfers in) / "Other Disbursements" (transfers out)
+  result.contributions = 0;
+  result.withdrawals = 0;
+  
+  // --- CONTRIBUTIONS ---
+  // Strategy 1: Account Overview "Total Contributions" (most reliable — Fifth Third aggregates here)
+  const totalContribMatch = fullText.match(/Total\s+Contributions\s+\$?([\d,]+\.\d{2})/i);
+  if (totalContribMatch) {
+    result.contributions = cleanAmount(totalContribMatch[1]);
+  }
+  
+  // Strategy 2: If no Total Contributions line, look for individual contribution patterns
+  if (result.contributions === 0) {
+    const contribPatterns = [
+      /Total\s+Other\s+Receipts\s+\$?([\d,]+\.\d{2})/i,
+      /(?:Employer|Participant|Plan)\s+Contributions?\s+.*?\$?([\d,]+\.\d{2})/gi,
+      /Transfer\s+(?:From|In)\s+.*?\$?([\d,]+\.\d{2})/gi,
+      /(?:Rollover)\s+In\s+.*?\$?([\d,]+\.\d{2})/gi,
+      /Deposits?\s+from\s+.*?\$?([\d,]+\.\d{2})/gi
+    ];
+    for (const pat of contribPatterns) {
+      if (pat.global) {
+        let m;
+        while ((m = pat.exec(fullText)) !== null) {
+          result.contributions += cleanAmount(m[1]);
+        }
+      } else {
+        const m = fullText.match(pat);
+        if (m) result.contributions += cleanAmount(m[1]);
+      }
+    }
+  }
+  
+  // --- WITHDRAWALS ---
+  // Strategy 1: Account Overview "Total Withdrawals" (if present)
+  const totalWithdrMatch = fullText.match(/Total\s+Withdrawals\s+\(?\$?([\d,]+\.\d{2})\)?/i);
+  if (totalWithdrMatch) {
+    result.withdrawals = cleanAmount(totalWithdrMatch[1]);
+  }
+  
+  // Strategy 2: Individual withdrawal patterns
+  if (result.withdrawals === 0) {
+    const withdrawPatterns = [
+      /Total\s+Other\s+Disbursements\s+\(?\$?([\d,]+\.\d{2})\)?/i,
+      /(?:Benefit|Pension)\s+Payments?\s+.*?\(?\$?([\d,]+\.\d{2})\)?/gi,
+      /Transfer\s+(?:To|Out)\s+.*?\(?\$?([\d,]+\.\d{2})\)?/gi,
+      /(?:Rollover)\s+Out\s+.*?\(?\$?([\d,]+\.\d{2})\)?/gi,
+      /(?:Participant|Plan)\s+Distributions?\s+.*?\(?\$?([\d,]+\.\d{2})\)?/gi,
+      /Withdrawal\s+.*?\(?\$?([\d,]+\.\d{2})\)?/gi
+    ];
+    for (const pat of withdrawPatterns) {
+      if (pat.global) {
+        let m;
+        while ((m = pat.exec(fullText)) !== null) {
+          result.withdrawals += cleanAmount(m[1]);
+        }
+      } else {
+        const m = fullText.match(pat);
+        if (m) result.withdrawals += cleanAmount(m[1]);
+      }
+    }
+  }
+  
+  // Store raw amounts for review
+  const incomeMatch = fullText.match(/Total\s+Income\s+Earned\s+\$?([\d,]+\.\d{2})/i);
+  const adminMatch = fullText.match(/Total\s+Administrative\s+Expenses\s+\(?\$?([\d,]+\.\d{2})\)?/i);
+  const mktChgMatch = fullText.match(/Change\s+in\s+Market\s+Value\s+\$?([\d,]+\.\d{2})/i);
+  
+  result.raw.income_earned = incomeMatch ? cleanAmount(incomeMatch[1]) : null;
+  result.raw.admin_expenses = adminMatch ? cleanAmount(adminMatch[1]) : null;
+  result.raw.market_change = mktChgMatch ? cleanAmount(mktChgMatch[1]) : null;
+  
+  return result;
+}
+
+function parseBNY(fullText) {
+  const result = { custodian: 'BNY', raw: {} };
+  
+  // Account number — BNY institutional uses "ACR F081072" format
+  const acctMatch = fullText.match(/ACR\s+([A-Z]\d{6,})/i);
+  result.account_number = acctMatch ? 'ACR ' + acctMatch[1].trim() : null;
+  
+  // Fallback: traditional account number
+  if (!result.account_number) {
+    const altAcct = fullText.match(/(?:Account|Acct)[:\s#]*([\w\d\*]+)/i);
+    result.account_number = altAcct ? altAcct[1].trim() : null;
+  }
+  
+  // Account name — client name block after ACR line
+  const nameMatch = fullText.match(/ACR\s+[A-Z]\d+\s+([\w\s]+(?:RETIREMENT|PENSION|FUND|BOARD|UNION|LOCAL|TRUST)[\w\s]*?)(?:GRIDIRON|ATTENTION)/i);
+  if (nameMatch) {
+    result.account_name = nameMatch[1].replace(/\s+/g, ' ').trim();
+  }
+  
+  // Period — "FOR THE PERIOD 01 JANUARY 2026 THROUGH 31 JANUARY 2026"
+  const periodMatch = fullText.match(/(?:FOR\s+THE\s+)?PERIOD\s+(\d{1,2}\s+\w+\s+\d{4})\s+THROUGH\s+(\d{1,2}\s+\w+\s+\d{4})/i);
+  if (periodMatch) {
+    result.period_start = periodMatch[1];
+    result.period_end = periodMatch[2];
+    const d = new Date(periodMatch[2]);
+    if (!isNaN(d)) result.month_end_date = d.toISOString().slice(0, 10);
+  }
+  // Fallback: "ENDING 31 JANUARY 2026"
+  if (!result.month_end_date) {
+    const endingMatch = fullText.match(/ENDING\s+(\d{1,2}\s+\w+\s+\d{4})/i);
+    if (endingMatch) {
+      result.period_end = endingMatch[1];
+      const d = new Date(endingMatch[1]);
+      if (!isNaN(d)) result.month_end_date = d.toISOString().slice(0, 10);
+    }
+  }
+  // Fallback: ISO date from header "2026-01-31 CYCLE"
+  if (!result.month_end_date) {
+    const isoMatch = fullText.match(/(\d{4}-\d{2}-\d{2})\s+CYCLE/);
+    if (isoMatch) result.month_end_date = isoMatch[1];
+  }
+  
+  // --- Balances from "Statement of Change in Net Assets" ---
+  // BNY PDF text may have extra spaces in numbers: "19,701,004.50" or "19 ,701 ,004.50"
+  const begMatch = fullText.match(/NET\s+ASSETS\s*[-–]\s*BEGINNING\s+OF\s+PERIOD\s+\$?\s*([\d,\s]+\.\d{2})/i);
+  if (begMatch) result.beginning_balance = cleanAmount(begMatch[1].replace(/\s/g, ''));
+  
+  const endMatch = fullText.match(/NET\s+ASSETS\s*[-–]\s*END\s+OF\s+PERIOD\s+\$?\s*([\d,\s]+\.\d{2})/i);
+  if (endMatch) result.ending_balance = cleanAmount(endMatch[1].replace(/\s/g, ''));
+  
+  // Fallback: "NET ASSETS $ 19,830,629.33" (balance sheet — end only)
+  if (!result.ending_balance) {
+    const naMatch = fullText.match(/NET\s+ASSETS\s+\$\s*([\d,\s]+\.\d{2})/i);
+    if (naMatch) result.ending_balance = cleanAmount(naMatch[1].replace(/\s/g, ''));
+  }
+  // Fallback: "TOTAL MARKET VALUE $ 19,830,629.33"
+  if (!result.ending_balance) {
+    const mvMatch = fullText.match(/TOTAL\s+MARKET\s+VALUE\s+\$\s*([\d,\s]+\.\d{2})/i);
+    if (mvMatch) result.ending_balance = cleanAmount(mvMatch[1].replace(/\s/g, ''));
+  }
+  // Fallback: generic Beginning/Ending patterns
+  if (!result.beginning_balance) {
+    const fbeg = fullText.match(/(?:Beginning|Opening)\s+(?:Market\s+)?(?:Value|Balance)\s+\$?([\d,]+\.\d{2})/i);
+    if (fbeg) result.beginning_balance = cleanAmount(fbeg[1]);
+  }
+  if (!result.ending_balance) {
+    const fend = fullText.match(/(?:Ending|Closing)\s+(?:Market\s+)?(?:Value|Balance)\s+\$?([\d,]+\.\d{2})/i);
+    if (fend) result.ending_balance = cleanAmount(fend[1]);
+  }
+  
+  // --- External cash flows ---
+  // BNY "RECEIPTS" section includes investment income AND external contributions
+  // Investment income: DIVIDENDS, INTEREST, CAPITAL GAIN, UNREALIZED GAIN/LOSS
+  // External flows: EMPLOYER/PARTICIPANT CONTRIBUTIONS, TRANSFERS IN, RECEIPTS FROM PARTICIPANTS
+  result.contributions = 0;
+  result.withdrawals = 0;
+  
+  // Contributions
+  const contribPatterns = [
+    /(?:EMPLOYER|PARTICIPANT|PLAN)\s+CONTRIBUTIONS?\s+[\$\s]*([\d,\s]+\.\d{2})/gi,
+    /TRANSFERS?\s+IN\s+[\$\s]*([\d,\s]+\.\d{2})/gi,
+    /RECEIPTS?\s+FROM\s+PARTICIPANTS?\s+[\$\s]*([\d,\s]+\.\d{2})/gi
+  ];
+  for (const pat of contribPatterns) {
+    let m;
+    while ((m = pat.exec(fullText)) !== null) {
+      result.contributions += cleanAmount(m[1].replace(/\s/g, ''));
+    }
+  }
+  
+  // Withdrawals from DISBURSEMENTS section
+  // BENEFIT PAYMENTS and TRANSFERS OUT are real withdrawals
+  // EXPENSE PAYMENTS (Gridiron management fees) are NOT external withdrawals for Mod Dietz
+  const totalDisbMatch = fullText.match(/TOTAL\s+DISBURSEMENTS\s+[\$\s]*([\d,\s]+\.\d{2})/i);
+  const benefitMatch = fullText.match(/BENEFIT\s+PAYMENTS?\s+[\$\s]*([\d,\s]+\.\d{2})/i);
+  const transferOutMatch = fullText.match(/TRANSFERS?\s+OUT\s+[\$\s]*([\d,\s]+\.\d{2})/i);
+  
+  if (benefitMatch) result.withdrawals += cleanAmount(benefitMatch[1].replace(/\s/g, ''));
+  if (transferOutMatch) result.withdrawals += cleanAmount(transferOutMatch[1].replace(/\s/g, ''));
+  
+  // If disbursements > 0 but no specific line items found, flag for review
+  const totalDisb = totalDisbMatch ? cleanAmount(totalDisbMatch[1].replace(/\s/g, '')) : 0;
+  if (result.withdrawals === 0 && totalDisb > 0) {
+    result.raw.disbursement_note = 'Review: disbursements may include fees vs withdrawals';
+  }
+  
+  // Raw details for info line
+  const totalRecMatch = fullText.match(/TOTAL\s+RECEIPTS\s+[\$\s]*([\d,\s]+\.\d{2})/i);
+  result.raw.total_receipts = totalRecMatch ? cleanAmount(totalRecMatch[1].replace(/\s/g, '')) : null;
+  result.raw.total_disbursements = totalDisb || null;
+  
+  return result;
+}
+
+// Generic fallback parser
+function parseGeneric(fullText) {
+  const result = { custodian: 'Unknown', raw: {} };
+  
+  const acctMatch = fullText.match(/(?:Account|Acct)\s*(?:Number|#|No)?[:\s]*([\w\d\-\*]+)/i);
+  result.account_number = acctMatch ? acctMatch[1].trim() : null;
+  
+  const periodMatch = fullText.match(/(\w+\s+\d+,?\s+\d{4})\s*(?:[-–]|to|through)\s*(\w+\s+\d+,?\s+\d{4})/i);
+  if (periodMatch) {
+    result.period_start = periodMatch[1];
+    result.period_end = periodMatch[2];
+    const d = new Date(periodMatch[2]);
+    if (!isNaN(d)) result.month_end_date = d.toISOString().slice(0, 10);
+  }
+  
+  const begMatch = fullText.match(/(?:Beginning|Opening)\s+(?:Market\s+)?(?:Value|Balance|Market\s+And\s+Cost)\s+\$?([\d,]+\.\d{2})/i);
+  result.beginning_balance = begMatch ? cleanAmount(begMatch[1]) : null;
+  
+  const endMatch = fullText.match(/(?:Ending|Closing)\s+(?:Market\s+)?(?:Value|Balance|Market\s+And\s+Cost)\s+\$?([\d,]+\.\d{2})/i);
+  result.ending_balance = endMatch ? cleanAmount(endMatch[1]) : null;
+  
+  result.contributions = 0;
+  result.withdrawals = 0;
+  
+  return result;
+}
+
+function detectCustodian(fullText) {
+  const t = fullText.toLowerCase();
+  if (t.includes('u.s. bank') || t.includes('us bank') || t.includes('usbank')) return 'US Bank';
+  if (t.includes('pnc')) return 'PNC';
+  if (t.includes('goldman sachs') || t.includes('goldman')) return 'Goldman';
+  if (t.includes('bny mellon') || t.includes('bnymellon') || t.includes('bank of new york') || /\bbny\b/.test(t)) return 'BNY';
+  if (t.includes('fifth third')) return 'Fifth Third';
+  if (t.includes('first national') || t.includes('fnb')) return 'FNB';
+  if (t.includes('somerset')) return 'STC';
+  if (t.includes('schwab')) return 'Schwab';
+  return 'Unknown';
+}
+
+function parseStatement(fullText) {
+  const custodian = detectCustodian(fullText);
+  let result;
+  
+  switch(custodian) {
+    case 'US Bank': result = parseUSBank(fullText); break;
+    case 'PNC': result = parsePNC(fullText); break;
+    case 'Goldman': result = parseGoldman(fullText); break;
+    case 'BNY': result = parseBNY(fullText); break;
+    case 'Fifth Third': result = parseFifthThird(fullText); break;
+    default: result = parseGeneric(fullText); result.custodian = custodian; break;
+  }
+  
+  return result;
+}
+
+// ============================================
+// CLIENT MATCHING
+// ============================================
+function matchClient(parsed) {
+  if (!parsed.account_number) return null;
+  
+  const cleanAcct = parsed.account_number.replace(/[\*\-\s]/g, '');
+  
+  // Try exact match first
+  if (CLIENT_MAP[cleanAcct]) return CLIENT_MAP[cleanAcct];
+  if (CLIENT_MAP[parsed.account_number]) return CLIENT_MAP[parsed.account_number];
+  
+  // Try matching by last N digits
+  for (const [key, client] of Object.entries(CLIENT_MAP)) {
+    const cleanKey = key.replace(/[\*\-\s]/g, '');
+    if (cleanKey.length > 3 && cleanAcct.length > 3) {
+      if (cleanAcct.includes(cleanKey) || cleanKey.includes(cleanAcct)) return client;
+      // Last 4 digit match
+      if (cleanAcct.slice(-4) === cleanKey.slice(-4) && 
+          client.custodian && parsed.custodian &&
+          client.custodian.toLowerCase().includes(parsed.custodian.toLowerCase().slice(0,3))) {
+        return client;
+      }
+    }
+  }
+  
+  // Try matching by custodian + account number substring
+  for (const client of CLIENTS) {
+    if (!client.account_number || !client.custodian) continue;
+    const clientClean = client.account_number.replace(/[\*\-\s]/g, '');
+    // Check if the last 3+ digits match and custodian matches
+    if (clientClean.slice(-3) === cleanAcct.slice(-3) && 
+        parsed.custodian.toLowerCase().includes(client.custodian.toLowerCase().slice(0,3))) {
+      return client;
+    }
+  }
+  
+  return null;
+}
+
+// ============================================
+// CHECK EXISTING DATA
+// ============================================
+async function checkExisting(clientId, monthEnd) {
+  try {
+    const data = await sbFetch(
+      `monthly_data?client_id=eq.${clientId}&month_end_date=eq.${monthEnd}&select=monthly_data_id,beginning_balance,ending_balance,contributions,withdrawals,status`
+    );
+    return data && data.length > 0 ? data[0] : null;
+  } catch(e) {
+    return null;
+  }
+}
+
+// ============================================
+// INSERT / UPDATE
+// ============================================
+async function upsertMonthlyData(parsed, client, existing) {
+  const payload = {
+    client_id: client.client_id,
+    month_end_date: parsed.month_end_date,
+    beginning_balance: parsed.beginning_balance,
+    ending_balance: parsed.ending_balance,
+    contributions: parsed.contributions || 0,
+    withdrawals: parsed.withdrawals || 0,
+    status: 'final',
+    notes: `Auto-imported from ${parsed.custodian} statement ${new Date().toISOString().slice(0,10)}`
+  };
+  
+  if (existing) {
+    // Update
+    const result = await sbFetch(
+      `monthly_data?monthly_data_id=eq.${existing.monthly_data_id}`,
+      { method: 'PATCH', body: payload }
+    );
+    return { action: 'updated', result };
+  } else {
+    // Insert
+    const result = await sbFetch('monthly_data', { method: 'POST', body: payload });
+    return { action: 'inserted', result };
+  }
+}
+
+// ============================================
+// UI STATE
+// ============================================
+let processedStatements = [];
+
+function formatCurrency(num) {
+  if (num === null || num === undefined) return '—';
+  return '$' + Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function updateSummary() {
+  const processed = processedStatements.length;
+  const matched = processedStatements.filter(s => s.client).length;
+  const ready = processedStatements.filter(s => s.client && s.parsed.beginning_balance !== null).length;
+  
+  document.getElementById('sumProcessed').textContent = processed;
+  document.getElementById('sumMatched').textContent = matched;
+  document.getElementById('sumReady').textContent = ready;
+  document.getElementById('summaryBar').style.display = processed > 0 ? 'flex' : 'none';
+  document.getElementById('btnInsertAll').style.display = ready > 0 ? 'inline-flex' : 'none';
+}
+
+function renderCard(stmt, index) {
+  const { parsed, client, existing, filename } = stmt;
+  const isMatched = !!client;
+  const hasExisting = !!existing;
+  const cardClass = isMatched ? (hasExisting ? '' : 'pending') : 'error';
+  const badgeClass = isMatched ? (hasExisting ? 'badge-update' : 'badge-new') : 'badge-error';
+  const badgeText = isMatched ? (hasExisting ? 'UPDATE' : 'NEW RECORD') : 'NO MATCH';
+  
+  let existingHtml = '';
+  if (hasExisting) {
+    existingHtml = `
+      <div style="margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:700;color:#718096;margin-bottom:6px;">EXISTING DATABASE RECORD:</div>
+        <div class="existing-row">
+          <div><span class="existing-label">Beginning</span><br><span class="existing-value">${formatCurrency(existing.beginning_balance)}</span></div>
+          <div><span class="existing-label">Ending</span><br><span class="existing-value">${formatCurrency(existing.ending_balance)}</span></div>
+          <div><span class="existing-label">Contributions</span><br><span class="existing-value">${formatCurrency(existing.contributions)}</span></div>
+          <div><span class="existing-label">Withdrawals</span><br><span class="existing-value">${formatCurrency(existing.withdrawals)}</span></div>
+          <div><span class="existing-label">Status</span><br><span class="existing-value">${existing.status || 'n/a'}</span></div>
+        </div>
+      </div>`;
+  }
+  
+  return `
+    <div class="card ${cardClass}" id="card-${index}">
+      <div class="card-header">
+        <span class="card-title">${isMatched ? client.client_name : 'Unmatched Statement'}</span>
+        <span class="card-badge ${badgeClass}">${badgeText}</span>
+        <span style="margin-left:auto;font-size:12px;color:#a0aec0;">${parsed.custodian} · ${filename}</span>
+      </div>
+      
+      <div style="font-size:13px;color:#718096;margin-bottom:12px;">
+        ${parsed.period_start || '?'} — ${parsed.period_end || '?'} · Account: ${parsed.account_number || 'unknown'}
+        ${isMatched ? ` · Client ID: ${client.client_id}` : ''}
+      </div>
+      
+      ${existingHtml}
+      
+      <div style="font-size:12px;font-weight:700;color:#718096;margin-bottom:6px;">EXTRACTED FROM STATEMENT:</div>
+      <div class="data-grid">
+        <div class="data-item">
+          <div class="data-label">Beginning Balance</div>
+          <input class="editable currency" id="beg-${index}" value="${parsed.beginning_balance !== null ? parsed.beginning_balance : ''}" 
+            onchange="updateParsed(${index},'beginning_balance',this.value)">
+        </div>
+        <div class="data-item">
+          <div class="data-label">Ending Balance</div>
+          <input class="editable currency" id="end-${index}" value="${parsed.ending_balance !== null ? parsed.ending_balance : ''}"
+            onchange="updateParsed(${index},'ending_balance',this.value)">
+        </div>
+        <div class="data-item">
+          <div class="data-label">Contributions</div>
+          <input class="editable currency" id="cont-${index}" value="${parsed.contributions || 0}"
+            onchange="updateParsed(${index},'contributions',this.value)">
+        </div>
+        <div class="data-item">
+          <div class="data-label">Withdrawals</div>
+          <input class="editable currency" id="wdrl-${index}" value="${parsed.withdrawals || 0}"
+            onchange="updateParsed(${index},'withdrawals',this.value)">
+        </div>
+      </div>
+      ${parsed.raw && (parsed.raw.income_earned || parsed.raw.admin_expenses || parsed.raw.market_change || parsed.raw.total_receipts !== undefined) ? `
+      <div style="font-size:11px;color:#a0aec0;margin-bottom:12px;font-family:monospace;">
+        ${parsed.raw.income_earned ? `Income: ${formatCurrency(parsed.raw.income_earned)}` : ''}
+        ${parsed.raw.admin_expenses ? ` · Fees: ${formatCurrency(parsed.raw.admin_expenses)}` : ''}
+        ${parsed.raw.market_change ? ` · Mkt Δ: ${formatCurrency(parsed.raw.market_change)}` : ''}
+        ${parsed.raw.total_receipts ? `Receipts: ${formatCurrency(parsed.raw.total_receipts)}` : ''}
+        ${parsed.raw.total_disbursements ? ` · Disbursements: ${formatCurrency(parsed.raw.total_disbursements)}` : ''}
+        ${parsed.raw.disbursement_note ? ` ⚠ ${parsed.raw.disbursement_note}` : ''}
+      </div>` : ''}
+      
+      <div class="actions">
+        ${isMatched && parsed.beginning_balance !== null ? `
+          <button class="btn btn-primary" id="btnInsert-${index}" onclick="insertOne(${index})">
+            ${hasExisting ? 'Update in Supabase' : 'Insert into Supabase'}
+          </button>` : ''}
+        ${!isMatched ? `
+          <select class="btn btn-secondary" onchange="manualMatch(${index}, this.value)" style="padding:10px 12px;">
+            <option value="">— Select Client Manually —</option>
+            ${CLIENTS.map(c => `<option value="${c.client_id}">${c.client_name} (${c.custodian})</option>`).join('')}
+          </select>` : ''}
+        <button class="btn btn-danger" onclick="removeCard(${index})">✕ Remove</button>
+      </div>
+    </div>`;
+}
+
+function renderAll() {
+  document.getElementById('results').innerHTML = processedStatements.map((s, i) => renderCard(s, i)).join('');
+  updateSummary();
+}
+
+// ============================================
+// ACTIONS
+// ============================================
+window.updateParsed = function(index, field, value) {
+  processedStatements[index].parsed[field] = parseFloat(value) || 0;
+};
+
+window.manualMatch = async function(index, clientId) {
+  if (!clientId) return;
+  const client = CLIENTS.find(c => c.client_id === parseInt(clientId));
+  if (client) {
+    processedStatements[index].client = client;
+    if (processedStatements[index].parsed.month_end_date) {
+      processedStatements[index].existing = await checkExisting(client.client_id, processedStatements[index].parsed.month_end_date);
+    }
+    renderAll();
+    log(`Manually matched to ${client.client_name}`, 'success');
+  }
+};
+
+window.insertOne = async function(index) {
+  const stmt = processedStatements[index];
+  const btn = document.getElementById(`btnInsert-${index}`);
+  btn.innerHTML = '<span class="spinner"></span> Saving...';
+  btn.disabled = true;
+  
+  try {
+    const result = await upsertMonthlyData(stmt.parsed, stmt.client, stmt.existing);
+    const card = document.getElementById(`card-${index}`);
+    card.className = 'card success';
+    btn.textContent = `✓ ${result.action === 'updated' ? 'Updated' : 'Inserted'} Successfully`;
+    btn.className = 'btn btn-success';
+    stmt.inserted = true;
+    log(`${stmt.client.client_name}: ${result.action} for ${stmt.parsed.month_end_date}`, 'success');
+    updateSummary();
+  } catch(e) {
+    btn.textContent = '✕ Error — Try Again';
+    btn.disabled = false;
+    log(`Error inserting ${stmt.client?.client_name}: ${e.message}`, 'error');
+  }
+};
+
+window.insertAll = async function() {
+  const btn = document.getElementById('btnInsertAll');
+  btn.innerHTML = '<span class="spinner"></span> Inserting All...';
+  btn.disabled = true;
+  
+  for (let i = 0; i < processedStatements.length; i++) {
+    const stmt = processedStatements[i];
+    if (stmt.client && stmt.parsed.beginning_balance !== null && !stmt.inserted) {
+      await insertOne(i);
+      await new Promise(r => setTimeout(r, 200)); // Brief pause between inserts
+    }
+  }
+  
+  btn.textContent = '✓ All Done';
+};
+
+window.removeCard = function(index) {
+  processedStatements.splice(index, 1);
+  renderAll();
+};
+
+window.clearAll = function() {
+  processedStatements = [];
+  renderAll();
+  document.getElementById('logPanel').classList.remove('visible');
+};
+
+// ============================================
+// FILE PROCESSING
+// ============================================
+async function processFile(file) {
+  log(`Processing: ${file.name}`, 'info');
+  
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const { fullText } = await extractPdfText(arrayBuffer);
+    
+    const parsed = parseStatement(fullText);
+    parsed._filename = file.name;
+    
+    log(`  Detected: ${parsed.custodian} | Account: ${parsed.account_number} | Period: ${parsed.month_end_date}`, 'info');
+    log(`  Beginning: ${formatCurrency(parsed.beginning_balance)} | Ending: ${formatCurrency(parsed.ending_balance)}`, 'info');
+    
+    // Match to client
+    const client = matchClient(parsed);
+    if (client) {
+      log(`  ✓ Matched: ${client.client_name} (ID: ${client.client_id})`, 'success');
+    } else {
+      log(`  ✕ No client match found for account ${parsed.account_number}`, 'error');
+    }
+    
+    // Check existing record
+    let existing = null;
+    if (client && parsed.month_end_date) {
+      existing = await checkExisting(client.client_id, parsed.month_end_date);
+      if (existing) {
+        log(`  ⚠ Existing record found — will update`, 'info');
+      }
+    }
+    
+    processedStatements.push({ parsed, client, existing, filename: file.name });
+    
+  } catch(e) {
+    log(`  ✕ Failed to parse ${file.name}: ${e.message}`, 'error');
+    processedStatements.push({ 
+      parsed: { custodian: 'Error', account_number: null, beginning_balance: null, ending_balance: null, 
+        contributions: 0, withdrawals: 0, month_end_date: null, period_start: null, period_end: null },
+      client: null, existing: null, filename: file.name 
+    });
+  }
+}
+
+async function handleFiles(files) {
+  const dropZone = document.getElementById('dropZone');
+  const logPanel = document.getElementById('logPanel');
+  
+  dropZone.classList.add('processing');
+  logPanel.classList.add('visible');
+  document.getElementById('statusText').textContent = `Processing ${files.length} file(s)...`;
+  
+  for (const file of files) {
+    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+      await processFile(file);
+    } else {
+      log(`Skipped: ${file.name} (not a PDF)`, 'error');
+    }
+  }
+  
+  dropZone.classList.remove('processing');
+  document.getElementById('statusText').textContent = 
+    `${processedStatements.length} statement(s) processed — ${processedStatements.filter(s=>s.client).length} matched`;
+  
+  renderAll();
+}
+
+function log(msg, type = '') {
+  const panel = document.getElementById('logPanel');
+  const entry = document.createElement('div');
+  entry.className = `log-entry ${type}`;
+  entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  panel.appendChild(entry);
+  panel.scrollTop = panel.scrollHeight;
+}
+
+// ============================================
+// DRAG & DROP + FILE INPUT
+// ============================================
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); });
+
+// ============================================
+// INIT
+// ============================================
+async function initApp() {
+  await loadClients();
+  document.getElementById('statusText').textContent = `Ready — ${CLIENTS.length} clients loaded`;
+}
+
+// Check for existing session, or show login
+await checkExistingSession();
+</script>
+
+</body>
+</html>

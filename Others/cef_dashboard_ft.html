@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gridiron CEF Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fb; --card: #ffffff; --hover: #f0f4f8; --alt: #fafbfc;
+  --hdr: #eef1f6; --bdr: #dfe3ea; --bdr-lt: #e8ecf1;
+  --txt: #1a2332; --txt2: #4a5568; --dim: #8896a8;
+  --grn: #16a34a; --grn-bg: rgba(22,163,74,0.08); --grn-bdr: rgba(22,163,74,0.2);
+  --red: #dc2626; --red-bg: rgba(220,38,38,0.08); --red-bdr: rgba(220,38,38,0.2);
+  --blu: #2563eb; --blu-bg: rgba(37,99,235,0.08);
+  --amb: #b45309; --amb-bg: rgba(180,83,9,0.08);
+  --gold: #92700a; --gold-bg: #fdf8ec;
+  --pink-bg: rgba(219,39,119,0.06);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--txt); font-family:'DM Sans',sans-serif; height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+
+.header { padding:24px 32px 16px; border-bottom:1px solid var(--bdr); background:var(--card); }
+.header-top { display:flex; align-items:baseline; gap:14px; margin-bottom:3px; }
+.logo { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold); }
+.title { font-size:20px; font-weight:700; }
+.subtitle { font-size:12px; color:var(--dim); font-family:'JetBrains Mono',monospace; }
+
+.stats-bar { display:flex; gap:24px; padding:12px 32px; border-bottom:1px solid var(--bdr); background:var(--card); flex-wrap:wrap; }
+.stat-item { display:flex; align-items:baseline; gap:6px; }
+.stat-label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--dim); font-family:'JetBrains Mono',monospace; }
+.stat-value { font-size:14px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+
+.controls { display:flex; align-items:center; gap:8px; padding:10px 32px; border-bottom:1px solid var(--bdr); background:var(--card); flex-wrap:wrap; }
+.filter-btn { padding:4px 12px; border-radius:4px; border:1px solid var(--bdr); background:var(--card); color:var(--txt2); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; cursor:pointer; }
+.filter-btn:hover { border-color:var(--dim); color:var(--txt); }
+.filter-btn.active { background:var(--blu-bg); border-color:var(--blu); color:var(--blu); font-weight:600; }
+.sep { color:var(--bdr); font-size:14px; margin:0 2px; }
+.search-input { margin-left:auto; padding:4px 10px; border-radius:4px; border:1px solid var(--bdr); background:var(--bg); color:var(--txt); font-family:'JetBrains Mono',monospace; font-size:11px; width:140px; outline:none; }
+.search-input:focus { border-color:var(--blu); }
+.search-input::placeholder { color:var(--dim); }
+.font-size-control { display:flex; align-items:center; gap:6px; margin-left:12px; }
+.font-size-control label { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--dim); font-family:'JetBrains Mono',monospace; }
+.font-size-control select { padding:3px 8px; border-radius:4px; border:1px solid var(--bdr); background:var(--bg); color:var(--txt); font-family:'JetBrains Mono',monospace; font-size:11px; cursor:pointer; }
+.save-btn { padding:4px 14px; border-radius:4px; border:1px solid var(--grn-bdr); background:var(--grn-bg); color:var(--grn); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; margin-left:8px; display:none; }
+.save-btn:hover { background:rgba(22,163,74,0.15); }
+.save-btn.visible { display:inline-block; }
+
+.table-wrap { padding:0 32px 0; overflow:auto; flex:1; min-height:0; }
+table { width:100%; border-collapse:collapse; font-size:12px; background:var(--card); border:1px solid var(--bdr); border-radius:6px; margin-top:12px; box-shadow:0 1px 2px rgba(0,0,0,0.03); }
+
+thead th { position:sticky; top:0; z-index:10; background:var(--hdr); padding:7px 8px; font-family:'JetBrains Mono',monospace; font-size:0.8em; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; color:var(--dim); border-bottom:2px solid var(--bdr); cursor:pointer; user-select:none; white-space:nowrap; }
+thead th:hover { color:var(--txt2); }
+thead th.sorted { color:var(--gold); }
+thead th .sa { margin-left:2px; font-size:8px; }
+thead th.al { text-align:left; } thead th.ar { text-align:right; } thead th.ac { text-align:center; }
+thead th.no-sort { cursor:default; }
+thead th.no-sort:hover { color:var(--dim); }
+/* Z-score group header highlight */
+thead th.z-hdr { background:#edf2f7; border-bottom-color:var(--blu); }
+
+tbody tr { border-bottom:1px solid var(--bdr-lt); }
+tbody tr:nth-child(even) { background:var(--alt); }
+tbody tr:hover { background:var(--hover); }
+
+td { padding:5px 8px; white-space:nowrap; }
+td.al { text-align:left; } td.ar { text-align:right; } td.ac { text-align:center; }
+td.tk { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11.5px; letter-spacing:0.5px; }
+td.tp { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:0.5px; }
+td.tp-fi { color:var(--blu); } td.tp-eq { color:var(--amb); }
+td.nm { font-family:'JetBrains Mono',monospace; font-size:11px; }
+td.dt { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dim); }
+td.sector-label { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dim); letter-spacing:0.3px; }
+
+.positive { color:var(--grn); } .negative { color:var(--red); } .neutral { color:var(--dim); }
+
+/* Buy/Sell input cells */
+td.input-cell { padding:2px 3px; }
+td.input-cell input {
+  width:54px; padding:3px 5px; border:1px solid var(--bdr); border-radius:3px;
+  background:var(--card); color:var(--blu); font-family:'JetBrains Mono',monospace;
+  font-size:10.5px; font-weight:600; text-align:right; outline:none;
+}
+td.input-cell input:focus { border-color:var(--blu); background:#f8faff; }
+
+/* Action badges */
+.action-badge { display:inline-block; padding:2px 7px; border-radius:3px; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:inherit; letter-spacing:0.5px; min-width:36px; text-align:center; }
+.action-buy { background:rgba(22,163,74,0.15); color:#15803d; border:1px solid rgba(22,163,74,0.35); font-weight:800; }
+.action-sell { background:rgba(220,38,38,0.15); color:#991b1b; border:1px solid rgba(220,38,38,0.35); font-weight:800; }
+.action-none { color:var(--dim); font-size:10px; }
+
+/* Z-Score badges - vivid & bold */
+.zb { display:inline-block; padding:2px 6px; border-radius:4px; font-family:'JetBrains Mono',monospace; font-weight:800; font-size:inherit; min-width:44px; text-align:center; }
+.z-dv { background:#1e40af; color:#ffffff; border:1px solid #1e3a8a; }              /* Deep Value: solid blue */
+.z-v2 { background:#059669; color:#ffffff; border:1px solid #047857; }              /* Very cheap: solid green */
+.z-v  { background:#86efac; color:#14532d; border:1px solid #4ade80; }              /* Cheap: bright green bg */
+.z-mv { background:#d1fae5; color:#065f46; border:1px solid #6ee7b7; }              /* Mild value: light green */
+.z-n  { background:transparent; color:var(--dim); }                                  /* Neutral: no color */
+.z-mr { background:#ffedd5; color:#c2410c; border:1px solid #fdba74; }              /* Mild rich: light orange */
+.z-r  { background:#fed7aa; color:#9a3412; border:1px solid #fb923c; }              /* Getting rich: orange bg */
+.z-r2 { background:#ef4444; color:#ffffff; border:1px solid #dc2626; }              /* Rich: solid red */
+.z-dr { background:#991b1b; color:#ffffff; border:1px solid #7f1d1d; }              /* Deep rich: dark red */
+
+.loading-overlay { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:100px 40px; gap:14px; }
+.spinner { width:28px; height:28px; border:3px solid var(--bdr); border-top-color:var(--blu); border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-text { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dim); }
+.no-data { text-align:center; padding:60px 40px; color:var(--dim); font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.8; }
+
+.config-bar { display:flex; align-items:center; gap:8px; padding:8px 32px; background:var(--gold-bg); border-bottom:1px solid rgba(146,112,10,0.15); font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--gold); }
+.config-bar input { padding:3px 8px; border-radius:4px; border:1px solid rgba(146,112,10,0.25); background:var(--card); color:var(--txt); font-family:'JetBrains Mono',monospace; font-size:11px; width:260px; }
+.config-bar button { padding:3px 12px; border-radius:4px; border:1px solid rgba(146,112,10,0.25); background:rgba(146,112,10,0.1); color:var(--gold); font-family:'JetBrains Mono',monospace; font-size:11px; cursor:pointer; font-weight:700; }
+.config-bar.hidden { display:none; }
+
+/* AUM column */
+td.aum { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--txt2); }
+/* NEW ticker badge */
+.new-badge { display:inline-block; padding:1px 4px; border-radius:3px; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:7px; letter-spacing:0.5px; background:rgba(147,51,234,0.1); color:#7c3aed; border:1px solid rgba(147,51,234,0.25); margin-left:4px; vertical-align:middle; }
+
+/* Detail Modal */
+.detail-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; backdrop-filter:blur(4px); }
+.detail-overlay.open { display:flex; align-items:center; justify-content:center; }
+.detail-modal { background:var(--bg); border:1px solid var(--bdr); border-radius:12px; width:94vw; max-width:1200px; max-height:92vh; overflow-y:auto; padding:28px 32px; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+.detail-close { position:absolute; top:12px; right:16px; background:none; border:none; color:var(--dim); font-size:24px; cursor:pointer; padding:4px 10px; border-radius:4px; }
+.detail-close:hover { background:var(--hover); color:var(--txt); }
+.detail-header { margin-bottom:20px; }
+.detail-name { font-family:'DM Sans',sans-serif; font-size:22px; font-weight:700; color:var(--txt); }
+.detail-ticker { font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--blu); margin-left:10px; }
+.detail-sub { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--dim); margin-top:4px; }
+.detail-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:10px; margin:16px 0; }
+.detail-card { background:var(--hover); border:1px solid var(--bdr); border-radius:8px; padding:10px 12px; }
+.detail-card-label { font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.8px; color:var(--dim); margin-bottom:4px; }
+.detail-card-value { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; color:var(--txt); }
+.detail-card-value.pos { color:#15803d; }
+.detail-card-value.neg { color:#b91c1c; }
+.detail-section { margin:20px 0 10px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--dim); text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--bdr); padding-bottom:4px; }
+.chart-container { position:relative; height:320px; margin:12px 0 20px; }
+.detail-zscores { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin:12px 0; }
+.detail-zcard { text-align:center; padding:8px; border-radius:6px; }
+.detail-zcard-label { font-size:9px; color:var(--dim); text-transform:uppercase; margin-bottom:3px; }
+.detail-zcard-value { font-size:18px; font-weight:700; }
+.detail-loading { text-align:center; color:var(--dim); padding:40px; font-size:13px; }
+.tk.clickable { cursor:pointer; text-decoration:underline; text-decoration-color:rgba(37,99,235,0.3); text-underline-offset:2px; }
+.tk.clickable:hover { color:var(--blu); text-decoration-color:var(--blu); }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="config-bar" id="configBar">
+  <span>⚠ PASTE SUPABASE ANON KEY →</span>
+  <input type="text" id="keyInput" placeholder="eyJhbGciOiJI..." />
+  <button onclick="saveKey()">CONNECT</button>
+</div>
+<div class="config-bar" id="ftConfigBar" style="background:#edf2f7; border-bottom-color:rgba(37,99,235,0.15);">
+  <span style="color:var(--blu);">⚠ PASTE FASTTRACK API KEY →</span>
+  <input type="text" id="ftKeyInput" placeholder="ak_live_..." style="border-color:rgba(37,99,235,0.25);" />
+  <button onclick="saveFTKey()" style="background:rgba(37,99,235,0.1); color:var(--blu); border-color:rgba(37,99,235,0.25);">CONNECT</button>
+  <span id="ftStatus" style="margin-left:8px;"></span>
+</div>
+
+<div class="header">
+  <div class="header-top">
+    <span class="logo">Gridiron</span>
+    <span class="title">CEF Discount Model</span>
+  </div>
+  <div class="subtitle" id="lastUpdated">Loading data...</div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-item"><span class="stat-label">Funds</span><span class="stat-value" id="statFunds">—</span></div>
+  <div class="stat-item"><span class="stat-label">Avg Discount</span><span class="stat-value" id="statAvgDisc">—</span></div>
+  <div class="stat-item"><span class="stat-label">Widest</span><span class="stat-value" id="statWidest" style="color:var(--red)">—</span></div>
+  <div class="stat-item"><span class="stat-label">Narrowest</span><span class="stat-value" id="statNarrowest" style="color:var(--grn)">—</span></div>
+  <div class="stat-item"><span class="stat-label">BUY Signals</span><span class="stat-value" id="statBuys" style="color:var(--grn)">—</span></div>
+  <div class="stat-item"><span class="stat-label">SELL Signals</span><span class="stat-value" id="statSells" style="color:var(--red)">—</span></div>
+  <div class="stat-item"><span class="stat-label">Deep Value (z&lt;-1.5)</span><span class="stat-value" id="statDeepValue" style="color:var(--grn)">—</span></div>
+  <div class="stat-item"><span class="stat-label">NEW (no history)</span><span class="stat-value" id="statNew" style="color:#7c3aed">—</span></div>
+</div>
+
+<div class="controls">
+  <button class="filter-btn active" data-group="type" onclick="setTypeFilter('all',this)">All</button>
+  <button class="filter-btn" data-group="type" onclick="setTypeFilter('fi',this)">Fixed Income</button>
+  <button class="filter-btn" data-group="type" onclick="setTypeFilter('eq',this)">Equity</button>
+  <span class="sep">|</span>
+  <button class="filter-btn" data-group="signal" onclick="setSignalFilter('buy-signal',this)">BUY Signals</button>
+  <button class="filter-btn" data-group="signal" onclick="setSignalFilter('sell-signal',this)">SELL Signals</button>
+  <button class="filter-btn" data-group="signal" onclick="setSignalFilter('deep-value',this)">Deep Value</button>
+  <button class="filter-btn" data-group="signal" onclick="setSignalFilter('new-tickers',this)" style="color:#7c3aed;border-color:rgba(147,51,234,0.3)">New Only</button>
+  <button class="filter-btn" data-group="signal" onclick="setSignalFilter('hide-new',this)" style="color:#64748b;border-color:rgba(100,116,139,0.3)">Hide New</button>
+  <span class="sep">|</span>
+  <button class="filter-btn" id="refreshBtn" onclick="refreshFromFastTrack()" style="background:rgba(37,99,235,0.08); border-color:rgba(37,99,235,0.3); color:var(--blu); font-weight:600;">⟳ Refresh from FastTrack</button>
+  <button class="filter-btn" id="backfillBtn" onclick="backfillAdjPrices()" style="background:rgba(168,85,247,0.08); border-color:rgba(168,85,247,0.3); color:#a855f7; font-weight:600;">⟳ Backfill Adj Prices</button>
+  <span id="refreshStatus" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dim);"></span>
+  <input type="text" class="search-input" placeholder="Search..." oninput="filterSearch(this.value)" />
+  <div class="font-size-control">
+    <label>Font:</label>
+    <select id="fontSizeSelect" onchange="changeFontSize(this.value)">
+      <option value="10">10px</option>
+      <option value="11">11px</option>
+      <option value="12" selected>12px</option>
+      <option value="13">13px</option>
+      <option value="14">14px</option>
+      <option value="15">15px</option>
+      <option value="16">16px</option>
+      <option value="18">18px</option>
+      <option value="20">20px</option>
+      <option value="22">22px</option>
+      <option value="24">24px</option>
+    </select>
+  </div>
+  <button class="save-btn" id="saveBtn" onclick="saveBuySell()">💾 Save Buy/Sell</button>
+</div>
+
+<div class="table-wrap">
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">CONNECTING TO SUPABASE...</div>
+  </div>
+  <table id="mainTable" style="display:none">
+    <thead>
+      <tr>
+        <th class="al" onclick="sortBy('sector')">Sector <span class="sa"></span></th>
+        <th class="al" onclick="sortBy('ticker')">Ticker <span class="sa"></span></th>
+        <th class="al" onclick="sortBy('type')">Type <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('price')">Last <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('nav')">NAV <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('disc_amt')">Disc$ <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('discount_pct')">Disc% <span class="sa"></span></th>
+        <th class="ar no-sort">Buy</th>
+        <th class="ar no-sort">Sell</th>
+        <th class="ar" onclick="sortBy('amt_from_buy')">frm Buy <span class="sa"></span></th>
+        <th class="ac" onclick="sortBy('action')">Action <span class="sa"></span></th>
+        <th class="ac z-hdr" onclick="sortBy('z1m')">Z 1m <span class="sa"></span></th>
+        <th class="ac z-hdr" onclick="sortBy('z3m')">Z 3m <span class="sa"></span></th>
+        <th class="ac z-hdr" onclick="sortBy('z6m')">Z 6m <span class="sa"></span></th>
+        <th class="ac z-hdr" onclick="sortBy('z1y')">Z 1y <span class="sa"></span></th>
+        <th class="ac z-hdr" onclick="sortBy('z3y')">Z 3y <span class="sa"></span></th>
+        <th class="ac z-hdr" onclick="sortBy('z5y')">Z 5y <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('aum')">AUM <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('volume')">Vol <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('yield_pct')">Yield <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('ytd_return')">YTD <span class="sa"></span></th>
+        <th class="al" onclick="sortBy('benchmark')">Bench <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('bench_rtn')">Bench YTD <span class="sa"></span></th>
+        <th class="ar" onclick="sortBy('ytd_vs_bench')">vs Bench <span class="sa"></span></th>
+        <th class="al" onclick="sortBy('trade_date')">Date <span class="sa"></span></th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://nzinvxticgyjobkqxxhl.supabase.co';
+let SUPABASE_KEY = localStorage.getItem('sb_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aW52eHRpY2d5am9ia3F4eGhsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODk1NTA5MiwiZXhwIjoyMDg0NTMxMDkyfQ.IEgJeC2WcBq1kY7h25cuQLl1J3qs8HsZetErt3ADKC8';
+
+// ==================== SECTOR MAPPINGS ====================
+const SECTORS = {
+  NIE:'Convertible',
+  ACV:'Converts',AVK:'Converts',CCD:'Converts',CHI:'Converts',CHY:'Converts',NCV:'Converts',
+  NCZ:'Converts',
+  ACP:'Corp/HY',ARDC:'Corp/HY',BGX:'Corp/HY',BIT:'Corp/HY',BTZ:'Corp/HY',CIK:'Corp/HY',
+  DHF:'Corp/HY',DHY:'Corp/HY',DSU:'Corp/HY',EAD:'Corp/HY',ECC:'Corp/HY',ERH:'Corp/HY',
+  FSCO:'Corp/HY',FTHY:'Corp/HY',GHY:'Corp/HY',HIO:'Corp/HY',HIX:'Corp/HY',HYI:'Corp/HY',
+  HYT:'Corp/HY',ISD:'Corp/HY',JGH:'Corp/HY',JHS:'Corp/HY',JQC:'Corp/HY',KIO:'Corp/HY',
+  MCI:'Corp/HY',NHS:'Corp/HY',OCCI:'Corp/HY',PAI:'Corp/HY',PCF:'Corp/HY',PHK:'Corp/HY',
+  PTY:'Corp/HY',SDHY:'Corp/HY',
+  BDJ:'Covered Call',BGY:'Covered Call',BOE:'Covered Call',BXMX:'Covered Call',CII:'Covered Call',DIAX:'Covered Call',
+  EOI:'Covered Call',EOS:'Covered Call',ETB:'Covered Call',ETJ:'Covered Call',ETV:'Covered Call',ETW:'Covered Call',
+  ETY:'Covered Call',EXG:'Covered Call',FFA:'Covered Call',HEQ:'Covered Call',IGD:'Covered Call',NFJ:'Covered Call',
+  QQQX:'Covered Call',SPXX:'Covered Call',
+  AWF:'Diversified',BHK:'Diversified',BRW:'Diversified',BWG:'Diversified',DBL:'Diversified',DLY:'Diversified',
+  DNP:'Diversified',DSL:'Diversified',EDF:'Diversified',EIC:'Diversified',FINS:'Diversified',GOF:'Diversified',
+  HFRO:'Diversified',NMAI:'Diversified',PAXS:'Diversified',PCN:'Diversified',PDO:'Diversified',PDX:'Diversified',
+  PFL:'Diversified',PFN:'Diversified',PGP:'Diversified',PIM:'Diversified',PPT:'Diversified',SABA:'Diversified',
+  SCD:'Diversified',TBLD:'Diversified',TSI:'Diversified',VBF:'Diversified',WDI:'Diversified',WEA:'Diversified',
+  WIA:'Diversified',
+  AGD:'Dividend',ETG:'Dividend',EVT:'Dividend',GDV:'Dividend',HTD:'Dividend',PDT:'Dividend',
+  BCX:'Energy',BGR:'Energy',PEO:'Energy',
+  BTO:'Financials',
+  BGB:'Floating Rate',BGT:'Floating Rate',BSL:'Floating Rate',EFR:'Floating Rate',EFT:'Floating Rate',FCT:'Floating Rate',
+  FRA:'Floating Rate',JFR:'Floating Rate',VVR:'Floating Rate',XFLT:'Floating Rate',
+  AEF:'Foreign',CAF:'Foreign',CEE:'Foreign',EDD:'Foreign',EHI:'Foreign',EMD:'Foreign',
+  EMF:'Foreign',FAX:'Foreign',GLQ:'Foreign',IAF:'Foreign',IFN:'Foreign',IHD:'Foreign',
+  IIF:'Foreign',JOF:'Foreign',KF:'Foreign',MCR:'Foreign',MIN:'Foreign',MMT:'Foreign',
+  MSD:'Foreign',MXF:'Foreign',TEI:'Foreign',TWN:'Foreign',
+  ADX:'General',ASG:'General',BANX:'General',BCAT:'General',BCV:'General',BST:'General',
+  BXSY:'General',CET:'General',CGO:'General',CLM:'General',CPZ:'General',CRF:'General',
+  ECAT:'General',ECF:'General',ETO:'General',FLC:'General',FOF:'General',FT:'General',
+  FUND:'General',GAB:'General',GAM:'General',GF:'General',GGT:'General',GGZ:'General',
+  GUG:'General',HGLB:'General',IGA:'General',JCE:'General',JHI:'General',LGI:'General',
+  MPV:'General',NPCT:'General',OPP:'General',PTA:'General',RIV:'General',RMT:'General',
+  RVT:'General',SOR:'General',SPE:'General',SPMC:'General',STEW:'General',TDF:'General',
+  TY:'General',USA:'General',WIW:'General',
+  ASA:'Gold',GGN:'Gold',GNT:'Gold',
+  AOD:'Growth/Inc',CHW:'Growth/Inc',CSQ:'Growth/Inc',EOD:'Growth/Inc',GLO:'Growth/Inc',ZTR:'Growth/Inc',
+  BME:'Healthcare',BMEZ:'Healthcare',GRX:'Healthcare',HQH:'Healthcare',HQL:'Healthcare',THQ:'Healthcare',
+  THW:'Healthcare',
+  BGH:'Low Duration',BLW:'Low Duration',ERC:'Low Duration',EVG:'Low Duration',EVV:'Low Duration',FTF:'Low Duration',
+  BKT:'MBB',DMO:'MBB',JLS:'MBB',RA:'MBB',RCS:'MBB',
+  EMO:'MLPs',KYN:'MLPs',NML:'MLPs',SRV:'MLPs',TYG:'MLPs',
+  AFB:'Municipal',BBN:'Municipal',BKN:'Municipal',BMN:'Municipal',BTA:'Municipal',BTT:'Municipal',
+  CXE:'Municipal',DMB:'Municipal',DSM:'Municipal',EIM:'Municipal',EOT:'Municipal',ETX:'Municipal',
+  EVN:'Municipal',GBAB:'Municipal',IIM:'Municipal',IQI:'Municipal',KTF:'Municipal',LEO:'Municipal',
+  MFM:'Municipal',MHD:'Municipal',MHF:'Municipal',MIY:'Municipal',MMD:'Municipal',MMU:'Municipal',
+  MPA:'Municipal',MQT:'Municipal',MQY:'Municipal',MUA:'Municipal',MUC:'Municipal',MUJ:'Municipal',
+  MVF:'Municipal',MVT:'Municipal',MYD:'Municipal',MYI:'Municipal',MYN:'Municipal',NAC:'Municipal',
+  NAD:'Municipal',NAN:'Municipal',NAZ:'Municipal',NBB:'Municipal',NBH:'Municipal',NCA:'Municipal',
+  NDMO:'Municipal',NEA:'Municipal',NIM:'Municipal',NKX:'Municipal',NMCO:'Municipal',NMI:'Municipal',
+  NMT:'Municipal',NMZ:'Municipal',NNY:'Municipal',NPV:'Municipal',NQP:'Municipal',NRK:'Municipal',
+  NUV:'Municipal',NUW:'Municipal',NVG:'Municipal',NXJ:'Municipal',NXP:'Municipal',NZF:'Municipal',
+  OIA:'Municipal',PCQ:'Municipal',PML:'Municipal',PMM:'Municipal',PMO:'Municipal',PNI:'Municipal',
+  RFMZ:'Municipal',RMM:'Municipal',RMMZ:'Municipal',SBI:'Municipal',VCV:'Municipal',VFL:'Municipal',
+  VGM:'Municipal',VKI:'Municipal',VKQ:'Municipal',VMO:'Municipal',VPV:'Municipal',VTN:'Municipal',
+  DFP:'Preferred',FFC:'Preferred',FPF:'Preferred',HPF:'Preferred',HPI:'Preferred',HPS:'Preferred',
+  JPC:'Preferred',LDP:'Preferred',NPFD:'Preferred',PFD:'Preferred',PFO:'Preferred',PSF:'Preferred',
+  AWP:'Real Estate',BPRE:'Real Estate',IGR:'Real Estate',JRI:'Real Estate',JRS:'Real Estate',NRO:'Real Estate',
+  RFI:'Real Estate',RLTY:'Real Estate',RNP:'Real Estate',RQI:'Real Estate',
+  AIO:'Tech',BSTZ:'Tech',BTX:'Tech',MCN:'Tech',NBXG:'Tech',STK:'Tech',
+  UTF:'Transports',
+  ASGI:'Utilities',BUI:'Utilities',DPG:'Utilities',GLU:'Utilities',GUT:'Utilities',IDE:'Utilities',
+  MEGI:'Utilities',NXG:'Utilities',UTG:'Utilities'
+};
+
+// ==================== CORRECT BENCHMARKS (from FI + EQ detail sheets) ====================
+const BENCHMARKS = {
+  ACP:'HYG',ACV:'CWB',ADX:'SPY',AEF:'EFA',AFB:'MUB',AGD:'SPY',AIO:'QQQ',AOD:'SPY',
+  ARDC:'HYG',ASA:'GDX',ASG:'SPY',ASGI:'XLU',AVK:'CWB',AWF:'HYG',AWP:'IYR',BANX:'SPY',
+  BBN:'MUB',BCAT:'SPY',BCV:'SPY',BCX:'XLK',BDJ:'MCN',BGB:'FLTR',BGH:'BND',BGR:'XLK',
+  BGT:'FLTR',BGX:'HYG',BGY:'MCN',BHK:'HYG',BIT:'HYG',BKN:'MUB',BKT:'MBB',BLW:'BND',
+  BME:'XLV',BMEZ:'XLV',BMN:'MUB',BOE:'MCN',BPRE:'IYR',BRW:'AGG',BSL:'FLTR',BST:'XLK',
+  BSTZ:'QQQ',BTA:'MUB',BTO:'XLF',BTT:'MUB',BTX:'QQQ',BTZ:'HYG',BUI:'XLU',BWG:'AGG',
+  BXMX:'MCN',BXSY:'SPY',CAF:'EFA',CEE:'EFA',CET:'SPY',CGO:'SPY',CHI:'CWB',CHW:'SPY',
+  CHY:'CWB',CII:'MCN',CIK:'HYG',CLM:'SPY',CPZ:'SPY',CRF:'SPY',CSQ:'SPY',CXE:'MUB',
+  DBL:'HYG',DFP:'PFF',DHF:'HYG',DHY:'HYG',DIAX:'MCN',DLY:'HYG',DMB:'MUB',DMO:'MBB',
+  DNP:'AGG',DPG:'XLU',DSL:'HYG',DSM:'MUB',DSU:'HYG',EAD:'HYG',ECAT:'SPY',ECC:'HYG',
+  ECF:'SPY',EDD:'EMB',EDF:'AGG',EFR:'FLTR',EFT:'FLTR',EHI:'EMB',EIC:'AGG',EIM:'MUB',
+  EMD:'EMB',EMF:'EFA',EMO:'AMJ',EOD:'SPY',EOI:'MCN',EOS:'MCN',EOT:'MUB',ERC:'BND',
+  ERH:'HYG',ETB:'SPY',ETG:'DIV',ETJ:'MCN',ETO:'SPY',ETV:'MCN',ETW:'MCN',ETX:'MUB',
+  ETY:'MCN',EVG:'BND',EVN:'MUB',EVT:'DIV',EVV:'BND',EXG:'MCN',FAX:'EMB',FCT:'FLTR',
+  FFA:'MCN',FFC:'PFF',FINS:'AGG',FLC:'SPY',FOF:'SPY',FPF:'PFF',FRA:'FLTR',FSCO:'HYG',
+  FT:'SPY',FTF:'BND',FTHY:'HYG',FUND:'SPY',GAB:'SPY',GAM:'SPY',GBAB:'MUB',GDV:'DIV',
+  GF:'SPY',GGN:'GLD',GGT:'SPY',GGZ:'SPY',GHY:'HYG',GLO:'SPY',GLQ:'EFA',GLU:'XLU',
+  GNT:'GDX',GRX:'XLV',GUG:'SPY',GUT:'XLU',HEQ:'SPY',HFRO:'AGG',HGLB:'SPY',HIO:'HYG',
+  HIX:'HYG',HPF:'PFF',HPI:'PFF',HPS:'PFF',HQH:'XLV',HQL:'XLV',HTD:'DIV',HYI:'HYG',
+  HYT:'HYG',IAF:'EFA',IDE:'XLU',IFN:'EFA',IGA:'SPY',IGD:'MCN',IGR:'IYR',IHD:'EFA',
+  IIF:'EFA',IIM:'MUB',IQI:'MUB',ISD:'HYG',JCE:'SPY',JFR:'FLTR',JGH:'HYG',JHI:'SPY',
+  JHS:'LQD',JLS:'MBB',JOF:'EFA',JPC:'PFF',JQC:'FLTR',JRI:'IYR',JRS:'IYR',KF:'EFA',
+  KIO:'HYG',KTF:'MUB',KYN:'AMLP',LDP:'PFF',LEO:'MUB',LGI:'SPY',MCI:'LQD',MCN:'QQQ',
+  MCR:'EMB',MEGI:'XLU',MFM:'MUB',MHD:'MUB',MHF:'MUB',MIN:'EMB',MIY:'MUB',MMD:'MUB',
+  MMT:'EMB',MMU:'MUB',MPA:'MUB',MPV:'SPY',MQT:'MUB',MQY:'MUB',MSD:'EMB',MUA:'MUB',
+  MUC:'MUB',MUJ:'MUB',MVF:'MUB',MVT:'MUB',MXF:'EFA',MYD:'MUB',MYI:'MUB',MYN:'MUB',
+  NAC:'MUB',NAD:'MUB',NAN:'MUB',NAZ:'MUB',NBB:'MUB',NBH:'MUB',NBXG:'QQQ',NCA:'MUB',
+  NCV:'CWB',NCZ:'CWB',NDMO:'MUB',NEA:'MUB',NFJ:'MCN',NHS:'HYG',NIE:'BND',NIM:'MUB',
+  NKX:'MUB',NMAI:'AGG',NMCO:'MUB',NMI:'MUB',NML:'AMJ',NMT:'MUB',NMZ:'MUB',NNY:'MUB',
+  NPCT:'SPY',NPFD:'PFF',NPV:'MUB',NQP:'MUB',NRK:'MUB',NRO:'IYR',NUV:'MUB',NUW:'MUB',
+  NVG:'MUB',NXG:'XLU',NXJ:'MUB',NXP:'MUB',NZF:'MUB',OCCI:'HYG',OIA:'MUB',OPP:'SPY',
+  PAI:'LQD',PAXS:'AGG',PCF:'HYG',PCN:'HYG',PCQ:'MUB',PDO:'HYG',PDT:'SPY',PDX:'HYG',
+  PEO:'XLK',PFD:'PFF',PFL:'AGG',PFN:'HYG',PFO:'PFF',PGP:'AGG',PHK:'HYG',PIM:'HYG',
+  PML:'MUB',PMM:'MUB',PMO:'MUB',PNI:'MUB',PPT:'HYG',PSF:'PFF',PTA:'SPY',PTY:'HYG',
+  QQQX:'MCN',RA:'MBB',RCS:'MBB',RFI:'IYR',RFMZ:'MUB',RIV:'SPY',RLTY:'IYR',RMM:'MUB',
+  RMMZ:'MUB',RMT:'SPY',RNP:'IYR',RQI:'IYR',RVT:'SPY',SABA:'AGG',SBI:'MUB',SCD:'AGG',
+  SDHY:'HYG',SOR:'SPY',SPE:'SPY',SPMC:'SPY',SPXX:'SPY',SRV:'AMLP',STEW:'SPY',STK:'QQQ',
+  TBLD:'AGG',TDF:'SPY',TEI:'EMB',THQ:'XLV',THW:'XLV',TSI:'AGG',TWN:'EFA',TY:'SPY',
+  TYG:'AMJ',USA:'SPY',UTF:'IYT',UTG:'XLU',VBF:'AGG',VCV:'MUB',VFL:'MUB',VGM:'MUB',
+  VKI:'MUB',VKQ:'MUB',VMO:'MUB',VPV:'MUB',VTN:'MUB',VVR:'FLTR',WDI:'AGG',WEA:'AGG',
+  WIA:'AGG',WIW:'SPY',XFLT:'FLTR',ZTR:'BND',
+  CCD:'CWB',GOF:'AGG'};
+
+// ==================== FI TICKERS ====================
+const FI_TICKERS = new Set([
+  'ACP','ACV','AFB','ARDC','AVK','AWF','BBN','BGB','BGH','BGT','BGX','BHK',
+  'BIT','BKN','BKT','BLW','BMN','BRW','BSL','BTA','BTT','BTZ','BWG','CCD',
+  'CHI','CHY','CIK','CXE','DBL','DFP','DHF','DHY','DLY','DMB','DMO','DNP',
+  'DSL','DSM','DSU','EAD','ECC','EDD','EDF','EFR','EFT','EHI','EIC','EIM',
+  'EMD','EOT','ERC','ERH','ETX','EVG','EVN','EVV','FAX','FCT','FFC','FINS',
+  'FPF','FRA','FSCO','FTF','FTHY','GBAB','GHY','GOF','HFRO','HIO','HIX','HPF',
+  'HPI','HPS','HYI','HYT','IIM','IQI','ISD','JFR','JGH','JHS','JLS','JPC',
+  'JQC','KIO','KTF','LDP','LEO','MCI','MCR','MFM','MHD','MHF','MIN','MIY',
+  'MMD','MMT','MMU','MPA','MQT','MQY','MSD','MUA','MUC','MUJ','MVF','MVT',
+  'MYD','MYI','MYN','NAC','NAD','NAN','NAZ','NBB','NBH','NCA','NCV','NCZ',
+  'NDMO','NEA','NHS','NIM','NKX','NMAI','NMCO','NMI','NMT','NMZ','NNY','NPFD',
+  'NPV','NQP','NRK','NUV','NUW','NVG','NXJ','NXP','NZF','OCCI','OIA','PAI',
+  'PAXS','PCF','PCN','PCQ','PDO','PDX','PFD','PFL','PFN','PFO','PGP','PHK',
+  'PIM','PML','PMM','PMO','PNI','PPT','PSF','PTY','RA','RCS','RFMZ','RMM',
+  'RMMZ','SABA','SBI','SCD','SDHY','TBLD','TEI','TSI','VBF','VCV','VFL','VGM',
+  'VKI','VKQ','VMO','VPV','VTN','VVR','WDI','WEA','WIA','XFLT'
+]);
+
+// ==================== DEFAULT BUY/SELL LEVELS (from Excel) ====================
+const DEFAULT_BUYSELL = {
+  ACV:{buy:-0.1,sell:-0.06},ADX:{buy:-0.15,sell:-0.13},AFB:{buy:-0.08,sell:-0.04},
+  AOD:{buy:-0.162,sell:-0.14},AVK:{buy:-0.1,sell:-0.07},AWF:{buy:-0.09,sell:-0.055},
+  AWP:{buy:-0.16,sell:-0.13},BBN:{buy:-0.055,sell:-0.02},BCX:{buy:-0.15,sell:-0.12},
+  BDJ:{buy:-0.12,sell:-0.1},BGB:{buy:-0.08,sell:-0.05},BGH:{buy:-0.075,sell:-0.04},
+  BGR:{buy:-0.1,sell:-0.07},BGT:{buy:-0.04,sell:0},BGY:{buy:-0.1,sell:-0.08},
+  BHK:{buy:-0.07,sell:-0.06},BIT:{buy:-0.1,sell:-0.075},BKT:{buy:-0.08,sell:-0.05},
+  BLW:{buy:-0.07,sell:0},BOE:{buy:-0.1,sell:-0.07},BST:{buy:-0.14,sell:-0.115},
+  BTO:{buy:-0.1,sell:-0.05},BTZ:{buy:-0.12,sell:-0.09},BUI:{buy:-0.13,sell:-0.1},
+  BXMX:{buy:-0.08,sell:-0.06},CHI:{buy:-0.04,sell:0},
+  CHW:{buy:-0.1,sell:-0.06},CHY:{buy:-0.05,sell:-0.02},CII:{buy:-0.1,sell:-0.07},
+  CSQ:{buy:-0.1,sell:-0.06},DBL:{buy:0.015,sell:0.03},
+  DIAX:{buy:-0.1,sell:-0.08},DPG:{buy:-0.12,sell:-0.1},
+  DSL:{buy:-0.06,sell:-0.03},DSU:{buy:-0.095,sell:-0.075},EAD:{buy:-0.085,sell:-0.05},
+  EDD:{buy:-0.11,sell:-0.08},EFR:{buy:-0.045,sell:-0.015},EFT:{buy:-0.04,sell:-0.02},
+  EHI:{buy:-0.075,sell:-0.05},EIM:{buy:-0.075,sell:-0.045},EMD:{buy:-0.1,sell:-0.07},
+  EMO:{buy:-0.12,sell:-0.06},EOD:{buy:-0.1,sell:-0.06},EOI:{buy:-0.12,sell:-0.095},
+  EOS:{buy:-0.1,sell:-0.07},EOT:{buy:-0.055,sell:-0.03},ERC:{buy:-0.095,sell:-0.065},
+  ETG:{buy:-0.08,sell:-0.06},ETJ:{buy:-0.12,sell:-0.085},ETV:{buy:-0.06,sell:-0.02},
+  ETW:{buy:-0.1,sell:-0.05},ETY:{buy:-0.11,sell:-0.08},EVG:{buy:-0.08,sell:-0.04},
+  EVT:{buy:-0.1,sell:-0.08},EVV:{buy:-0.075,sell:-0.055},EXG:{buy:-0.095,sell:-0.06},
+  FAX:{buy:-0.09,sell:-0.07},
+  FFA:{buy:-0.12,sell:-0.085},FFC:{buy:0,sell:0.03},
+  FPF:{buy:-0.06,sell:-0.03},FRA:{buy:-0.075,sell:-0.04},FTF:{buy:-0.075,sell:-0.02},GAB:{buy:-0.05,sell:-0.01},
+  GAM:{buy:-0.16,sell:-0.13},GBAB:{buy:-0.06,sell:-0.03},GDV:{buy:-0.12,sell:-0.1},
+  GGN:{buy:-0.09,sell:-0.06},GHY:{buy:-0.09,sell:-0.05},
+  GLO:{buy:-0.14,sell:-0.12},HIO:{buy:-0.09,sell:-0.06},HIX:{buy:-0.06,sell:-0.025},
+  HQH:{buy:-0.07,sell:-0.05},HQL:{buy:-0.08,sell:-0.04},HTD:{buy:-0.1,sell:-0.08},
+  HYI:{buy:-0.08,sell:-0.05},HYT:{buy:-0.09,sell:-0.055},IGD:{buy:-0.1,sell:-0.07},
+  IGR:{buy:-0.12,sell:-0.1},IIM:{buy:-0.075,sell:-0.04},ISD:{buy:-0.08,sell:-0.05},JLS:{buy:-0.07,sell:-0.04},JQC:{buy:-0.08,sell:-0.05},KIO:{buy:-0.09,sell:-0.06},LDP:{buy:-0.07,sell:-0.04},
+  LEO:{buy:-0.04,sell:0},MCR:{buy:-0.09,sell:-0.06},MFM:{buy:-0.05,sell:-0.02},
+  MIN:{buy:-0.07,sell:-0.05},MMT:{buy:-0.1,sell:-0.08},MSD:{buy:-0.12,sell:-0.09},
+  MUA:{buy:-0.03,sell:-0.01},MVF:{buy:-0.03,sell:0},NBB:{buy:-0.055,sell:-0.025},
+  NCV:{buy:-0.025,sell:0},NCZ:{buy:-0.025,sell:0},NEA:{buy:-0.09,sell:-0.05},
+  NFJ:{buy:-0.1,sell:-0.055},NHS:{buy:-0.1,sell:-0.06},NIE:{buy:-0.13,sell:-0.1},
+  NML:{buy:-0.08,sell:-0.05},NMZ:{buy:-0.02,sell:0},
+  NUV:{buy:-0.04,sell:-0.02},NVG:{buy:-0.09,sell:-0.06},NXP:{buy:-0.06,sell:-0.03},
+  NZF:{buy:-0.08,sell:-0.06},OIA:{buy:-0.04,sell:-0.02},PCN:{buy:0,sell:0.05},PEO:{buy:-0.145,sell:-0.12},PFN:{buy:-0.01,sell:0.02},PIM:{buy:-0.09,sell:-0.06},
+  PML:{buy:0.02,sell:0.05},PMM:{buy:-0.065,sell:-0.045},PMO:{buy:-0.065,sell:-0.045},
+  PPT:{buy:-0.09,sell:-0.045},PSF:{buy:-0.02,sell:0},PTY:{buy:0.025,sell:0.06},
+  QQQX:{buy:-0.1,sell:-0.065},RA:{buy:-0.085,sell:-0.05},RCS:{buy:0.025,sell:0.07},
+  RFI:{buy:-0.09,sell:-0.06},RMT:{buy:-0.14,sell:-0.12},RNP:{buy:-0.14,sell:-0.1},
+  RQI:{buy:-0.12,sell:-0.095},RVT:{buy:-0.14,sell:-0.125},SOR:{buy:-0.12,sell:-0.09},
+  TEI:{buy:-0.085,sell:-0.05},THQ:{buy:-0.1,sell:-0.075},THW:{buy:-0.09,sell:-0.05},
+  TY:{buy:-0.15,sell:-0.13},TYG:{buy:-0.09,sell:-0.065},USA:{buy:-0.14,sell:-0.115},
+  UTF:{buy:-0.135,sell:-0.1},UTG:{buy:-0.075,sell:-0.045},VMO:{buy:-0.075,sell:-0.045},VVR:{buy:-0.05,sell:-0.02},ZTR:{buy:-0.12,sell:-0.1}
+};
+
+// ==================== AUM DATA (CEFConnect, Feb 2026) ====================
+const AUM_DATA = {
+  'ASA':1393e6,'ADX':2856e6,'PEO':709e6,'AVK':562e6,'AWF':922e6,'AFB':317e6,'NFJ':1272e6,'EOD':264e6,
+  'EAD':407e6,'ERC':267e6,'ERH':109e6,'FINS':446e6,'ARDC':318e6,'BANX':143e6,'DHF':186e6,'DMB':205e6,
+  'DSM':310e6,'LEO':406e6,'BCV':136e6,'MCI':418e6,'BGH':299e6,'MPV':205e6,'BXSY':208e6,'BMN':161e6,
+  'BCAT':1594e6,'BHK':699e6,'HYT':1723e6,'BTZ':1006e6,'DSU':564e6,'ECAT':1546e6,'BGR':387e6,'BDJ':1699e6,
+  'BOE':673e6,'BGY':560e6,'CII':944e6,'FRA':417e6,'BME':541e6,'BMEZ':943e6,'BKT':271e6,'BKN':198e6,
+  'BLW':533e6,'BTA':131e6,'BIT':753e6,'MUC':1014e6,'MUJ':656e6,'MIY':359e6,'MYN':383e6,'MPA':148e6,
+  'MYI':743e6,'MUA':432e6,'BTT':1495e6,'MHD':610e6,'MVF':394e6,'MVT':228e6,'MYD':490e6,'MQY':842e6,
+  'MQT':226e6,'BCX':1012e6,'BSTZ':1599e6,'BST':1418e6,'BBN':1018e6,'BTX':775e6,'BUI':657e6,'BGT':316e6,
+  'BGX':143e6,'BSL':172e6,'BGB':520e6,'BPRE':2423e6,'BWG':145e6,'RA':735e6,'IGR':736e6,'CHY':951e6,
+  'CHI':895e6,'CCD':619e6,'CHW':524e6,'CGO':123e6,'CPZ':296e6,'CSQ':3097e6,'CET':1490e6,'EMO':996e6,
+  'GLQ':156e6,'GLO':260e6,'FOF':405e6,'UTF':2570e6,'LDP':621e6,'RQI':1730e6,'RNP':1008e6,'RLTY':257e6,
+  'PSF':246e6,'PTA':1083e6,'RFI':314e6,'STK':707e6,'CLM':2288e6,'CRF':1178e6,'CIK':154e6,'DHY':207e6,
+  'DNP':3852e6,'KTF':362e6,'DXYZ':335e6,'DSL':1326e6,'DLY':727e6,'DBL':296e6,'DPG':522e6,'ETX':205e6,
+  'ECC':604e6,'EIC':274e6,'EOI':845e6,'EOS':1163e6,'EFT':302e6,'EVV':1160e6,'EIM':513e6,'EVN':439e6,
+  'EOT':272e6,'ETJ':594e6,'EFR':327e6,'EVG':149e6,'ETG':1779e6,'EVT':1970e6,'ETO':496e6,'ETB':455e6,
+  'ETV':1724e6,'ETY':2392e6,'EXG':2965e6,'ETW':1031e6,'EARN':198e6,'ECF':167e6,'FTHY':518e6,'FSCO':1178e6,
+  'FSSL':1010e6,'FFA':443e6,'FPF':1154e6,'FCT':258e6,'DFP':448e6,'FFC':810e6,'FLC':188e6,'PFD':154e6,
+  'PFO':127e6,'FTF':251e6,'FT':207e6,'GGN':891e6,'GNT':139e6,'GDV':2589e6,'GAB':1957e6,'GGZ':129e6,
+  'GLU':126e6,'GRX':151e6,'GGT':154e6,'GUT':540e6,'GAM':1433e6,'GUG':537e6,'GOF':2527e6,'GBAB':424e6,
+  'PCF':114e6,'HGLB':206e6,'HFRO':353e6,'VKI':411e6,'VBF':176e6,'VCV':541e6,'VMO':669e6,'VKQ':549e6,
+  'OIA':301e6,'VPV':197e6,'IQI':543e6,'VVR':508e6,'VGM':574e6,'VTN':175e6,'IIM':598e6,'BTO':771e6,
+  'JHS':136e6,'JHI':123e6,'HPI':437e6,'HPF':351e6,'HPS':476e6,'PDT':658e6,'HTD':886e6,'JOF':343e6,
+  'HEQ':137e6,'KIO':484e6,'KYN':2266e6,'KF':202e6,'SCD':365e6,'LGI':246e6,'USA':1821e6,'ASG':329e6,
+  'MCR':263e6,'MIN':295e6,'MMT':262e6,'MFM':228e6,'CXE':120e6,'MXF':327e6,'CAF':309e6,'MSD':159e6,
+  'EDD':393e6,'IIF':234e6,'NML':552e6,'SRV':192e6,'NXG':219e6,'MEGI':783e6,'MMD':295e6,'NBXG':1065e6,
+  'NHS':239e6,'NBH':314e6,'NRO':195e6,'GF':196e6,'NVG':2846e6,'NUW':261e6,'NEA':3522e6,'NAZ':150e6,
+  'NKX':686e6,'NCA':316e6,'NAC':1808e6,'JCE':271e6,'NPCT':304e6,'JQC':757e6,'DIAX':574e6,'NDMO':628e6,
+  'JFR':1267e6,'JGH':364e6,'NMT':118e6,'JLS':103e6,'NMAI':462e6,'NZF':2513e6,'NMCO':597e6,'NMZ':1257e6,
+  'NMI':119e6,'NUV':1907e6,'QQQX':1369e6,'NXJ':516e6,'NRK':892e6,'NNY':161e6,'NAN':366e6,'NQP':450e6,
+  'JPC':3055e6,'NAD':2850e6,'JRI':360e6,'JRS':232e6,'BXMX':1547e6,'SPXX':323e6,'NIM':121e6,'NXP':897e6,
+  'NBB':473e6,'NPV':220e6,'NPFD':478e6,'OCCI':119e6,'OXLC':1034e6,'GHY':529e6,'ISD':492e6,'SDHY':416e6,
+  'PAXS':742e6,'PCQ':515e6,'PTY':2719e6,'PCN':932e6,'PDO':1976e6,'PDX':911e6,'PGP':109e6,'PHK':900e6,
+  'PFL':409e6,'PFN':730e6,'PML':984e6,'PNI':169e6,'RCS':277e6,'PMM':271e6,'PIM':159e6,'PMO':292e6,
+  'PPT':347e6,'UTG':3590e6,'RFMZ':321e6,'RMMZ':127e6,'RMM':286e6,'RIV':331e6,'OPP':199e6,'RMT':632e6,
+  'RVT':2174e6,'STEW':1760e6,'BRW':348e6,'SABA':223e6,'SPMC':230e6,'SOR':397e6,'SPE':160e6,'FUND':294e6,
+  'SPPP':768e6,'TSI':227e6,'TWN':370e6,'TDF':300e6,'TEI':328e6,'EMF':303e6,'CEE':128e6,'IFN':572e6,
+  'TBLD':706e6,'TYG':985e6,'TY':1748e6,'AIO':786e6,'NCV':377e6,'NCZ':284e6,'ACV':290e6,'NIE':705e6,
+  'EDF':160e6,'ZTR':339e6,'IHD':127e6,'IGA':153e6,'IGD':462e6,'IDE':211e6,'WDI':734e6,'EMD':648e6,
+  'EHI':198e6,'HIX':382e6,'HIO':362e6,'HYI':143e6,'PAI':121e6,'WIW':534e6,'WIA':195e6,'SBI':112e6,
+  'MMU':581e6,'DMO':128e6,'MHF':155e6,'WEA':132e6,'MCN':130e6,'XFLT':313e6,'FAX':658e6,'IAF':136e6,
+  'AEF':337e6,'AGD':308e6,'ASGI':780e6,'AWP':1095e6,'HQH':1106e6,'THQ':791e6,'ACP':710e6,'HQL':508e6,
+  'VFL':128e6,'AOD':1090e6,'THW':510e6
+};
+
+// Tickers added without historical data yet
+const NEW_TICKERS = new Set([
+  'ACP','AEF','AGD','AIO','ARDC','ASA','ASG','ASGI','BANX','BCAT','BCV','BGX',
+  'BKN','BME','BMEZ','BMN','BPRE','BRW','BSL','BSTZ','BTA','BTX','BWG','BXSY',
+  'CAF','CEE','CET','CGO','CIK','CLM','CPZ','CRF','CXE','DFP','DHF','DHY',
+  'DMB','DMO','DNP','ECAT','ECC','ECF','EDF','EIC','EMF','ERH','ETB','ETO',
+  'ETX','FCT','FINS','FLC','FOF','FSCO','FT','FTHY','FUND','GF','GGT','GGZ',
+  'GLQ','GLU','GNT','GRX','GUG','GUT','HEQ','HFRO','HGLB','HPF','HPI','HPS',
+  'IAF','IDE','IFN','IGA','IHD','IIF','IQI','JCE','JFR','JGH','JHI','JHS',
+  'JOF','JPC','JRI','JRS','KF','KYN','LGI','MCI','MCN','MEGI','MHD','MHF',
+  'MIY','MMD','MMU','MPA','MPV','MQY','MUC','MUJ','MXF','MYD','MYI','MYN',
+  'NAC','NAD','NAN','NAZ','NBH','NBXG','NCA','NDMO','NIM','NKX','NMAI','NMI',
+  'NMT','NNY','NPCT','NPFD','NPV','NQP','NRK','NRO','NUW','NXG','NXJ','OCCI',
+  'OPP','PAI','PAXS','PCF','PCQ','PDT','PFD','PFL','PFO','PGP','PHK','PNI',
+  'PTA','RFMZ','RIV','RLTY','RMM','RMMZ','SABA','SBI','SCD','SDHY','SPE','SPMC',
+  'SPXX','SRV','STEW','STK','TBLD','TDF','TSI','TWN','VBF','VCV','VFL','VKI',
+  'VKQ','VPV','VTN','WDI','WEA','WIA','WIW','XFLT'
+]);
+
+// ==================== STATE ====================
+let allData = [];
+let buySellData = {};
+let currentTypeFilter = 'all';
+let currentSignalFilter = 'none';
+let currentSearch = '';
+let sortCol = 'sector';
+let sortDir = 1;
+let dirty = false;
+
+// Column list for sort arrow tracking
+const ALL_COLS = ['sector','ticker','type','price','nav','disc_amt','discount_pct','buy','sell','amt_from_buy','action','z1m','z3m','z6m','z1y','z3y','z5y','aum','volume','yield_pct','ytd_return','benchmark','bench_rtn','ytd_vs_bench','trade_date'];
+
+function hdrs() {
+  return { 'apikey':SUPABASE_KEY, 'Authorization':`Bearer ${SUPABASE_KEY}`, 'Content-Type':'application/json' };
+}
+async function sf(path) {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers:hdrs() });
+  if (!r.ok) throw new Error(`API ${r.status}`);
+  return r.json();
+}
+
+// Load buy/sell: merge defaults with user overrides from localStorage
+function loadBuySell() {
+  buySellData = JSON.parse(JSON.stringify(DEFAULT_BUYSELL));
+  try {
+    const saved = JSON.parse(localStorage.getItem('cef_buysell_v2') || '{}');
+    for (const [t, v] of Object.entries(saved)) {
+      buySellData[t] = v;
+    }
+  } catch(e) {}
+}
+function persistBuySell() {
+  // Only save user overrides (diffs from defaults)
+  const overrides = {};
+  for (const [t, v] of Object.entries(buySellData)) {
+    const def = DEFAULT_BUYSELL[t];
+    if (!def || v.buy !== def.buy || v.sell !== def.sell) {
+      overrides[t] = v;
+    }
+  }
+  localStorage.setItem('cef_buysell_v2', JSON.stringify(overrides));
+  dirty = false;
+  document.getElementById('saveBtn').classList.remove('visible');
+}
+
+// ==================== FASTTRACK API ====================
+const FT_BASE = 'https://api.fasttrack.net/v2';
+let FT_API_KEY = localStorage.getItem('ft_api_key') || '';
+let ftToken = null;
+let ftTokenExpiry = 0;
+
+async function ftAuth() {
+  if (ftToken && Date.now() < ftTokenExpiry) return ftToken;
+  if (!FT_API_KEY) return null;
+  try {
+    const r = await fetch(`${FT_BASE}/auth`, {
+      method: 'POST',
+      headers: { 'x-api-key': FT_API_KEY, 'Content-Type': 'application/json' }
+    });
+    if (!r.ok) { ftToken = null; return null; }
+    const data = await r.json();
+    if (data.id_token) {
+      ftToken = data.id_token;
+      ftTokenExpiry = Date.now() + ((data.expires_in || 3600) - 60) * 1000; // refresh 60s early
+      return ftToken;
+    }
+  } catch(e) { console.error('FT auth error:', e); }
+  ftToken = null;
+  return null;
+}
+
+function ftHeaders() {
+  return { 'Authorization': `Bearer ${ftToken}`, 'Content-Type': 'application/json' };
+}
+
+// Fetch YTD returns for multiple tickers using /data endpoint
+// FastTrack returns: results[].prices = flat number array, metadata.dates = parallel date array
+// Returns { TICKER: ytdReturn, ... } as decimals (0.05 = 5%)
+async function ftFetchYTD(tickers) {
+  const results = {};
+  if (!ftToken || !tickers.length) return results;
+  
+  const year = new Date().getFullYear();
+  const ytdFrom = `${year}-01-01`;
+  const ytdTo = getToday();
+  
+  // Chunk to ~50 tickers per call
+  const chunks = [];
+  for (let i = 0; i < tickers.length; i += 50) {
+    chunks.push(tickers.slice(i, i + 50));
+  }
+  
+  for (const chunk of chunks) {
+    try {
+      const r = await fetch(`${FT_BASE}/data`, {
+        method: 'POST',
+        headers: ftHeaders(),
+        body: JSON.stringify({
+          assets: chunk,
+          start_date: ytdFrom,
+          end_date: ytdTo
+        })
+      });
+      if (!r.ok) continue;
+      const data = await r.json();
+      if (data.results) {
+        for (const item of data.results) {
+          if (item.error) continue;
+          const prices = item.prices || [];
+          if (prices.length < 2) continue;
+          
+          // Flat number array: first and last elements
+          const firstPrice = prices[0];
+          const lastPrice = prices[prices.length - 1];
+          
+          if (firstPrice != null && lastPrice != null && firstPrice !== 0) {
+            results[item.ticker] = (lastPrice - firstPrice) / firstPrice;
+          }
+        }
+      }
+    } catch(e) { console.error('FT YTD error:', e); }
+  }
+  return results;
+}
+
+// Fetch yield, volume for CEF tickers from FastTrack /data endpoint
+// Response structure per ticker:
+//   volumes: [33.38, 48.53, ...] — flat array in thousands, parallel to dates
+//   yield_data: { yield_income: 0.091, yield_all: 0.091 } — decimals
+//   metadata: { security_type: "Closed End Fund" } — no AUM available
+// Returns { TICKER: { yield_pct, volume }, ... }
+async function ftFetchEnrichment(tickers) {
+  const results = {};
+  if (!ftToken || !tickers.length) return results;
+  
+  const chunks = [];
+  for (let i = 0; i < tickers.length; i += 50) {
+    chunks.push(tickers.slice(i, i + 50));
+  }
+  
+  for (const chunk of chunks) {
+    try {
+      const r = await fetch(`${FT_BASE}/data`, {
+        method: 'POST',
+        headers: ftHeaders(),
+        body: JSON.stringify({
+          assets: chunk,
+          start_date: getDateNDaysAgo(7),
+          end_date: getToday(),
+          include: ['volumes', 'yield']
+        })
+      });
+      if (!r.ok) {
+        console.error('FT enrichment error:', r.status);
+        continue;
+      }
+      const data = await r.json();
+      
+      if (data.results) {
+        for (const item of data.results) {
+          if (item.error) continue;
+          const entry = {};
+          
+          // Volumes — flat array in thousands, take last value, multiply by 1000
+          const vols = item.volumes || [];
+          if (vols.length > 0) {
+            entry.volume = vols[vols.length - 1] * 1000;
+          }
+          
+          // Yield — in yield_data object as decimals (0.091 = 9.1%)
+          if (item.yield_data) {
+            entry.yield_pct = item.yield_data.yield_income || item.yield_data.yield_all || null;
+          }
+          
+          if (Object.keys(entry).length > 0) {
+            results[item.ticker] = entry;
+          }
+        }
+      }
+    } catch(e) { console.error('FT enrichment error:', e); }
+  }
+  return results;
+}
+// Note: FT v2 /reference only returns details (security_type, expense ratio, family, etc.)
+// AUM, yield, and volume are NOT available from FastTrack v2 API.
+// Yield comes from Supabase cef_daily. AUM/volume would need another data source.
+async function ftFetchReference(tickers) {
+  const results = {};
+  if (!ftToken || !tickers.length) return results;
+  
+  const chunks = [];
+  for (let i = 0; i < tickers.length; i += 50) {
+    chunks.push(tickers.slice(i, i + 50));
+  }
+  
+  for (const chunk of chunks) {
+    try {
+      const r = await fetch(`${FT_BASE}/reference`, {
+        method: 'POST',
+        headers: ftHeaders(),
+        body: JSON.stringify({ assets: chunk })
+      });
+      if (!r.ok) continue;
+      const data = await r.json();
+      if (data.results) {
+        for (const item of data.results) {
+          if (item.error) continue;
+          results[item.ticker] = {
+            name: item.name || null,
+            expense_ratio: item.details?.expenseratio || null,
+            family: item.details?.family || null,
+            objective: item.details?.objective || null
+          };
+        }
+      }
+    } catch(e) { console.error('FT reference error:', e); }
+  }
+  return results;
+}
+
+// Fetch latest prices for multiple tickers (for holdings matrix)
+async function ftFetchPrices(tickers) {
+  const results = {};
+  if (!ftToken || !tickers.length) return results;
+  
+  try {
+    const r = await fetch(`${FT_BASE}/stats/snapshot`, {
+      method: 'POST',
+      headers: ftHeaders(),
+      body: JSON.stringify({
+        assets: tickers,
+        time_periods: ['1d']
+      })
+    });
+    if (!r.ok) return results;
+    const data = await r.json();
+    if (data.results) {
+      for (const item of data.results) {
+        if (item.error) continue;
+        const price = item.shared_data?.pricing?.current_close_price;
+        if (price != null) {
+          results[item.ticker] = price;
+        }
+      }
+    }
+  } catch(e) { console.error('FT prices error:', e); }
+  return results;
+}
+
+// Fetch monthly index returns for data entry (US Agg, Corp HY, Global Agg, MSCI ACWI)
+// indexMap: { 'AGG-X': index_id_1, ... } - mapping FT ticker to your Supabase index_id
+async function ftFetchIndexReturns(ftTickers, year, months) {
+  const results = {};
+  if (!ftToken || !ftTickers.length) return results;
+  
+  try {
+    const r = await fetch(`${FT_BASE}/stats/calendar`, {
+      method: 'POST',
+      headers: ftHeaders(),
+      body: JSON.stringify({
+        assets: ftTickers,
+        rollups: ['monthly'],
+        years: [String(year)]
+      })
+    });
+    if (!r.ok) return results;
+    const data = await r.json();
+    if (data.results) {
+      for (const item of data.results) {
+        if (item.error || !item.monthly) continue;
+        results[item.ticker] = {};
+        for (const [period, stats] of Object.entries(item.monthly)) {
+          // period is like "2026-01"
+          const ret = stats.returns?.total;
+          if (ret != null) {
+            results[item.ticker][period] = ret;
+          }
+        }
+      }
+    }
+  } catch(e) { console.error('FT index returns error:', e); }
+  return results;
+}
+
+async function loadDashboard() {
+  if (!SUPABASE_KEY) {
+    document.getElementById('configBar').classList.remove('hidden');
+    document.getElementById('loadingOverlay').innerHTML = '<div class="no-data">Paste your Supabase anon key above to connect.</div>';
+    return;
+  }
+  document.getElementById('configBar').classList.add('hidden');
+  loadBuySell();
+
+  try {
+    document.getElementById('loadingOverlay').innerHTML = '<div class="spinner"></div><div class="loading-text">LOADING SUPABASE DATA...</div>';
+
+    // Get latest price/NAV with pre-calculated z-scores from view
+    const latest = await sf('cef_latest_with_zscores?select=*');
+    
+    allData = [];
+    for (const row of latest) {
+      if (!SECTORS[row.ticker]) continue; // skip tickers not in our universe
+      const price = parseFloat(row.price);
+      const nav = parseFloat(row.nav);
+      const curDisc = parseFloat(row.discount_pct);
+
+      allData.push({
+        ticker: row.ticker,
+        type: FI_TICKERS.has(row.ticker) ? 'FI' : 'EQ',
+        sector: SECTORS[row.ticker] || '—',
+        benchmark: BENCHMARKS[row.ticker] || '—',
+        price, nav,
+        disc_amt: price - nav,
+        discount_pct: curDisc,
+        z1m: row.z1m ? parseFloat(row.z1m) : null,
+        z3m: row.z3m ? parseFloat(row.z3m) : null,
+        z6m: row.z6m ? parseFloat(row.z6m) : null,
+        z1y: row.z1y ? parseFloat(row.z1y) : null,
+        z3y: row.z3y ? parseFloat(row.z3y) : null,
+        z5y: row.z5y ? parseFloat(row.z5y) : null,
+        trade_date: row.trade_date,
+        yield_pct: row.yield_pct ? parseFloat(row.yield_pct) : null,
+        aum: AUM_DATA[row.ticker] || null,
+        volume: null,
+        ytd_return: null,
+        bench_rtn: null,
+        ytd_vs_bench: null
+      });
+    }
+
+    // Add placeholder rows for tickers in SECTORS but not yet in Supabase
+    const loaded = new Set(allData.map(d => d.ticker));
+    for (const ticker of Object.keys(SECTORS)) {
+      if (!loaded.has(ticker)) {
+        allData.push({
+          ticker, type: FI_TICKERS.has(ticker) ? 'FI' : 'EQ',
+          sector: SECTORS[ticker] || '—', benchmark: BENCHMARKS[ticker] || '—',
+          price:null, nav:null, disc_amt:null, discount_pct:null,
+          z1m:null, z3m:null, z6m:null, z1y:null, z3y:null, z5y:null,
+          trade_date:null, yield_pct:null, aum: AUM_DATA[ticker] || null,
+          volume:null, ytd_return:null, bench_rtn:null, ytd_vs_bench:null
+        });
+      }
+    }
+
+    // Show table with Supabase data immediately, then enhance with FastTrack
+    updateStats(); renderTable();
+    document.getElementById('loadingOverlay').style.display = 'none';
+    document.getElementById('mainTable').style.display = 'table';
+    const dates = allData.map(d=>d.trade_date).filter(Boolean);
+    const maxDate = dates.length ? dates.sort().reverse()[0] : 'N/A';
+    document.getElementById('lastUpdated').textContent = `Data as of: ${maxDate}  ·  ${allData.length} funds  ·  Connecting to FastTrack...`;
+
+    // === FASTTRACK: Authenticate and fetch YTD returns ===
+    if (FT_API_KEY) {
+      const token = await ftAuth();
+      if (token) {
+        document.getElementById('ftConfigBar').classList.add('hidden');
+        const uniqueBenchmarks = [...new Set(allData.map(d => d.benchmark).filter(b => b && b !== '—'))];
+        const cefTickers = allData.map(d => d.ticker);
+        const allTickers = [...new Set([...cefTickers, ...uniqueBenchmarks])];
+
+        document.getElementById('lastUpdated').textContent = `Data as of: ${maxDate}  ·  ${allData.length} funds  ·  Fetching YTD returns from FastTrack...`;
+
+        // Single batch call for all CEF + benchmark YTD returns
+        const allYTD = await ftFetchYTD(allTickers);
+
+        // Fetch enrichment data (yield, volume, AUM) for CEF tickers
+        document.getElementById('lastUpdated').textContent = `Data as of: ${maxDate}  ·  ${allData.length} funds  ·  Fetching yield/volume/AUM...`;
+        const enrichData = await ftFetchEnrichment(cefTickers);
+
+        // Merge FastTrack YTD + enrichment data into allData
+        for (const d of allData) {
+          if (allYTD[d.ticker] != null) {
+            d.ytd_return = allYTD[d.ticker];
+          }
+          if (d.benchmark && d.benchmark !== '—' && allYTD[d.benchmark] != null) {
+            d.bench_rtn = allYTD[d.benchmark];
+          }
+          if (d.ytd_return != null && d.bench_rtn != null) {
+            d.ytd_vs_bench = d.ytd_return - d.bench_rtn;
+          }
+          // Merge enrichment (yield, volume)
+          const enr = enrichData[d.ticker];
+          if (enr) {
+            if (enr.volume != null) d.volume = enr.volume;
+            if (enr.yield_pct != null) d.yield_pct = enr.yield_pct; // FT yield is fresher
+          }
+        }
+
+        // Re-render with full data
+        updateStats(); renderTable();
+        const ytdCount = allData.filter(d => d.ytd_return != null).length;
+        const benchCount = Object.keys(allYTD).filter(t => uniqueBenchmarks.includes(t)).length;
+        document.getElementById('lastUpdated').textContent = `Data as of: ${maxDate}  ·  ${allData.length} funds  ·  ${ytdCount} YTD returns  ·  ${benchCount}/${uniqueBenchmarks.length} benchmarks  ·  FastTrack ✓`;
+      } else {
+        document.getElementById('ftConfigBar').classList.remove('hidden');
+        document.getElementById('ftStatus').textContent = '✗ Auth failed — check key';
+        document.getElementById('ftStatus').style.color = 'var(--red)';
+        document.getElementById('lastUpdated').textContent = `Data as of: ${maxDate}  ·  ${allData.length} funds  ·  FastTrack auth failed`;
+      }
+    } else {
+      document.getElementById('ftConfigBar').classList.remove('hidden');
+      document.getElementById('lastUpdated').textContent = `Data as of: ${maxDate}  ·  ${allData.length} funds  ·  Add FastTrack key for YTD data`;
+    }
+
+  } catch(err) {
+    document.getElementById('loadingOverlay').innerHTML = `<div class="no-data">Error: ${err.message}<br><br>Check your anon key.</div>`;
+    document.getElementById('configBar').classList.remove('hidden');
+  }
+}
+
+function getAction(ticker, disc_pct) {
+  const bs = buySellData[ticker];
+  if (!bs) return 'NONE';
+  if (bs.buy != null && disc_pct <= bs.buy) return 'BUY';
+  if (bs.sell != null && disc_pct >= bs.sell) return 'SELL';
+  return 'NONE';
+}
+
+function getAmtFromBuy(ticker, disc_pct) {
+  const bs = buySellData[ticker];
+  if (!bs || bs.buy == null) return null;
+  return disc_pct - bs.buy;
+}
+
+function updateStats() {
+  const f = getFiltered(), wd = f.filter(d => d.discount_pct != null);
+  document.getElementById('statFunds').textContent = f.length;
+  if (wd.length) {
+    const avg = wd.reduce((s,d)=>s+d.discount_pct,0)/wd.length;
+    document.getElementById('statAvgDisc').textContent = (avg*100).toFixed(1)+'%';
+    const sorted = [...wd].sort((a,b)=>a.discount_pct-b.discount_pct);
+    document.getElementById('statWidest').textContent = sorted[0].ticker+' '+(sorted[0].discount_pct*100).toFixed(1)+'%';
+    document.getElementById('statNarrowest').textContent = sorted[sorted.length-1].ticker+' '+(sorted[sorted.length-1].discount_pct*100).toFixed(1)+'%';
+  }
+  const buys = f.filter(d=>getAction(d.ticker,d.discount_pct)==='BUY').length;
+  const sells = f.filter(d=>getAction(d.ticker,d.discount_pct)==='SELL').length;
+  document.getElementById('statBuys').textContent = buys;
+  document.getElementById('statSells').textContent = sells;
+  // Deep value: z3y < -1.5 (primary), fallback to z1y
+  document.getElementById('statDeepValue').textContent = f.filter(d => {
+    const z = d.z3y ?? d.z1y;
+    return z != null && z < -1.5;
+  }).length;
+  document.getElementById('statNew').textContent = f.filter(d => NEW_TICKERS.has(d.ticker)).length;
+}
+
+function getFiltered() {
+  return allData.filter(d => {
+    if (currentSearch && !d.ticker.toLowerCase().includes(currentSearch.toLowerCase()) && !d.sector.toLowerCase().includes(currentSearch.toLowerCase()) && !(d.benchmark||'').toLowerCase().includes(currentSearch.toLowerCase())) return false;
+    // Type filter
+    if (currentTypeFilter==='fi' && d.type!=='FI') return false;
+    if (currentTypeFilter==='eq' && d.type!=='EQ') return false;
+    // Signal filter
+    if (currentSignalFilter==='buy-signal' && getAction(d.ticker,d.discount_pct)!=='BUY') return false;
+    if (currentSignalFilter==='sell-signal' && getAction(d.ticker,d.discount_pct)!=='SELL') return false;
+    if (currentSignalFilter==='deep-value') { const z=d.z3y??d.z1y; if(z==null||z>=-1.5) return false; }
+    if (currentSignalFilter==='new-tickers' && !NEW_TICKERS.has(d.ticker)) return false;
+    if (currentSignalFilter==='hide-new' && NEW_TICKERS.has(d.ticker)) return false;
+    return true;
+  });
+}
+
+function getSorted() {
+  return getFiltered().sort((a,b) => {
+    if (sortCol==='sector') {
+      const s = a.sector.localeCompare(b.sector)*sortDir;
+      return s !== 0 ? s : a.ticker.localeCompare(b.ticker);
+    }
+    if (sortCol==='action') {
+      const aa=getAction(a.ticker,a.discount_pct), ba=getAction(b.ticker,b.discount_pct);
+      const order={BUY:0,SELL:1,NONE:2};
+      return ((order[aa]||2)-(order[ba]||2))*sortDir;
+    }
+    if (sortCol==='amt_from_buy') {
+      const va=getAmtFromBuy(a.ticker,a.discount_pct), vb=getAmtFromBuy(b.ticker,b.discount_pct);
+      if(va==null&&vb==null)return 0; if(va==null)return 1; if(vb==null)return -1;
+      return (va-vb)*sortDir;
+    }
+    let va=a[sortCol], vb=b[sortCol];
+    if(va==null&&vb==null)return 0; if(va==null)return 1; if(vb==null)return -1;
+    if(typeof va==='string') return va.localeCompare(vb)*sortDir;
+    return (va-vb)*sortDir;
+  });
+}
+
+function setTypeFilter(f,el) {
+  currentTypeFilter=f;
+  document.querySelectorAll('.filter-btn[data-group="type"]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  updateStats(); renderTable();
+}
+function setSignalFilter(f,el) {
+  // Toggle off if clicking the same signal filter
+  if (currentSignalFilter===f) {
+    currentSignalFilter='none';
+    el.classList.remove('active');
+  } else {
+    currentSignalFilter=f;
+    document.querySelectorAll('.filter-btn[data-group="signal"]').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+  }
+  updateStats(); renderTable();
+}
+function filterSearch(val) { currentSearch=val; updateStats(); renderTable(); }
+
+function sortBy(col) {
+  if(sortCol===col) sortDir*=-1;
+  else { sortCol=col; sortDir=(col.startsWith('z')||col==='discount_pct'||col==='disc_amt'||col==='ytd_vs_bench')?1:-1; }
+  document.querySelectorAll('thead th').forEach(th=>{th.classList.remove('sorted'); const sa=th.querySelector('.sa'); if(sa)sa.textContent='';});
+  const idx=ALL_COLS.indexOf(col);
+  if(idx>=0){const th=document.querySelectorAll('thead th')[idx]; th.classList.add('sorted'); const sa=th.querySelector('.sa'); if(sa) sa.textContent=sortDir===1?'▲':'▼';}
+  renderTable();
+}
+
+function fmtZ(z) {
+  if(z==null) return '<span class="zb z-n">—</span>';
+  let c='z-n';
+  if(z<=-3)c='z-dv'; else if(z<=-2)c='z-v2'; else if(z<=-1)c='z-v'; else if(z<=-0.5)c='z-mv';
+  else if(z>=2)c='z-dr'; else if(z>=1)c='z-r2'; else if(z>=0.5)c='z-r'; else if(z>=0.25)c='z-mr';
+  return `<span class="zb ${c}">${z.toFixed(2)}</span>`;
+}
+function fmtPct(d) {
+  if(d==null) return '<span class="neutral">—</span>';
+  const v = d * 100;
+  return `<span class="${v<0?'negative':v>0?'positive':'neutral'}">${v.toFixed(1)}%</span>`;
+}
+function fmtPctShort(d) {
+  if(d==null) return '<span class="neutral">—</span>';
+  const v = d * 100;
+  return `<span class="${v<0?'negative':v>0?'positive':'neutral'}">${v>=0?'+':''}${v.toFixed(2)}%</span>`;
+}
+function fmtAction(a) {
+  if(a==='BUY') return '<span class="action-badge action-buy">BUY</span>';
+  if(a==='SELL') return '<span class="action-badge action-sell">SELL</span>';
+  return '<span class="action-none">—</span>';
+}
+function fmtAUM(v) {
+  if(v==null) return '<span class="neutral">—</span>';
+  if(typeof v === 'string') return '<span class="neutral">—</span>';
+  if(v >= 1e9) return '$' + (v/1e9).toFixed(1) + 'B';
+  if(v >= 1e6) return '$' + (v/1e6).toFixed(0) + 'M';
+  return '$' + v.toLocaleString();
+}
+function fmtVol(v) {
+  if(v==null) return '<span class="neutral">—</span>';
+  if(typeof v === 'string') v = parseFloat(v);
+  if(isNaN(v)) return '<span class="neutral">—</span>';
+  if(v >= 1e6) return (v/1e6).toFixed(1) + 'M';
+  if(v >= 1e3) return (v/1e3).toFixed(0) + 'K';
+  return v.toLocaleString();
+}
+
+function onBuySellChange(ticker, field, value) {
+  if(!buySellData[ticker]) buySellData[ticker]={buy:null,sell:null};
+  let v = value.trim().replace('%', '').replace(/\s/g, '');
+  if(v === '' || isNaN(parseFloat(v))) {
+    buySellData[ticker][field] = null;
+    // Find and clear the input
+    const row = document.querySelector(`tr[data-ticker="${ticker}"]`);
+    if (row) {
+      const idx = field === 'buy' ? 7 : 8;
+      const input = row.querySelectorAll('td')[idx]?.querySelector('input');
+      if (input) input.value = '';
+    }
+  } else {
+    const pct = parseFloat(v);
+    buySellData[ticker][field] = pct / 100;
+    // Reformat with % sign
+    const row = document.querySelector(`tr[data-ticker="${ticker}"]`);
+    if (row) {
+      const idx = field === 'buy' ? 7 : 8;
+      const input = row.querySelectorAll('td')[idx]?.querySelector('input');
+      if (input) input.value = pct.toFixed(1) + '%';
+    }
+  }
+  dirty = true;
+  document.getElementById('saveBtn').classList.add('visible');
+  updateRowActions(ticker);
+  updateStats();
+}
+
+function changeFontSize(size) {
+  document.querySelector('table').style.fontSize = size + 'px';
+  localStorage.setItem('cef_font_size', size);
+}
+
+// Load saved font size on startup
+function loadFontSize() {
+  const saved = localStorage.getItem('cef_font_size');
+  if(saved) {
+    document.getElementById('fontSizeSelect').value = saved;
+    document.querySelector('table').style.fontSize = saved + 'px';
+  }
+}
+
+function updateRowActions(ticker) {
+  const row = document.querySelector(`tr[data-ticker="${ticker}"]`);
+  if(!row) return;
+  const d = allData.find(x=>x.ticker===ticker);
+  if(!d) return;
+  const action = getAction(ticker, d.discount_pct);
+  const amt = getAmtFromBuy(ticker, d.discount_pct);
+  const actionCell = row.querySelector('.action-cell');
+  const amtCell = row.querySelector('.amt-cell');
+  if(actionCell) actionCell.innerHTML = fmtAction(action);
+  if(amtCell) amtCell.innerHTML = amt!=null ? fmtPct(amt) : '<span class="neutral">—</span>';
+}
+
+function saveBuySell() {
+  persistBuySell();
+  const btn = document.getElementById('saveBtn');
+  btn.textContent = '✓ Saved';
+  setTimeout(()=>{ btn.textContent='💾 Save Buy/Sell'; btn.classList.remove('visible'); }, 1500);
+}
+
+function renderTable() {
+  const data = getSorted();
+  const tbody = document.getElementById('tableBody');
+  if(!data.length) { tbody.innerHTML='<tr><td colspan="25" style="text-align:center;padding:40px;color:var(--dim)">No matching funds</td></tr>'; return; }
+
+  tbody.innerHTML = data.map(d => {
+    const bs = buySellData[d.ticker] || {};
+    const action = getAction(d.ticker, d.discount_pct);
+    const amt = getAmtFromBuy(d.ticker, d.discount_pct);
+    const buyVal = bs.buy!=null ? (bs.buy*100).toFixed(1)+'%' : '';
+    const sellVal = bs.sell!=null ? (bs.sell*100).toFixed(1)+'%' : '';
+
+    return `<tr data-ticker="${d.ticker}">
+      <td class="sector-label al">${d.sector}</td>
+      <td class="tk al clickable" onclick="openDetail('${d.ticker}')">${d.ticker}${NEW_TICKERS.has(d.ticker)?'<span class="new-badge">NEW</span>':''}</td>
+      <td class="tp al ${d.type==='FI'?'tp-fi':'tp-eq'}">${d.type}</td>
+      <td class="nm ar">${d.price!=null ? '$'+d.price.toFixed(2) : '<span class="neutral">—</span>'}</td>
+      <td class="nm ar">${d.nav!=null ? '$'+d.nav.toFixed(2) : '<span class="neutral">—</span>'}</td>
+      <td class="nm ar">${d.disc_amt!=null ? '<span class="'+(d.disc_amt<0?'negative':'positive')+'">'+d.disc_amt.toFixed(2)+'</span>' : '<span class="neutral">—</span>'}</td>
+      <td class="nm ar">${fmtPct(d.discount_pct)}</td>
+      <td class="input-cell ar"><input type="text" value="${buyVal}" onchange="onBuySellChange('${d.ticker}','buy',this.value)" onfocus="this.select()" placeholder="—" /></td>
+      <td class="input-cell ar"><input type="text" value="${sellVal}" onchange="onBuySellChange('${d.ticker}','sell',this.value)" onfocus="this.select()" placeholder="—" /></td>
+      <td class="nm ar amt-cell">${amt!=null ? fmtPct(amt) : '<span class="neutral">—</span>'}</td>
+      <td class="ac action-cell">${fmtAction(action)}</td>
+      <td class="ac">${fmtZ(d.z1m)}</td>
+      <td class="ac">${fmtZ(d.z3m)}</td>
+      <td class="ac">${fmtZ(d.z6m)}</td>
+      <td class="ac">${fmtZ(d.z1y)}</td>
+      <td class="ac">${fmtZ(d.z3y)}</td>
+      <td class="ac">${fmtZ(d.z5y)}</td>
+      <td class="aum ar">${fmtAUM(d.aum)}</td>
+      <td class="aum ar">${fmtVol(d.volume)}</td>
+      <td class="nm ar">${d.yield_pct!=null ? (d.yield_pct*100).toFixed(1)+'%' : '<span class="neutral">—</span>'}</td>
+      <td class="nm ar">${fmtPctShort(d.ytd_return)}</td>
+      <td class="dt al">${d.benchmark}</td>
+      <td class="nm ar">${fmtPctShort(d.bench_rtn)}</td>
+      <td class="nm ar">${fmtPctShort(d.ytd_vs_bench)}</td>
+      <td class="dt al">${d.trade_date}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ==================== FASTTRACK → SUPABASE REFRESH ====================
+// Pulls latest price + NAV from FastTrack for ALL CEF tickers,
+// calculates discount_pct, and upserts into cef_daily table.
+// The cef_latest_with_zscores view auto-recalculates z-scores.
+
+async function refreshFromFastTrack() {
+  const btn = document.getElementById('refreshBtn');
+  const status = document.getElementById('refreshStatus');
+  
+  if (!FT_API_KEY) {
+    status.textContent = '✗ No FastTrack key — paste above';
+    status.style.color = 'var(--red)';
+    document.getElementById('ftConfigBar').classList.remove('hidden');
+    return;
+  }
+  if (!SUPABASE_KEY) {
+    status.textContent = '✗ No Supabase key';
+    status.style.color = 'var(--red)';
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = '⟳ Refreshing...';
+  status.textContent = 'Authenticating with FastTrack...';
+  status.style.color = 'var(--blu)';
+  
+  try {
+    // 1. Authenticate
+    const token = await ftAuth();
+    if (!token) throw new Error('FastTrack auth failed');
+    
+    // 2. Get all CEF tickers from SECTORS map
+    const allTickers = Object.keys(SECTORS);
+    status.textContent = `Fetching data for ${allTickers.length} tickers...`;
+    
+    // 2b. Get valid tickers from cef_tickers to respect foreign key
+    let validTickers = null;
+    try {
+      const tkRows = await sf('cef_tickers?select=ticker');
+      if (tkRows && tkRows.length) validTickers = new Set(tkRows.map(r => r.ticker));
+    } catch(e) { console.warn('Could not fetch cef_tickers, skipping filter'); }
+    
+    // 3. Fetch latest prices from FastTrack /data endpoint (last trading day)
+    const priceData = await ftFetchLatestPriceNav(allTickers);
+    const fetchedCount = Object.keys(priceData).length;
+    status.textContent = `Got ${fetchedCount}/${allTickers.length} tickers, writing to Supabase...`;
+    
+    if (fetchedCount === 0) throw new Error('No data returned from FastTrack');
+    
+    // 4. Build cef_daily rows — with data quality guards
+    const rows = [];
+    let skipped = 0;
+    for (const [ticker, data] of Object.entries(priceData)) {
+      // Guard: skip tickers not in cef_tickers (dead/delisted)
+      if (validTickers && !validTickers.has(ticker)) { skipped++; continue; }
+      
+      const price = data.price;
+      const nav = data.nav;
+      
+      // Guard: must have both price AND nav (no adjusted-price-only rows)
+      if (price == null || nav == null || nav <= 0) { skipped++; continue; }
+      
+      // Guard: price and NAV must be within 5x of each other (rejects corrupt data)
+      if (price > nav * 5 || nav > price * 5) {
+        console.warn(`Skipping ${ticker}: price/NAV ratio out of range (${price}/${nav})`);
+        skipped++;
+        continue;
+      }
+      
+      const disc = parseFloat(((price - nav) / nav).toFixed(6));
+      
+      const row = {
+        ticker: ticker,
+        trade_date: data.date,
+        price: price,
+        nav: nav,
+        discount_pct: disc,  // always decimal format: -0.05 = -5%
+        adj_price: price     // for latest day, adjusted ≈ unadjusted; backfill corrects history
+      };
+      
+      if (data.yield_pct != null) {
+        row.yield_pct = data.yield_pct;
+      }
+      
+      if (data.volume != null) {
+        row.volume = data.volume;
+      }
+      
+      rows.push(row);
+    }
+    if (skipped) console.log(`Skipped ${skipped} tickers (missing NAV or bad ratio)`);
+    
+    // 5. Upsert to Supabase cef_daily in batches
+    let upserted = 0;
+    const batchSize = 50;
+    for (let i = 0; i < rows.length; i += batchSize) {
+      const batch = rows.slice(i, i + batchSize);
+      const resp = await fetch(
+        `${SUPABASE_URL}/rest/v1/cef_daily?on_conflict=ticker,trade_date`,
+        {
+          method: 'POST',
+          headers: {
+            ...hdrs(),
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify(batch)
+        }
+      );
+      if (!resp.ok) {
+        const err = await resp.text();
+        console.error('Supabase upsert error:', err);
+        // Try without on_conflict if table doesn't have that constraint
+        const resp2 = await fetch(
+          `${SUPABASE_URL}/rest/v1/cef_daily`,
+          {
+            method: 'POST',
+            headers: {
+              ...hdrs(),
+              'Prefer': 'resolution=merge-duplicates,return=minimal'
+            },
+            body: JSON.stringify(batch)
+          }
+        );
+        if (resp2.ok) upserted += batch.length;
+      } else {
+        upserted += batch.length;
+      }
+      status.textContent = `Wrote ${upserted}/${rows.length} to Supabase...`;
+    }
+    
+    // 6. Update adj_price for recent dates
+    status.textContent = 'Updating adjusted prices...';
+    try {
+      const adjR = await fetch(`${FT_BASE}/data`, {
+        method: 'POST',
+        headers: ftHeaders(),
+        body: JSON.stringify({
+          assets: allTickers,
+          start_date: getDateNDaysAgo(60),
+          end_date: getToday(),
+          include: ['prices']
+        })
+      });
+      if (adjR.ok) {
+        const adjData = await adjR.json();
+        const dates = adjData.metadata?.dates || [];
+        if (adjData.results && dates.length) {
+          const adjRows = [];
+          for (const item of adjData.results) {
+            if (!item.prices) continue;
+            for (let d = 0; d < Math.min(dates.length, item.prices.length); d++) {
+              if (item.prices[d] != null) {
+                adjRows.push({ ticker: item.ticker, trade_date: dates[d], adj_price: parseFloat(item.prices[d].toFixed(4)) });
+              }
+            }
+          }
+          // Bulk update via RPC
+          const batchSize = 1000;
+          for (let i = 0; i < adjRows.length; i += batchSize) {
+            await fetch(`${SUPABASE_URL}/rest/v1/rpc/bulk_update_adj_price`, {
+              method: 'POST',
+              headers: hdrs(),
+              body: JSON.stringify({ updates: adjRows.slice(i, i + batchSize) })
+            });
+          }
+          console.log(`Updated ${adjRows.length} adj_price values`);
+        }
+      }
+    } catch(e) { console.warn('adj_price update error:', e); }
+    
+    // 7. Detect new distributions
+    status.textContent = 'Detecting distributions...';
+    try {
+      const distR = await fetch(`${SUPABASE_URL}/rest/v1/rpc/refresh_distributions`, {
+        method: 'POST',
+        headers: hdrs(),
+        body: JSON.stringify({})
+      });
+      if (distR.ok) {
+        const newDists = await distR.json();
+        if (newDists > 0) console.log(`Detected ${newDists} new distributions`);
+      }
+    } catch(e) { console.warn('Distribution refresh error:', e); }
+    
+    // 8. Success — reload dashboard
+    status.textContent = `✓ ${upserted} tickers updated — reloading...`;
+    status.style.color = 'var(--grn)';
+    btn.textContent = '✓ Done';
+    
+    // Reload data after brief pause
+    setTimeout(async () => {
+      btn.disabled = false;
+      btn.textContent = '⟳ Refresh from FastTrack';
+      await loadDashboard();
+    }, 1500);
+    
+  } catch(err) {
+    console.error('Refresh error:', err);
+    status.textContent = `✗ ${err.message}`;
+    status.style.color = 'var(--red)';
+    btn.disabled = false;
+    btn.textContent = '⟳ Refresh from FastTrack';
+  }
+}
+
+// ==================== BACKFILL ADJUSTED PRICES ====================
+// Pulls full historical ADJUSTED prices from FastTrack POST /data
+// and writes them to adj_price column in cef_daily.
+// The adjusted price series accounts for distributions — comparing
+// adj_price vs price (unadjusted) reveals ex-dates and amounts.
+
+async function backfillAdjPrices() {
+  const btn = document.getElementById('backfillBtn');
+  const status = document.getElementById('refreshStatus');
+  
+  if (!FT_API_KEY) {
+    status.textContent = '✗ No FastTrack key';
+    status.style.color = 'var(--red)';
+    return;
+  }
+  if (!SUPABASE_KEY) {
+    status.textContent = '✗ No Supabase key';
+    status.style.color = 'var(--red)';
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = '⟳ Running...';
+  status.style.color = 'var(--blu)';
+  
+  try {
+    // 1. Authenticate
+    status.textContent = 'Authenticating...';
+    const token = await ftAuth();
+    if (!token) throw new Error('FastTrack auth failed');
+    
+    // 2. Get all tickers
+    const allTickers = Object.keys(SECTORS);
+    
+    // 3. Get date range from existing cef_daily data
+    status.textContent = 'Checking existing data range...';
+    const rangeRows = await sf('cef_daily?select=trade_date&order=trade_date.asc&limit=1');
+    const startDate = rangeRows && rangeRows.length > 0 ? rangeRows[0].trade_date : '2016-01-01';
+    const endDate = getToday();
+    
+    console.log(`Backfill range: ${startDate} to ${endDate}, ${allTickers.length} tickers`);
+    
+    // 4. Pull adjusted prices from FastTrack in ticker batches of 30
+    //    (smaller batches for full history to avoid timeouts)
+    const tickerChunks = [];
+    for (let i = 0; i < allTickers.length; i += 30) {
+      tickerChunks.push(allTickers.slice(i, i + 30));
+    }
+    
+    let totalRows = 0;
+    let totalUpserted = 0;
+    
+    for (let c = 0; c < tickerChunks.length; c++) {
+      const chunk = tickerChunks[c];
+      status.textContent = `Fetching adjusted prices: batch ${c+1}/${tickerChunks.length} (${totalRows} rows so far)...`;
+      
+      try {
+        // Re-auth if needed (long backfill may exceed token life)
+        if (Date.now() >= ftTokenExpiry - 120000) {
+          await ftAuth();
+        }
+        
+        const r = await fetch(`${FT_BASE}/data`, {
+          method: 'POST',
+          headers: ftHeaders(),
+          body: JSON.stringify({
+            assets: chunk,
+            start_date: startDate,
+            end_date: endDate,
+            include: ['prices']
+          })
+        });
+        
+        if (!r.ok) {
+          console.error(`FT batch ${c+1} error:`, r.status);
+          continue;
+        }
+        
+        const data = await r.json();
+        const dates = data.metadata?.dates || [];
+        
+        if (!data.results || dates.length === 0) continue;
+        
+        // Build update rows: {ticker, trade_date, adj_price}
+        const rows = [];
+        for (const item of data.results) {
+          if (item.error || !item.prices) continue;
+          const prices = item.prices;
+          
+          for (let d = 0; d < Math.min(dates.length, prices.length); d++) {
+            if (prices[d] == null || prices[d] <= 0) continue;
+            rows.push({
+              ticker: item.ticker,
+              trade_date: dates[d],
+              adj_price: parseFloat(prices[d].toFixed(4))
+            });
+          }
+        }
+        
+        totalRows += rows.length;
+        
+        // Upsert to Supabase in batches of 500
+        // This will UPDATE adj_price for existing rows and INSERT minimal rows for new dates
+        const batchSize = 500;
+        for (let i = 0; i < rows.length; i += batchSize) {
+          const batch = rows.slice(i, i + batchSize);
+          const resp = await fetch(
+            `${SUPABASE_URL}/rest/v1/cef_daily?on_conflict=ticker,trade_date`,
+            {
+              method: 'POST',
+              headers: {
+                ...hdrs(),
+                'Prefer': 'resolution=merge-duplicates'
+              },
+              body: JSON.stringify(batch)
+            }
+          );
+          if (resp.ok) {
+            totalUpserted += batch.length;
+          } else {
+            const err = await resp.text();
+            console.error('Upsert error:', err);
+          }
+          status.textContent = `Writing: ${totalUpserted}/${totalRows} rows...`;
+        }
+        
+        // Small delay between FT batches to avoid rate limits
+        await new Promise(r => setTimeout(r, 500));
+        
+      } catch(e) {
+        console.error(`Batch ${c+1} error:`, e);
+      }
+    }
+    
+    // 5. Clean up: delete rows that only have adj_price (no price/nav)
+    //    These were created by the upsert for dates not in our original data
+    status.textContent = 'Cleaning up orphan rows...';
+    const delResp = await fetch(
+      `${SUPABASE_URL}/rest/v1/cef_daily?price=is.null`,
+      { method: 'DELETE', headers: hdrs() }
+    );
+    const cleanedMsg = delResp.ok ? ' (orphans cleaned)' : '';
+    
+    status.textContent = `✓ Backfill complete: ${totalUpserted} adj_price values written${cleanedMsg}`;
+    status.style.color = 'var(--grn)';
+    btn.textContent = '✓ Done';
+    
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = '⟳ Backfill Adj Prices';
+    }, 3000);
+    
+  } catch(err) {
+    console.error('Backfill error:', err);
+    status.textContent = `✗ ${err.message}`;
+    status.style.color = 'var(--red)';
+    btn.disabled = false;
+    btn.textContent = '⟳ Backfill Adj Prices';
+  }
+}
+
+// Fetch latest price + NAV for CEF tickers from FastTrack
+// include: ['prices', 'nav'] returns parallel arrays for both
+async function ftFetchLatestPriceNav(tickers) {
+  const results = {};
+  if (!ftToken || !tickers.length) return results;
+  
+  const chunks = [];
+  for (let i = 0; i < tickers.length; i += 50) {
+    chunks.push(tickers.slice(i, i + 50));
+  }
+  
+  for (const chunk of chunks) {
+    try {
+      const r = await fetch(`${FT_BASE}/data`, {
+        method: 'POST',
+        headers: ftHeaders(),
+        body: JSON.stringify({
+          assets: chunk,
+          start_date: getDateNDaysAgo(7),
+          end_date: getToday(),
+          include: ['prices', 'nav', 'yield', 'volumes']
+        })
+      });
+      if (!r.ok) {
+        console.error('FT /data error:', r.status, await r.text());
+        continue;
+      }
+      const data = await r.json();
+      
+      // Get last date from metadata
+      const dates = data.metadata?.dates || [];
+      const lastDate = dates.length > 0 ? dates[dates.length - 1] : getToday();
+      
+      if (data.results) {
+        for (const item of data.results) {
+          if (item.error) continue;
+          const prices = item.prices || [];
+          const navs = item.nav || [];
+          if (prices.length === 0) continue;
+          
+          // Yield comes in yield_data object
+          let yld = null;
+          if (item.yield_data) {
+            yld = item.yield_data.yield_income || item.yield_data.yield_all || null;
+          }
+          
+          // Volume — flat array in thousands, take last value, multiply by 1000
+          const vols = item.volumes || [];
+          const vol = vols.length > 0 ? Math.round(vols[vols.length - 1] * 1000) : null;
+          
+          results[item.ticker] = {
+            price: prices[prices.length - 1],
+            nav: navs.length > 0 ? navs[navs.length - 1] : null,
+            yield_pct: yld,
+            volume: vol,
+            date: lastDate
+          };
+        }
+      }
+    } catch(e) {
+      console.error('FT data fetch error:', e);
+    }
+  }
+  
+  return results;
+}
+
+function getToday() {
+  return new Date().toISOString().split('T')[0];
+}
+function getDateNDaysAgo(n) {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return d.toISOString().split('T')[0];
+}
+
+// ==================== DETAIL VIEW ====================
+let detailChart = null;
+let detailDiscChart = null;
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  if (detailChart) { detailChart.destroy(); detailChart = null; }
+  if (detailDiscChart) { detailDiscChart.destroy(); detailDiscChart = null; }
+}
+
+async function fetchFundChars(ticker) {
+  try {
+    const rows = await sf(`fund_characteristics?ticker=eq.${ticker}&select=effective_duration,avg_maturity,distribution_yield,usd_exposure_pct,leverage_pct,as_of_date&limit=1`);
+    return rows && rows.length > 0 ? rows[0] : {};
+  } catch(e) { console.error('Fund chars error:', e); return {}; }
+}
+
+async function openDetail(ticker) {
+  const overlay = document.getElementById('detailOverlay');
+  const content = document.getElementById('detailContent');
+  overlay.classList.add('open');
+  content.innerHTML = '<div class="detail-loading">Loading data for ' + ticker + '...</div>';
+
+  // Get existing data from allData
+  const d = allData.find(x => x.ticker === ticker) || {};
+
+  // Start parallel fetches — only use Supabase for chart history (clean unadjusted data)
+  // FT historical prices are total-return adjusted and wrong for discount analysis
+  const [histData, refData, ftResult, fundChars, ftStats] = await Promise.all([
+    fetchSupabaseHistory(ticker),
+    fetchFTReference(ticker),
+    fetchFTHistory(ticker),  // only used for fund name
+    fetchFundChars(ticker),
+    fetchFTStats(ticker)
+  ]);
+  
+  const ftName = ftResult.name || null;
+
+  // Only use Supabase history (built from daily refreshes = unadjusted prices)
+  let history = histData;
+  
+  // Only keep data points where we have both price AND nav
+  history = history.filter(h => h.price != null && h.nav != null);
+  console.log('Detail history for', ticker, ':', history.length, 'clean rows from Supabase');
+
+  // Build the detail content - reference has no name, get it from /data response
+  if (!refData.name) refData.name = ftName;
+  console.log('Final name:', refData.name);
+  content.innerHTML = buildDetailHTML(ticker, d, refData, history, fundChars, ftStats);
+
+  // Render charts
+  if (history.length > 0) {
+    renderPriceNavChart(history, ticker);
+    renderDiscountChart(history, ticker);
+  }
+}
+
+async function fetchSupabaseHistory(ticker) {
+  try {
+    // Only fetch rows with both price and nav (clean data)
+    const rows = await sf(`cef_daily?ticker=eq.${ticker}&nav=not.is.null&price=not.is.null&select=trade_date,price,nav,discount_pct,yield_pct&order=trade_date.asc&limit=5000`);
+    return rows.map(r => {
+      const p = parseFloat(r.price);
+      const n = parseFloat(r.nav);
+      // Guard: skip corrupt ratios
+      if (p > n * 5 || n > p * 5) return null;
+      return {
+        date: r.trade_date,
+        price: p,
+        nav: n,
+        discount: r.discount_pct ? parseFloat(r.discount_pct) : (n !== 0 ? (p - n) / n : null),
+        yield_pct: r.yield_pct ? parseFloat(r.yield_pct) : null
+      };
+    }).filter(Boolean);
+  } catch(e) { console.error('Supabase history error:', e); return []; }
+}
+
+async function fetchFTReference(ticker) {
+  if (!ftToken) await ftAuth();
+  if (!ftToken) return {};
+  try {
+    const r = await fetch(`${FT_BASE}/reference`, {
+      method: 'POST', headers: ftHeaders(),
+      body: JSON.stringify({
+        assets: [ticker],
+        include: ['details', 'portfolio'],
+        topcount: '10'
+      })
+    });
+    if (!r.ok) return {};
+    const data = await r.json();
+    if (data.results && data.results[0] && !data.results[0].error) {
+      const item = data.results[0];
+      console.log('FT reference for', ticker, ':', JSON.stringify(item).substring(0, 800));
+      const port = item.portfolio || {};
+      return {
+        name: item.name || item.description || item.long_name || item.details?.name || null,
+        family: item.details?.family || item.family || null,
+        expense_ratio: item.details?.expenseratio || item.details?.expense_ratio || null,
+        objective: item.details?.objective || null,
+        category: item.details?.category || null,
+        inception: item.details?.inceptiondate || item.details?.inception_date || null,
+        security_type: item.details?.security_type || null,
+        similar: item.details?.similar || [],
+        // Portfolio breakdown data
+        bondquality: port.bondquality?.datalist || [],
+        bondmaturity: port.bondmaturity?.datalist || [],
+        topholdings: port.topten?.datalist || [],
+        sectorBond: port.sectorBond?.datalist || [],
+        assetclass: port.assetclass?.datalist || [],
+        sector: port.sector?.datalist || [],
+        region: port.region?.datalist || [],
+        wtdExpense: port.expense || null
+      };
+    }
+  } catch(e) { console.error('FT reference error:', e); }
+  return {};
+}
+
+async function fetchFTStats(ticker) {
+  if (!ftToken) await ftAuth();
+  if (!ftToken) return {};
+  try {
+    const r = await fetch(`${FT_BASE}/stats/snapshot`, {
+      method: 'POST', headers: ftHeaders(),
+      body: JSON.stringify({
+        assets: [ticker],
+        time_periods: ['1y', '3y'],
+        benchmark: 'AGG',
+        include: ['security_info']
+      })
+    });
+    if (!r.ok) return {};
+    const data = await r.json();
+    if (data.results && data.results[0] && !data.results[0].error) {
+      const item = data.results[0];
+      console.log('FT stats for', ticker, ':', JSON.stringify(item).substring(0, 600));
+      const p1y = item.periods?.['1y'] || {};
+      const p3y = item.periods?.['3y'] || {};
+      return {
+        ret1y: p1y.returns?.total,
+        ret3y: p3y.returns?.annualized_market,
+        sharpe1y: p1y.risk?.risk_adjusted_performance?.sharpe_ratio,
+        sharpe3y: p3y.risk?.risk_adjusted_performance?.sharpe_ratio,
+        beta1y: p1y.risk?.market_risk?.beta,
+        alpha1y: p1y.risk?.market_risk?.alpha,
+        correlation1y: p1y.risk?.market_risk?.correlation,
+        sdAnn1y: p1y.risk?.volatility?.sd_annualized,
+        maxdraw1y: p1y.maxdraw?.value,
+        maxdraw3y: p3y.maxdraw?.value,
+        sortino1y: p1y.risk?.risk_adjusted_performance?.sortino_ratio,
+        ulcer1y: p1y.risk?.volatility?.ulcer_index,
+        pricing: item.shared_data?.pricing || {},
+        yieldData: item.shared_data?.yield || {}
+      };
+    }
+  } catch(e) { console.error('FT stats error:', e); }
+  return {};
+}
+
+async function fetchFTHistory(ticker) {
+  if (!ftToken) await ftAuth();
+  if (!ftToken) return {history:[], name:null};
+  try {
+    // Only fetch last 7 days — we just need the fund name from FT
+    const startDate = getDateNDaysAgo(7);
+
+    const r = await fetch(`${FT_BASE}/data`, {
+      method: 'POST', headers: ftHeaders(),
+      body: JSON.stringify({
+        assets: [ticker],
+        start_date: startDate,
+        end_date: getToday(),
+        include: ['nav', 'volumes', 'yield']
+      })
+    });
+    if (!r.ok) return {history:[], name:null};
+    const data = await r.json();
+    const dates = data.metadata?.dates || [];
+    if (data.results && data.results[0] && !data.results[0].error) {
+      const item = data.results[0];
+      console.log('FT detail keys:', Object.keys(item), 'dates:', dates.length);
+      if (item.name) console.log('FT data name:', item.name);
+      const ftName = item.name || null;
+      const prices = item.prices || [];
+      const navs = item.nav || item.navs || item.nav_values || [];
+      const vols = item.volumes || [];
+      console.log('FT detail counts — prices:', prices.length, 'navs:', navs.length, 'vols:', vols.length);
+      if (navs.length === 0) console.warn('FT returned no NAV data for', ticker, '— full item keys:', JSON.stringify(Object.keys(item)));
+      const history = [];
+      for (let i = 0; i < dates.length; i++) {
+        const p = prices[i] ?? null;
+        const n = navs[i] ?? null;
+        // Guard: skip if missing either value or if ratio is corrupt (adjusted prices)
+        if (p == null || n == null || n === 0) continue;
+        if (p > n * 5 || n > p * 5) continue;
+        history.push({
+          date: dates[i],
+          price: p,
+          nav: n,
+          discount: (p - n) / n,
+          volume: vols[i] ? vols[i] * 1000 : null
+        });
+      }
+      return { history, name: ftName };
+    }
+  } catch(e) { console.error('FT history error:', e); }
+  return {history:[], name:null};
+}
+
+function zScoreCard(label, val) {
+  if (val == null) return `<div class="detail-zcard"><div class="detail-zcard-label">${label}</div><div class="detail-zcard-value" style="color:var(--dim)">—</div></div>`;
+  let bg = 'transparent', color = 'var(--dim)';
+  if (val <= -3) { bg = 'rgba(37,99,235,0.18)'; color = '#1e40af'; }
+  else if (val <= -2) { bg = 'rgba(5,150,105,0.18)'; color = '#065f46'; }
+  else if (val <= -1) { bg = 'rgba(34,197,94,0.14)'; color = '#166534'; }
+  else if (val >= 2) { bg = 'rgba(185,28,28,0.22)'; color = '#7f1d1d'; }
+  else if (val >= 1) { bg = 'rgba(239,68,68,0.18)'; color = '#b91c1c'; }
+  else if (val >= 0.5) { bg = 'rgba(251,146,60,0.18)'; color = '#9a3412'; }
+  return `<div class="detail-zcard" style="background:${bg}"><div class="detail-zcard-label">${label}</div><div class="detail-zcard-value" style="color:${color}">${val.toFixed(2)}</div></div>`;
+}
+
+function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
+  const name = ref.name || ticker;
+  const pct = v => v != null ? (v * 100).toFixed(2) + '%' : '—';
+  const dol = v => v != null ? '$' + v.toFixed(2) : '—';
+  const discClass = d.discount_pct != null ? (d.discount_pct < 0 ? 'neg' : 'pos') : '';
+
+  // Compute extra stats from history
+  let avgDisc = '—', minDisc = '—', maxDisc = '—', histDays = 0;
+  const discHist = history.filter(h => h.discount != null);
+  const navHist = history.filter(h => h.nav != null);
+  if (discHist.length > 0) {
+    histDays = discHist.length;
+    const avg = discHist.reduce((s,h) => s + h.discount, 0) / discHist.length;
+    const sorted = discHist.map(h => h.discount).sort((a,b) => a - b);
+    avgDisc = (avg * 100).toFixed(2) + '%';
+    minDisc = (sorted[0] * 100).toFixed(2) + '%';
+    maxDisc = (sorted[sorted.length - 1] * 100).toFixed(2) + '%';
+  }
+  const dataInfo = `${history.length} price points · ${navHist.length} NAV points · ${discHist.length} discount points`;
+
+  return `
+    <div class="detail-header">
+      <div><span class="detail-name">${name}</span><span class="detail-ticker">${ticker}</span></div>
+      <div class="detail-sub">
+        ${d.sector || '—'} · ${d.type || '—'} · Benchmark: ${d.benchmark || '—'}
+        ${ref.family ? ' · ' + ref.family : ''}
+        ${ref.category ? ' · ' + ref.category : ''}
+        ${ref.objective ? ' · ' + ref.objective : ''}
+      </div>
+      <div class="detail-sub" style="margin-top:4px;font-size:10px;color:rgba(148,163,184,0.6)">📊 ${dataInfo}</div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-card"><div class="detail-card-label">Price</div><div class="detail-card-value">${dol(d.price)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">NAV</div><div class="detail-card-value">${dol(d.nav)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Discount</div><div class="detail-card-value ${discClass}">${pct(d.discount_pct)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Yield</div><div class="detail-card-value">${d.yield_pct != null ? (d.yield_pct * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">AUM</div><div class="detail-card-value">${fmtAUM(d.aum)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">YTD Return</div><div class="detail-card-value ${d.ytd_return!=null?(d.ytd_return<0?'neg':'pos'):''}">${d.ytd_return != null ? (d.ytd_return * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Expense Ratio</div><div class="detail-card-value">${ref.expense_ratio != null ? (parseFloat(ref.expense_ratio) * 100).toFixed(2) + '%' : '—'}</div></div>
+    </div>
+
+    ${fc && (fc.effective_duration != null || fc.avg_maturity != null || fc.distribution_yield != null || fc.leverage_pct != null || fc.usd_exposure_pct != null) ? `
+    <div class="detail-section">Fund Characteristics${fc.as_of_date ? ' <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">(as of ${fc.as_of_date})</span>' : ''}</div>
+    <div class="detail-grid">
+      <div class="detail-card"><div class="detail-card-label">Eff Duration</div><div class="detail-card-value">${fc.effective_duration != null ? Number(fc.effective_duration).toFixed(2) + ' yr' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Avg Maturity</div><div class="detail-card-value">${fc.avg_maturity != null ? Number(fc.avg_maturity).toFixed(1) + ' yr' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Dist Yield</div><div class="detail-card-value">${fc.distribution_yield != null ? Number(fc.distribution_yield).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">USD Exposure</div><div class="detail-card-value">${fc.usd_exposure_pct != null ? Number(fc.usd_exposure_pct).toFixed(0) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Leverage</div><div class="detail-card-value">${fc.leverage_pct != null ? Number(fc.leverage_pct).toFixed(0) + '%' : '—'}</div></div>
+    </div>
+    ` : ''}
+
+    <div class="detail-section">Z-Scores</div>
+    <div class="detail-zscores">
+      ${zScoreCard('1 Mo', d.z1m)}
+      ${zScoreCard('3 Mo', d.z3m)}
+      ${zScoreCard('6 Mo', d.z6m)}
+      ${zScoreCard('1 Yr', d.z1y)}
+      ${zScoreCard('3 Yr', d.z3y)}
+      ${zScoreCard('5 Yr', d.z5y)}
+    </div>
+
+    ${stats && (stats.sharpe1y != null || stats.ret1y != null) ? `
+    <div class="detail-section">Risk & Performance (vs AGG)</div>
+    <div class="detail-grid">
+      <div class="detail-card"><div class="detail-card-label">1Y Return</div><div class="detail-card-value ${stats.ret1y!=null?(stats.ret1y<0?'neg':'pos'):''}">${stats.ret1y != null ? (stats.ret1y * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">3Y Ann Return</div><div class="detail-card-value ${stats.ret3y!=null?(stats.ret3y<0?'neg':'pos'):''}">${stats.ret3y != null ? (stats.ret3y * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Sharpe (1Y)</div><div class="detail-card-value">${stats.sharpe1y != null ? stats.sharpe1y.toFixed(2) : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Sortino (1Y)</div><div class="detail-card-value">${stats.sortino1y != null ? stats.sortino1y.toFixed(2) : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Beta (1Y)</div><div class="detail-card-value">${stats.beta1y != null ? stats.beta1y.toFixed(2) : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Alpha (1Y)</div><div class="detail-card-value ${stats.alpha1y!=null?(stats.alpha1y<0?'neg':'pos'):''}">${stats.alpha1y != null ? (stats.alpha1y * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Correlation</div><div class="detail-card-value">${stats.correlation1y != null ? stats.correlation1y.toFixed(2) : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Vol (Ann)</div><div class="detail-card-value">${stats.sdAnn1y != null ? (stats.sdAnn1y * 100).toFixed(1) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Max Draw (1Y)</div><div class="detail-card-value neg">${stats.maxdraw1y != null ? (stats.maxdraw1y * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Max Draw (3Y)</div><div class="detail-card-value neg">${stats.maxdraw3y != null ? (stats.maxdraw3y * 100).toFixed(2) + '%' : '—'}</div></div>
+    </div>
+    ` : ''}
+
+    ${ref.bondquality && ref.bondquality.length > 0 ? `
+    <div class="detail-section">Credit Quality</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0">
+      ${ref.bondquality.map(bq => {
+        const w = parseFloat(bq.netweight || 0);
+        const label = bq.name || '?';
+        const barColor = label.includes('AAA') ? '#15803d' : label.includes('AA') ? '#16a34a' : label.includes('A') && !label.includes('B') ? '#22c55e' : label.includes('BBB') ? '#eab308' : label.includes('BB') ? '#f97316' : label.includes('B') && !label.includes('C') ? '#ef4444' : label.includes('CCC') || label.includes('CC') || label.includes('C') ? '#b91c1c' : label.includes('D') ? '#7f1d1d' : 'var(--dim)';
+        return w > 0 ? '<div style="display:flex;align-items:center;gap:8px;padding:3px 8px;background:var(--hover);border-radius:4px"><span style="font-family:JetBrains Mono,monospace;font-size:11px;min-width:60px;color:var(--dim)">' + label + '</span><div style="flex:1;height:6px;background:var(--bdr);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + Math.min(w, 100) + '%;background:' + barColor + ';border-radius:3px"></div></div><span style="font-family:JetBrains Mono,monospace;font-size:11px;min-width:45px;text-align:right;color:var(--txt)">' + w.toFixed(1) + '%</span></div>' : '';
+      }).join('')}
+    </div>
+    ` : ''}
+
+    ${ref.bondmaturity && ref.bondmaturity.length > 0 ? `
+    <div class="detail-section">Maturity Breakdown</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0">
+      ${ref.bondmaturity.map(bm => {
+        const w = parseFloat(bm.netweight || 0);
+        return w > 0 ? '<div style="display:flex;align-items:center;gap:8px;padding:3px 8px;background:var(--hover);border-radius:4px"><span style="font-family:JetBrains Mono,monospace;font-size:11px;min-width:80px;color:var(--dim)">' + (bm.name || '?') + '</span><div style="flex:1;height:6px;background:var(--bdr);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + Math.min(w, 100) + '%;background:#2563eb;border-radius:3px"></div></div><span style="font-family:JetBrains Mono,monospace;font-size:11px;min-width:45px;text-align:right;color:var(--txt)">' + w.toFixed(1) + '%</span></div>' : '';
+      }).join('')}
+    </div>
+    ` : ''}
+
+    ${ref.topholdings && ref.topholdings.length > 0 ? `
+    <div class="detail-section">Top Holdings</div>
+    <div style="margin:10px 0">
+      <table style="width:100%;border-collapse:collapse;font-family:JetBrains Mono,monospace;font-size:11px">
+        <tr style="border-bottom:1px solid var(--bdr)">
+          <th style="text-align:left;padding:4px 8px;color:var(--dim);font-size:9px;text-transform:uppercase">Ticker</th>
+          <th style="text-align:left;padding:4px 8px;color:var(--dim);font-size:9px;text-transform:uppercase">Name</th>
+          <th style="text-align:right;padding:4px 8px;color:var(--dim);font-size:9px;text-transform:uppercase">Weight</th>
+        </tr>
+        ${ref.topholdings.map((h, i) => {
+          const w = parseFloat(h.netweight || 0);
+          return '<tr style="border-bottom:1px solid var(--bdr);background:' + (i % 2 === 0 ? 'transparent' : 'var(--hover)') + '"><td style="padding:4px 8px;color:var(--blu)">' + (h.ticker || '—') + '</td><td style="padding:4px 8px;color:var(--txt);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (h.name || '—') + '</td><td style="padding:4px 8px;text-align:right;color:var(--txt)">' + w.toFixed(2) + '%</td></tr>';
+        }).join('')}
+      </table>
+    </div>
+    ` : ''}
+
+    ${ref.sectorBond && ref.sectorBond.length > 0 ? `
+    <div class="detail-section">Bond Sector</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0">
+      ${ref.sectorBond.map(s => {
+        const w = parseFloat(s.netweight || 0);
+        return w > 0 ? '<div style="display:flex;align-items:center;gap:8px;padding:3px 8px;background:var(--hover);border-radius:4px"><span style="font-family:JetBrains Mono,monospace;font-size:11px;min-width:100px;color:var(--dim)">' + (s.name || '?') + '</span><div style="flex:1;height:6px;background:var(--bdr);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + Math.min(w, 100) + '%;background:#8b5cf6;border-radius:3px"></div></div><span style="font-family:JetBrains Mono,monospace;font-size:11px;min-width:45px;text-align:right;color:var(--txt)">' + w.toFixed(1) + '%</span></div>' : '';
+      }).join('')}
+    </div>
+    ` : ''}
+
+    <div class="detail-section">Discount Statistics (${histDays} days)</div>
+    <div class="detail-grid">
+      <div class="detail-card"><div class="detail-card-label">Avg Discount</div><div class="detail-card-value">${avgDisc}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Widest</div><div class="detail-card-value neg">${minDisc}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Narrowest</div><div class="detail-card-value pos">${maxDisc}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Current</div><div class="detail-card-value ${discClass}">${pct(d.discount_pct)}</div></div>
+    </div>
+
+    <div class="detail-section">Price vs NAV</div>
+    <div class="chart-container"><canvas id="priceNavChart"></canvas></div>
+
+    <div class="detail-section">Discount History</div>
+    <div class="chart-container"><canvas id="discountChart"></canvas></div>
+
+    ${d.trade_date ? '<div class="detail-sub" style="text-align:right;margin-top:12px">Data as of ' + d.trade_date + '</div>' : ''}
+    
+    ${ref.similar && ref.similar.length > 0 ? `
+    <div class="detail-section">Similar Funds</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${ref.similar.map(t => `<span class="tk clickable" onclick="closeDetail();setTimeout(()=>openDetail('${t}'),300)" style="padding:4px 10px;background:var(--hover);border:1px solid var(--bdr);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer">${t}</span>`).join('')}
+    </div>` : ''}
+  `;
+}
+
+function renderPriceNavChart(history, ticker) {
+  const ctx = document.getElementById('priceNavChart');
+  if (!ctx) return;
+  const hasBoth = history.some(h => h.nav != null);
+  const labels = history.map(h => h.date);
+  const datasets = [{
+    label: 'Price',
+    data: history.map(h => h.price),
+    borderColor: '#2563eb',
+    backgroundColor: 'rgba(37,99,235,0.08)',
+    fill: false,
+    pointRadius: 0,
+    borderWidth: 2,
+    tension: 0.1
+  }];
+  if (hasBoth) {
+    datasets.push({
+      label: 'NAV',
+      data: history.map(h => h.nav),
+      borderColor: '#16a34a',
+      backgroundColor: 'rgba(22,163,74,0.08)',
+      fill: false,
+      pointRadius: 0,
+      borderWidth: 2,
+      tension: 0.1
+    });
+  }
+  detailChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, font: { size: 11, family: "'DM Sans'" } } },
+        tooltip: {
+          callbacks: {
+            title: items => items[0]?.label || '',
+            label: item => item.dataset.label + ': $' + (item.raw?.toFixed(2) ?? '—')
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { maxTicksLimit: 12, font: { size: 9, family: "'JetBrains Mono'" } },
+          grid: { color: 'rgba(128,128,128,0.08)' }
+        },
+        y: {
+          ticks: { callback: v => '$' + v.toFixed(2), font: { size: 10, family: "'JetBrains Mono'" } },
+          grid: { color: 'rgba(128,128,128,0.08)' }
+        }
+      }
+    }
+  });
+}
+
+function renderDiscountChart(history, ticker) {
+  const ctx = document.getElementById('discountChart');
+  if (!ctx) return;
+  const discData = history.filter(h => h.discount != null);
+  if (discData.length === 0) return;
+  const labels = discData.map(h => h.date);
+  const values = discData.map(h => h.discount * 100);
+
+  // Compute average for reference line
+  const avg = values.reduce((s,v) => s + v, 0) / values.length;
+
+  detailDiscChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Discount %',
+          data: values,
+          borderColor: values.map(v => v < 0 ? '#b91c1c' : '#16a34a'),
+          segment: { borderColor: ctx2 => (ctx2.p0.parsed.y < 0 && ctx2.p1.parsed.y < 0) ? '#b91c1c' : (ctx2.p0.parsed.y >= 0 && ctx2.p1.parsed.y >= 0) ? '#16a34a' : '#888',  },
+          backgroundColor: 'rgba(37,99,235,0.05)',
+          fill: true,
+          pointRadius: 0,
+          borderWidth: 1.5,
+          tension: 0.1
+        },
+        {
+          label: 'Average (' + avg.toFixed(2) + '%)',
+          data: Array(labels.length).fill(avg),
+          borderColor: 'rgba(128,128,128,0.5)',
+          borderDash: [5, 3],
+          pointRadius: 0,
+          borderWidth: 1,
+          fill: false
+        },
+        {
+          label: 'Par (0%)',
+          data: Array(labels.length).fill(0),
+          borderColor: 'rgba(128,128,128,0.3)',
+          borderDash: [2, 2],
+          pointRadius: 0,
+          borderWidth: 1,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { usePointStyle: true, font: { size: 11, family: "'DM Sans'" } } },
+        tooltip: { callbacks: { label: item => item.dataset.label + ': ' + item.raw?.toFixed(2) + '%' } }
+      },
+      scales: {
+        x: {
+          ticks: { maxTicksLimit: 12, font: { size: 9, family: "'JetBrains Mono'" } },
+          grid: { color: 'rgba(128,128,128,0.08)' }
+        },
+        y: {
+          ticks: { callback: v => v.toFixed(1) + '%', font: { size: 10, family: "'JetBrains Mono'" } },
+          grid: { color: 'rgba(128,128,128,0.08)' }
+        }
+      }
+    }
+  });
+}
+
+// Keyboard handler for detail modal
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+function saveKey() {
+  const key=document.getElementById('keyInput').value.trim();
+  if(key){
+    SUPABASE_KEY=key; localStorage.setItem('sb_key',key);
+    document.getElementById('configBar').classList.add('hidden');
+    document.getElementById('loadingOverlay').innerHTML='<div class="spinner"></div><div class="loading-text">CONNECTING...</div>';
+    document.getElementById('loadingOverlay').style.display='flex';
+    document.getElementById('mainTable').style.display='none';
+    loadDashboard();
+  }
+}
+
+function saveFTKey() {
+  const key = document.getElementById('ftKeyInput').value.trim();
+  if (key) {
+    FT_API_KEY = key;
+    localStorage.setItem('ft_api_key', key);
+    document.getElementById('ftStatus').textContent = 'Authenticating...';
+    document.getElementById('ftStatus').style.color = 'var(--blu)';
+    ftAuth().then(token => {
+      if (token) {
+        document.getElementById('ftConfigBar').classList.add('hidden');
+        // Reload to fetch YTD data
+        loadDashboard();
+      } else {
+        document.getElementById('ftStatus').textContent = '✗ Auth failed — check key';
+        document.getElementById('ftStatus').style.color = 'var(--red)';
+      }
+    });
+  }
+}
+
+if(SUPABASE_KEY) document.getElementById('configBar').classList.add('hidden');
+if(FT_API_KEY) document.getElementById('ftConfigBar').classList.add('hidden');
+loadDashboard();
+loadFontSize();
+</script>
+<!-- Detail Modal -->
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-modal" id="detailModal">
+    <button class="detail-close" onclick="closeDetail()">&times;</button>
+    <div id="detailContent"><div class="detail-loading">Loading...</div></div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+2026-03-10 18:59:15,743 | INFO | nasdaq_cef_discovery.py | run_date=2026-03-10 | dry_run=False
+2026-03-10 18:59:15,744 | INFO | Downloading nasdaqlisted from https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt
+2026-03-10 18:59:17,044 | INFO |   Downloaded 5372 rows from nasdaqlisted
+2026-03-10 18:59:17,045 | INFO | Downloading otherlisted from https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt
+2026-03-10 18:59:18,144 | INFO |   Downloaded 7027 rows from otherlisted
+2026-03-10 18:59:18,170 | INFO | Combined listing file: 12253 unique tickers
+2026-03-10 18:59:18,171 | INFO | Loading current universe from cef_tickers...
+2026-03-10 18:59:18,791 | INFO |   Loaded 368 rows (355 active)
+2026-03-10 18:59:18,791 | INFO | Running diff...
+2026-03-10 18:59:19,000 | INFO | 
+======================================================================
+2026-03-10 18:59:19,000 | INFO | DRY-RUN DIFF REPORT
+2026-03-10 18:59:19,001 | INFO | ======================================================================
+2026-03-10 18:59:19,001 | INFO | 
+[OK] CONFIRMED ACTIVE: 353 tickers
+2026-03-10 18:59:19,001 | INFO | 
+[NEW] CEF CANDIDATES: 0
+2026-03-10 18:59:19,001 | INFO | 
+[<<] RETURNED FROM DELISTED: 0
+2026-03-10 18:59:19,001 | INFO | 
+[!!] MISSING FROM LISTING FILES (potential delistings): 2
+2026-03-10 18:59:19,001 | INFO |   FXBY
+2026-03-10 18:59:19,001 | INFO |   BXSY
+2026-03-10 18:59:19,001 | INFO | 
+[~~] NAME CHANGES: 0
+2026-03-10 18:59:19,001 | INFO | 
+======================================================================
+2026-03-10 18:59:19,001 | INFO | Review new_candidates for false positives.
+2026-03-10 18:59:19,001 | INFO | Review missing_from_listing - may be halted, not delisted.
+2026-03-10 18:59:19,001 | INFO | ======================================================================
+
+2026-03-10 18:59:19,001 | INFO | Upserting 353 confirmed-active updates...
+2026-03-10 18:59:20,918 | INFO |   [OK] confirmed-active updates done
+2026-03-10 18:59:20,919 | INFO | Writing 2 universe log events...
+2026-03-10 18:59:21,385 | INFO |   [OK] log events written
+2026-03-10 18:59:21,386 | INFO | DB write complete: 353 confirmed, 0 name updates, 0 status updates, 0 new candidates, 2 log events
+2026-03-10 18:59:21,386 | INFO | Done.
+2026-03-10 19:17:38,569 | INFO | === DRY-RUN MODE - no database writes ===
+2026-03-10 19:17:38,570 | INFO | nasdaq_cef_discovery.py | run_date=2026-03-10 | dry_run=True
+2026-03-10 19:17:38,570 | INFO | Downloading nasdaqlisted from https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt
+2026-03-10 19:17:39,336 | INFO |   Downloaded 5372 rows from nasdaqlisted
+2026-03-10 19:17:39,337 | INFO | Downloading otherlisted from https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt
+2026-03-10 19:17:40,457 | INFO |   Downloaded 7027 rows from otherlisted
+2026-03-10 19:17:40,490 | INFO | Combined listing file: 12253 unique tickers
+2026-03-10 19:17:40,492 | INFO | Loading current universe from cef_tickers...
+2026-03-10 19:17:41,086 | INFO |   Loaded 368 rows (355 active)
+2026-03-10 19:17:41,087 | INFO | Running diff...
+2026-03-10 19:17:41,288 | INFO | 
+======================================================================
+2026-03-10 19:17:41,289 | INFO | DRY-RUN DIFF REPORT
+2026-03-10 19:17:41,289 | INFO | ======================================================================
+2026-03-10 19:17:41,289 | INFO | 
+[OK] CONFIRMED ACTIVE: 353 tickers
+2026-03-10 19:17:41,290 | INFO | 
+[NEW] CEF CANDIDATES: 0
+2026-03-10 19:17:41,290 | INFO | 
+[<<] RETURNED FROM DELISTED: 0
+2026-03-10 19:17:41,290 | INFO | 
+[!!] MISSING FROM LISTING FILES (potential delistings): 0
+2026-03-10 19:17:41,290 | INFO | 
+[~~] NAME CHANGES: 0
+2026-03-10 19:17:41,291 | INFO | 
+======================================================================
+2026-03-10 19:17:41,291 | INFO | Review new_candidates for false positives.
+2026-03-10 19:17:41,291 | INFO | Review missing_from_listing - may be halted, not delisted.
+2026-03-10 19:17:41,292 | INFO | ======================================================================
+
+2026-03-10 19:17:41,292 | INFO | Done.
+2026-03-10 19:18:07,537 | INFO | nasdaq_cef_discovery.py | run_date=2026-03-10 | dry_run=False
+2026-03-10 19:18:07,539 | INFO | Downloading nasdaqlisted from https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt
+2026-03-10 19:18:08,158 | INFO |   Downloaded 5372 rows from nasdaqlisted
+2026-03-10 19:18:08,159 | INFO | Downloading otherlisted from https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt
+2026-03-10 19:18:08,746 | INFO |   Downloaded 7027 rows from otherlisted
+2026-03-10 19:18:08,768 | INFO | Combined listing file: 12253 unique tickers
+2026-03-10 19:18:08,769 | INFO | Loading current universe from cef_tickers...
+2026-03-10 19:18:09,265 | INFO |   Loaded 368 rows (355 active)
+2026-03-10 19:18:09,266 | INFO | Running diff...
+2026-03-10 19:18:09,544 | INFO | 
+======================================================================
+2026-03-10 19:18:09,544 | INFO | DRY-RUN DIFF REPORT
+2026-03-10 19:18:09,545 | INFO | ======================================================================
+2026-03-10 19:18:09,545 | INFO | 
+[OK] CONFIRMED ACTIVE: 353 tickers
+2026-03-10 19:18:09,545 | INFO | 
+[NEW] CEF CANDIDATES: 0
+2026-03-10 19:18:09,546 | INFO | 
+[<<] RETURNED FROM DELISTED: 0
+2026-03-10 19:18:09,546 | INFO | 
+[!!] MISSING FROM LISTING FILES (potential delistings): 0
+2026-03-10 19:18:09,547 | INFO | 
+[~~] NAME CHANGES: 0
+2026-03-10 19:18:09,547 | INFO | 
+======================================================================
+2026-03-10 19:18:09,548 | INFO | Review new_candidates for false positives.
+2026-03-10 19:18:09,548 | INFO | Review missing_from_listing - may be halted, not delisted.
+2026-03-10 19:18:09,549 | INFO | ======================================================================
+
+2026-03-10 19:18:09,549 | INFO | Upserting 353 confirmed-active updates...
+2026-03-10 19:18:11,674 | INFO |   [OK] confirmed-active updates done
+2026-03-10 19:18:11,675 | INFO | DB write complete: 353 confirmed, 0 name updates, 0 status updates, 0 new candidates, 0 log events
+2026-03-10 19:18:11,675 | INFO | Done.

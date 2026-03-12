@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gridiron Monthly Email Generator</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f3f4f6; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 16px; }
+        h1 { color: #1f2937; margin: 0 0 4px 0; font-size: 22px; }
+        h2 { color: #374151; margin: 0 0 14px 0; font-size: 15px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 4px; }
+        input, select, textarea { width: 100%; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; margin-bottom: 10px; }
+        textarea { resize: vertical; font-family: inherit; min-height: 200px; }
+        button { padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: #92400e; color: white; }
+        .btn-primary:hover { background: #78350f; }
+        .btn-green { background: #059669; color: white; }
+        .btn-green:hover { background: #047857; }
+        .row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+        .row > div { flex: 1; min-width: 150px; }
+        .status { padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; font-size: 13px; }
+        .status-success { background: #d1fae5; color: #065f46; }
+        .status-error { background: #fee2e2; color: #991b1b; }
+        .status-info { background: #dbeafe; color: #1e40af; }
+        .hidden { display: none; }
+        .check { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .check input { width: auto; margin: 0; }
+        .check label { margin: 0; font-weight: normal; }
+        .perf-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+        .perf-table th, .perf-table td { padding: 6px 8px; text-align: right; }
+        .perf-table th:first-child, .perf-table td:first-child { text-align: left; }
+        .perf-table th { border-bottom: 2px solid #caaa79; font-weight: 600; }
+        .perf-table td { border-bottom: 1px solid #e5e7eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Gridiron Monthly Email Generator</h1>
+            <p style="color: #6b7280; margin: 0; font-size: 13px;">Generate formatted performance emails from Supabase data</p>
+        </div>
+
+        <div id="statusMessage" class="status hidden"></div>
+
+        <!-- Settings -->
+        <div class="card">
+            <div class="row">
+                <div>
+                    <label>Report Month</label>
+                    <input type="month" id="reportMonth">
+                </div>
+                <div>
+                    <label>Supabase Anon Key</label>
+                    <input type="text" id="anonKey" placeholder="eyJhbGci..." style="font-family: monospace; font-size: 11px;">
+                </div>
+                <div style="flex: 0; padding-bottom: 10px;">
+                    <button class="btn-primary" onclick="loadData()">Load Data</button>
+                </div>
+            </div>
+            <div class="check">
+                <input type="checkbox" id="includeCommentary">
+                <label for="includeCommentary">Include Quarterly Commentary</label>
+            </div>
+            <div class="check">
+                <input type="checkbox" id="includeDisclosures" checked>
+                <label for="includeDisclosures">Include Composite Descriptions</label>
+            </div>
+        </div>
+
+        <!-- Performance Preview -->
+        <div class="card" id="perfCard" style="display: none;">
+            <h2>Performance Data</h2>
+            <table class="perf-table" id="perfTable"></table>
+        </div>
+
+        <!-- Commentary -->
+        <div class="card" id="commentaryCard" style="display: none;">
+            <h2>Quarterly Commentary</h2>
+            <textarea id="commentary" placeholder="Paste your full quarterly commentary here..."></textarea>
+        </div>
+
+        <!-- Action -->
+        <div class="card" style="display: flex; gap: 12px; align-items: center;">
+            <button class="btn-green" onclick="openEmailInNewTab()" style="font-size: 16px; padding: 12px 28px;">
+                ✉️ Generate & Open Email
+            </button>
+            <span style="color: #6b7280; font-size: 13px;">Opens in a new tab → Ctrl+A, Ctrl+C → paste into Outlook</span>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://nzinvxticgyjobkqxxhl.supabase.co';
+        let performanceData = null;
+
+        // ============================================
+        // INIT
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            now.setMonth(now.getMonth() - 1);
+            document.getElementById('reportMonth').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            
+            const savedKey = localStorage.getItem('gridiron_anon_key');
+            if (savedKey) document.getElementById('anonKey').value = savedKey;
+            
+            document.getElementById('includeCommentary').addEventListener('change', function() {
+                document.getElementById('commentaryCard').style.display = this.checked ? 'block' : 'none';
+            });
+        });
+
+        // ============================================
+        // STATUS
+        // ============================================
+        function showStatus(msg, type) {
+            const el = document.getElementById('statusMessage');
+            el.textContent = msg;
+            el.className = `status status-${type}`;
+            if (type === 'success') setTimeout(() => el.classList.add('hidden'), 4000);
+        }
+
+        // ============================================
+        // LOAD DATA - uses same logic as master calc
+        // ============================================
+        async function loadData() {
+            const key = document.getElementById('anonKey').value.trim();
+            const month = document.getElementById('reportMonth').value;
+            if (!key) return showStatus('Enter your Supabase anon key', 'error');
+            if (!month) return showStatus('Select a report month', 'error');
+            
+            localStorage.setItem('gridiron_anon_key', key);
+            showStatus('Loading...', 'info');
+            
+            try {
+                // Fetch from composite_returns - same source as main dashboard
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/composite_returns?select=strategy_id,month_end_date,gross_return,net_return,gross_return_override,net_return_override&order=month_end_date.desc`, {
+                    headers: { 'apikey': key, 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                const data = await res.json();
+                
+                // Apply COALESCE logic: override takes priority (same as master calc / v_composite_stats view)
+                const normalized = data.map(d => ({
+                    strategy_id: d.strategy_id,
+                    month_end_date: d.month_end_date,
+                    gross_return: d.gross_return_override !== null && d.gross_return_override !== undefined ? d.gross_return_override : d.gross_return,
+                    net_return: d.net_return_override !== null && d.net_return_override !== undefined ? d.net_return_override : d.net_return
+                }));
+                
+                performanceData = {
+                    gtfi: calcMetrics(normalized.filter(d => d.strategy_id === 1), month, '2015-10'),
+                    gma: calcMetrics(normalized.filter(d => d.strategy_id === 2), month, '2016-03'),
+                    month
+                };
+                
+                showPerformance();
+                showStatus('Data loaded from composite_returns (with overrides applied)', 'success');
+            } catch (e) {
+                showStatus('Error: ' + e.message, 'error');
+            }
+        }
+
+        function calcMetrics(data, target, inceptionMonth) {
+            if (!data.length) return null;
+            const sorted = [...data].sort((a, b) => new Date(b.month_end_date) - new Date(a.month_end_date));
+            const row = sorted.find(d => d.month_end_date.startsWith(target));
+            if (!row) return null;
+
+            // All months up to and including target, sorted newest first
+            const relevant = sorted.filter(d => d.month_end_date <= row.month_end_date && d.net_return !== null);
+            
+            // MTD
+            const mtd = row.net_return || 0;
+            
+            // YTD - compound all months in the target year
+            const year = target.substring(0, 4);
+            const ytdData = relevant.filter(d => d.month_end_date.startsWith(year));
+            const ytd = ytdData.reduce((acc, d) => (1 + acc) * (1 + (d.net_return || 0)) - 1, 0);
+            
+            // 1 Year - need exactly 12 months
+            const y1Data = relevant.slice(0, 12);
+            const oneYear = y1Data.length === 12 ? y1Data.reduce((acc, d) => (1 + acc) * (1 + (d.net_return || 0)) - 1, 0) : null;
+            
+            // 3 Year - need exactly 36 months, annualized
+            const y3Data = relevant.slice(0, 36);
+            const threeYear = y3Data.length === 36 ? y3Data.reduce((acc, d) => (1 + acc) * (1 + (d.net_return || 0)) - 1, 0) : null;
+            const threeYearAnn = threeYear !== null ? Math.pow(1 + threeYear, 12 / 36) - 1 : null;
+            
+            // Since Inception - annualized
+            const cum = relevant.reduce((acc, d) => (1 + acc) * (1 + (d.net_return || 0)) - 1, 0);
+            const si = relevant.length > 0 ? Math.pow(1 + cum, 12 / relevant.length) - 1 : 0;
+            
+            return { mtd, ytd, oneYear, threeYear: threeYearAnn, sinceInception: si };
+        }
+
+        function pct(v) { return v === null || v === undefined ? 'N/A' : (v * 100).toFixed(2) + '%'; }
+
+        function showPerformance() {
+            const g = performanceData.gtfi, m = performanceData.gma;
+            document.getElementById('perfTable').innerHTML = `
+                <tr><th>Composite</th><th>MTD</th><th>YTD</th><th>1 Year</th><th>3 Year</th><th>Since Incept.</th></tr>
+                <tr><td><strong>GTFI</strong></td><td>${g ? pct(g.mtd) : 'N/A'}</td><td>${g ? pct(g.ytd) : 'N/A'}</td><td>${g?.oneYear !== null ? pct(g.oneYear) : 'N/A'}</td><td>${g?.threeYear !== null ? pct(g.threeYear) : 'N/A'}</td><td>${g ? pct(g.sinceInception) : 'N/A'}</td></tr>
+                <tr><td><strong>GMA</strong></td><td>${m ? pct(m.mtd) : 'N/A'}</td><td>${m ? pct(m.ytd) : 'N/A'}</td><td>${m?.oneYear !== null ? pct(m.oneYear) : 'N/A'}</td><td>${m?.threeYear !== null ? pct(m.threeYear) : 'N/A'}</td><td>${m ? pct(m.sinceInception) : 'N/A'}</td></tr>
+            `;
+            document.getElementById('perfCard').style.display = 'block';
+        }
+
+        // ============================================
+        // GENERATE & OPEN IN NEW TAB
+        // ============================================
+        function openEmailInNewTab() {
+            if (!performanceData) return showStatus('Load performance data first', 'error');
+            
+            const g = performanceData.gtfi, m = performanceData.gma;
+            const monthDate = new Date(performanceData.month + '-15');
+            const monthName = monthDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            const hasCommentary = document.getElementById('includeCommentary').checked;
+            const hasDisclosures = document.getElementById('includeDisclosures').checked;
+            const commentary = document.getElementById('commentary').value.trim();
+
+            let commentaryHTML = '';
+            if (hasCommentary && commentary) {
+                const paras = commentary.split(/\n\n+/).map(p => p.trim()).filter(p => p);
+                commentaryHTML = paras.map(p => `<p style="margin: 0 0 15px 0; line-height: 1.6;">${p.replace(/\n/g, '<br>')}</p>`).join('');
+            }
+
+            let disclosuresHTML = '';
+            if (hasDisclosures) {
+                disclosuresHTML = `
+<div style="margin-top: 10px; margin-bottom: 30px; padding: 18px;">
+    <p style="font-size: 14px; font-weight: bold; color: #92400e; margin: 0 0 12px 0;">Gridiron Tactical Fixed Income Composite Description</p>
+    <p style="font-size: 11px; color: #4b5563; margin: 0 0 20px 0; line-height: 1.6;">The accounts in this composite are fully discretionary separate accounts. The accounts are managed to produce absolute returns, a high level of current income with low correlation to traditional asset classes. The strategy is managed to have a yield between 5-7% and produce average annualized returns over a market cycle between 7-9% with 3-5% standard deviation. The focus is for elevated current income with low drawdowns. The strategy may include the holding of cash or cash equivalents for strategic purposes. Exposures to any allowed security or asset class can be 0% for any length of time. Allocations to securities change opportunistically as market conditions change to meet the objective. Portfolios may invest in a wide range of fixed income securities including: U.S Treasury Securities, U.S. Agency Securities, Dollar denominated, investment grade, domestic corporate debt, Pass-through MBS securities, Dollar denominated, investment grade ABS, High Yield Bonds, Preferred Stock, Master Limited Partnerships, Closed End Funds, Open End Funds, Exchange Traded Funds, Exchange Traded Notes, Options, ADRs.</p>
+    <p style="font-size: 14px; font-weight: bold; color: #92400e; margin: 20px 0 12px 0;">Gridiron Multi-Asset Composite Description</p>
+    <p style="font-size: 11px; color: #4b5563; margin: 0; line-height: 1.6;">The accounts in this composite are fully discretionary separate accounts. The accounts are managed to produce absolute returns, a high level of current income with low correlation to traditional asset classes. The strategy is managed to produce average annualized returns over a market cycle between 7-9% with 4-6% standard deviation. The strategy may include the holding of cash or cash equivalents for strategic purposes. Exposures to any allowed security or asset class can be 0% for any length of time. Allocations to securities change opportunistically as market conditions change to meet the objective. Portfolios may invest in a wide range of fixed income & equity securities including: Taxable fixed income closed-end funds, Preferred stock closed-end funds, Equity closed-end funds, Fixed income ETFs, MLPs, Open end funds, Tax-exempt closed-end funds, Equity ETFs, ETNs, Options.</p>
+</div>`;
+            }
+
+            const emailBody = `
+<div style="text-align: center; margin-bottom: 30px; padding-bottom: 10px;">
+    <img src="http://gridironpartners.com/wp-content/uploads/2019/05/logo.png" alt="Gridiron Partners" style="max-width: 250px; height: auto;">
+</div>
+<div style="margin-bottom: 30px;">
+    <p style="color: #92400e; border-bottom: 2px solid #caaa79; padding-bottom: 8px; font-size: 18px; font-weight: bold; margin: 0 0 20px 0;">Performance Summary - ${monthName}</p>
+    <table style="width: 100%; border-collapse: collapse; font-size: 18px;" border="0" cellpadding="8" cellspacing="0">
+        <tr style="background-color: #f9fafb;">
+            <td style="text-align: left; border-bottom: 2px solid #caaa79; font-weight: bold; padding: 12px 10px;">Composite</td>
+            <td style="text-align: right; border-bottom: 2px solid #caaa79; font-weight: bold; padding: 12px 10px;">MTD</td>
+            <td style="text-align: right; border-bottom: 2px solid #caaa79; font-weight: bold; padding: 12px 10px;">YTD</td>
+            <td style="text-align: right; border-bottom: 2px solid #caaa79; font-weight: bold; padding: 12px 10px;">1 Year</td>
+            <td style="text-align: right; border-bottom: 2px solid #caaa79; font-weight: bold; padding: 12px 10px;">3 Year</td>
+            <td style="text-align: right; border-bottom: 2px solid #caaa79; font-weight: bold; padding: 12px 10px;">Since Incept.</td>
+        </tr>
+        <tr>
+            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px 10px;"><strong>GTFI</strong></td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${g ? pct(g.mtd) : 'N/A'}</td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${g ? pct(g.ytd) : 'N/A'}</td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${g?.oneYear !== null ? pct(g.oneYear) : 'N/A'}</td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${g?.threeYear !== null ? pct(g.threeYear) : 'N/A'}</td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${g ? pct(g.sinceInception) : 'N/A'}</td>
+        </tr>
+        <tr>
+            <td style="border-bottom: 1px solid #e5e7eb; padding: 12px 10px;"><strong>GMA</strong></td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${m ? pct(m.mtd) : 'N/A'}</td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${m ? pct(m.ytd) : 'N/A'}</td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${m?.oneYear !== null ? pct(m.oneYear) : 'N/A'}</td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${m?.threeYear !== null ? pct(m.threeYear) : 'N/A'}</td>
+            <td style="text-align: right; border-bottom: 1px solid #e5e7eb; padding: 12px 10px;">${m ? pct(m.sinceInception) : 'N/A'}</td>
+        </tr>
+    </table>
+    <p style="font-size: 11px; color: #6b7280; margin: 10px 0 0 0;">* Net of fees. Past performance is not indicative of future results.</p>
+</div>
+${commentaryHTML ? '<div style="margin-bottom: 30px;">' + commentaryHTML + '</div>' : ''}
+<div style="background-color: #caaa79; color: white; padding: 12px 15px; margin-bottom: 15px; font-size: 12px;">
+    <strong>Gridiron Partners claims compliance with the Global Investment Performance (GIPS&reg;) standards</strong>
+</div>
+<div style="background-color: #f3f4f6; padding: 12px 15px; margin-bottom: 30px; font-size: 12px;">
+    <p style="margin: 0;"><strong>Gridiron Tactical Fixed Income</strong> inception October 1, 2015</p>
+    <p style="margin: 8px 0 0 0;"><strong>Gridiron Multi-Asset</strong> inception March 1, 2016</p>
+</div>
+${disclosuresHTML}`;
+
+            // Open clean page in new tab
+            const w = window.open('', '_blank');
+            w.document.write(`<html><head><meta charset="UTF-8"><title>Gridiron Email</title></head><body style="font-family: Arial, sans-serif; font-size: 14px; color: #333; max-width: 700px; margin: 20px auto; padding: 20px;">${emailBody}</body></html>`);
+            w.document.close();
+        }
+    </script>
+</body>
+</html>

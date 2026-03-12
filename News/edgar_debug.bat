@@ -1,0 +1,4 @@
+@echo off
+set SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aW52eHRpY2d5am9ia3F4eGhsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODk1NTA5MiwiZXhwIjoyMDg0NTMxMDkyfQ.IEgJeC2WcBq1kY7h25cuQLl1J3qs8HsZetErt3ADKC8
+"C:\Users\Mike\AppData\Local\Microsoft\WindowsApps\python.exe" "C:\Users\Mike\OneDrive - Gridiron Partners\Gridiron Partners - Shared Documents\Reporting\News\edgar_debug.py"
+pause

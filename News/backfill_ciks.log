@@ -1,0 +1,483 @@
+2026-03-08 21:40:45,350 | INFO | ============================================================
+2026-03-08 21:40:45,350 | INFO | === DRY-RUN MODE -- no database writes ===
+2026-03-08 21:40:45,350 | INFO | backfill_ciks.py | 2026-03-08 | dry_run=True
+2026-03-08 21:40:45,351 | INFO | ============================================================
+2026-03-08 21:40:45,702 | INFO | Found 47 active tickers with null CIK
+2026-03-08 21:40:45,702 | INFO | Fetching SEC company_tickers.json (one-time call) ...
+2026-03-08 21:40:46,033 | INFO |   Loaded 10,420 ticker->CIK mappings
+2026-03-08 21:40:46,034 | INFO | [  1/47] BHV      | BlackRock Virginia Municipal Bond Trust
+2026-03-08 21:40:46,533 | INFO |   [SEC MAP]  CIK=1169034 | BLACKROCK VIRGINIA MUNICIPAL BOND TRUST
+2026-03-08 21:40:46,834 | INFO | [  2/47] CCIF     | Carlyle Credit Income Fund Shares of Beneficial 
+2026-03-08 21:40:47,145 | INFO |   [SEC MAP]  CIK=1517767 | Carlyle Credit Income Fund
+2026-03-08 21:40:47,446 | INFO | [  3/47] CEF      | Sprott Physical Gold and Silver Trust Units
+2026-03-08 21:40:47,447 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-08 21:40:47,447 | INFO | [  4/47] CEV      | Eaton Vance California Municipal Income Trust Sh
+2026-03-08 21:40:47,742 | INFO |   [SEC MAP]  CIK=1074692 | Eaton Vance California Municipal Income Trust
+2026-03-08 21:40:48,043 | INFO | [  5/47] CFND     | C1 Fund Inc. Common Stock
+2026-03-08 21:40:48,172 | INFO |   [SEC MAP]  CIK=2044327 | C1 Fund Inc.
+2026-03-08 21:40:48,473 | INFO | [  6/47] CIF      | MFS Intermediate High Income Fund Common Stock
+2026-03-08 21:40:48,720 | INFO |   [SEC MAP]  CIK=833021 | MFS INTERMEDIATE HIGH INCOME FUND
+2026-03-08 21:40:49,021 | INFO | [  7/47] CMU      | MFS Municipal Income Trust Common Stock
+2026-03-08 21:40:49,215 | INFO |   [SEC MAP]  CIK=809844 | MFS HIGH YIELD MUNICIPAL TRUST
+2026-03-08 21:40:49,516 | INFO | [  8/47] CXH      | MFS Investment Grade Municipal Trust Common Stoc
+2026-03-08 21:40:49,707 | INFO |   [OVERRIDE] CIK=847411 | MFS INVESTMENT GRADE MUNICIPAL TRUST
+2026-03-08 21:40:50,008 | INFO | [  9/47] DMA      | Destra Multi-Alternative Fund Common Stock
+2026-03-08 21:40:50,156 | INFO |   [SEC MAP]  CIK=1523289 | Destra Multi-Alternative Fund
+2026-03-08 21:40:50,457 | INFO | [ 10/47] DTF      | DTF Tax-Free Income 2028 Term Fund Inc. Common S
+2026-03-08 21:40:50,661 | INFO |   [SEC MAP]  CIK=879535 | DTF TAX-FREE INCOME 2028 TERM FUND INC
+2026-03-08 21:40:50,961 | INFO | [ 11/47] DXYZ     | Destiny Tech100 Inc. Common Stock
+2026-03-08 21:40:51,097 | INFO |   [SEC MAP]  CIK=1843974 | Destiny Tech100 Inc.
+2026-03-08 21:40:51,398 | INFO | [ 12/47] EARN     | Ellington Credit Company Common Shares of Benefi
+2026-03-08 21:40:51,612 | INFO |   [OVERRIDE] CIK=1560672 | Ellington Credit Co
+2026-03-08 21:40:51,912 | INFO | [ 13/47] EEA      | The European Equity Fund, Inc. Common Stock
+2026-03-08 21:40:52,114 | INFO |   [SEC MAP]  CIK=791718 | EUROPEAN EQUITY FUND, INC / MD
+2026-03-08 21:40:52,414 | INFO | [ 14/47] EVF      | Eaton Vance Senior Income Trust Common Stock
+2026-03-08 21:40:52,591 | INFO |   [OVERRIDE] CIK=1070732 | Eaton Vance Senior Income Trust
+2026-03-08 21:40:52,892 | INFO | [ 15/47] FCO      | abrdn Global Income Fund, Inc. Common Stock
+2026-03-08 21:40:53,106 | INFO |   [SEC MAP]  CIK=876717 | ABRDN GLOBAL INCOME FUND, INC.
+2026-03-08 21:40:53,407 | INFO | [ 16/47] FMN      | Federated Hermes Premier Municipal Income Fund
+2026-03-08 21:40:53,672 | INFO |   [SEC MAP]  CIK=1199004 | Federated Hermes Premier Municipal Income Fund
+2026-03-08 21:40:53,973 | INFO | [ 17/47] FMY      | First Trust Mortgage Income Fund Common Shares o
+2026-03-08 21:40:54,133 | INFO |   [SEC MAP]  CIK=1319183 | FIRST TRUST MORTGAGE INCOME FUND
+2026-03-08 21:40:54,434 | INFO | [ 18/47] FSSL     | FS Specialty Lending Fund Common Shares of Benef
+2026-03-08 21:40:54,614 | INFO |   [SEC MAP]  CIK=2065812 | FS Specialty Lending Fund
+2026-03-08 21:40:54,914 | INFO | [ 19/47] FXBY     | FOXBY CORP
+2026-03-08 21:40:55,076 | INFO |   [SEC MAP]  CIK=1068897 | FOXBY CORP.
+2026-03-08 21:40:55,376 | INFO | [ 20/47] GCV      | Gabelli Convertible and Income Securities Fund, 
+2026-03-08 21:40:55,584 | INFO |   [SEC MAP]  CIK=845611 | GABELLI CONVERTIBLE & INCOME SECURITIES FUND INC
+2026-03-08 21:40:55,885 | INFO | [ 21/47] GDL      | GDL Fund, The Common Shares of Beneficial Intere
+2026-03-08 21:40:56,072 | INFO |   [SEC MAP]  CIK=1378701 | GDL FUND
+2026-03-08 21:40:56,373 | INFO | [ 22/47] GDO      | Western Asset Global Corporate Opportunity Fund 
+2026-03-08 21:40:56,630 | INFO |   [SEC MAP]  CIK=1472341 | WESTERN ASSET GLOBAL CORPORATE OPPORTUNITY FUND INC.
+2026-03-08 21:40:56,931 | INFO | [ 23/47] GLV      | Clough Global Dividend and Income Fund Common Sh
+2026-03-08 21:40:57,145 | INFO |   [SEC MAP]  CIK=1288795 | Clough Global Dividend & Income Fund
+2026-03-08 21:40:57,445 | INFO | [ 24/47] GRF      | Eagle Capital Growth Fund, Inc. Common Stock
+2026-03-08 21:40:57,609 | INFO |   [SEC MAP]  CIK=850027 | EAGLE CAPITAL GROWTH FUND, INC.
+2026-03-08 21:40:57,909 | INFO | [ 25/47] HERZ     | Herzfeld Credit Income Fund, Inc.  - Closed End 
+2026-03-08 21:40:58,129 | INFO |   [SEC MAP]  CIK=880406 | Herzfeld Credit Income Fund, Inc
+2026-03-08 21:40:58,430 | INFO | [ 26/47] IAE      | Voya Asia Pacific High Dividend Equity Income Fu
+2026-03-08 21:40:58,651 | INFO |   [OVERRIDE] CIK=1385632 | Voya Asia Pacific High Dividend Equity Income Fund
+2026-03-08 21:40:58,952 | INFO | [ 27/47] IGI      | Western Asset Investment Grade Opportunity Trust
+2026-03-08 21:40:59,145 | INFO |   [SEC MAP]  CIK=1462586 | Western Asset Investment Grade Opportunity Trust Inc.
+2026-03-08 21:40:59,446 | INFO | [ 28/47] JMM      | Nuveen Multi-Market Income Fund (MA)
+2026-03-08 21:40:59,613 | INFO |   [SEC MAP]  CIK=838131 | Nuveen Multi-Market Income Fund
+2026-03-08 21:40:59,914 | INFO | [ 29/47] MGF      | MFS Government Markets Income Trust Common Stock
+2026-03-08 21:41:00,129 | INFO |   [OVERRIDE] CIK=811922 | MFS GOVERNMENT MARKETS INCOME TRUST
+2026-03-08 21:41:00,430 | INFO | [ 30/47] MXE      | Mexico Equity and Income Fund, Inc. (The) Common
+2026-03-08 21:41:00,653 | INFO |   [SEC MAP]  CIK=863900 | MEXICO EQUITY & INCOME FUND INC
+2026-03-08 21:41:00,954 | INFO | [ 31/47] NMS      | Nuveen Minnesota Quality Municipal Income Fund
+2026-03-08 21:41:01,362 | INFO |   [SEC MAP]  CIK=1607997 | Nuveen Minnesota Quality Municipal Income Fund
+2026-03-08 21:41:01,663 | INFO | [ 32/47] NOM      | Nuveen Missouri Quality Municipal Income Fund
+2026-03-08 21:41:01,820 | INFO |   [SEC MAP]  CIK=899782 | NUVEEN MISSOURI QUALITY MUNICIPAL INCOME FUND
+2026-03-08 21:41:02,121 | INFO | [ 33/47] OXLC     | Oxford Lane Capital Corp. - Closed End Fund
+2026-03-08 21:41:02,345 | INFO |   [SEC MAP]  CIK=1495222 | Oxford Lane Capital Corp.
+2026-03-08 21:41:02,646 | INFO | [ 34/47] PCM      | PCM Fund, Inc. Common Stock
+2026-03-08 21:41:02,930 | INFO |   [SEC MAP]  CIK=908187 | PCM FUND, INC.
+2026-03-08 21:41:03,230 | INFO | [ 35/47] PDCC     | Pearl Diver Credit Company Inc. Common Stock
+2026-03-08 21:41:03,362 | INFO |   [SEC MAP]  CIK=1998043 | Pearl Diver Credit Co Inc.
+2026-03-08 21:41:03,663 | INFO | [ 36/47] PGZ      | Principal Real Estate Income Fund Common Shares 
+2026-03-08 21:41:03,876 | INFO |   [SEC MAP]  CIK=1557523 | Principal Real Estate Income Fund
+2026-03-08 21:41:04,177 | INFO | [ 37/47] PHYS     | Sprott Physical Gold Trust ETV
+2026-03-08 21:41:04,177 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-08 21:41:04,178 | INFO | [ 38/47] PSLV     | Sprott Physical Silver Trust ETV
+2026-03-08 21:41:04,178 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-08 21:41:04,178 | INFO | [ 39/47] RCG      | RENN Fund, Inc Common Stock
+2026-03-08 21:41:04,321 | INFO |   [SEC MAP]  CIK=919567 | RENN Fund, Inc.
+2026-03-08 21:41:04,622 | INFO | [ 40/47] RFM      | RiverNorth Flexible Municipal Income Fund, Inc. 
+2026-03-08 21:41:04,762 | INFO |   [SEC MAP]  CIK=1790177 | RiverNorth Flexible Municipal Income Fund, Inc.
+2026-03-08 21:41:05,063 | INFO | [ 41/47] RGT      | Royce Global Trust, Inc. Common Stock
+2026-03-08 21:41:05,248 | INFO |   [SEC MAP]  CIK=1514490 | ROYCE GLOBAL TRUST, INC.
+2026-03-08 21:41:05,548 | INFO | [ 42/47] RMI      | RiverNorth Opportunistic Municipal Income Fund, 
+2026-03-08 21:41:05,765 | INFO |   [OVERRIDE] CIK=1746967 | RiverNorth Opportunistic Municipal Income Fund, Inc.
+2026-03-08 21:41:06,066 | INFO | [ 43/47] RSF      | RiverNorth Capital and Income Fund Common Stock
+2026-03-08 21:41:06,238 | INFO |   [SEC MAP]  CIK=1644771 | RiverNorth Capital & Income Fund, Inc.
+2026-03-08 21:41:06,538 | INFO | [ 44/47] SPPP     | Sprott Physical Platinum and Palladium Trust
+2026-03-08 21:41:06,539 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-08 21:41:06,539 | INFO | [ 45/47] SWZ      | Total Return Securities Fund Common Stock
+2026-03-08 21:41:06,847 | INFO |   [SEC MAP]  CIK=813623 | Total Return Securities Fund
+2026-03-08 21:41:07,148 | INFO | [ 46/47] VGI      | Virtus Global Multi-Sector Income Fund Common Sh
+2026-03-08 21:41:07,362 | INFO |   [OVERRIDE] CIK=1528811 | Virtus Global Multi-Sector Income Fund
+2026-03-08 21:41:07,662 | INFO | [ 47/47] VLT      | Invesco High Income Trust II
+2026-03-08 21:41:07,945 | INFO |   [SEC MAP]  CIK=846671 | Invesco High Income Trust II
+2026-03-08 21:41:08,246 | INFO | 
+2026-03-08 21:41:08,246 | INFO | ============================================================
+2026-03-08 21:41:08,247 | INFO | BACKFILL COMPLETE
+2026-03-08 21:41:08,247 | INFO |   Resolved (CIK written):    43
+2026-03-08 21:41:08,247 | INFO |   No SEC CIK (flagged -1):   4
+2026-03-08 21:41:08,247 | INFO |   Not found (manual needed): 0
+2026-03-08 21:41:08,248 | INFO | ============================================================
+2026-03-08 21:41:08,248 | INFO | 
+2026-03-08 21:41:08,249 | INFO | RESOLVED:
+2026-03-08 21:41:08,249 | INFO |   BHV     : 1169034
+2026-03-08 21:41:08,249 | INFO |   CCIF    : 1517767
+2026-03-08 21:41:08,249 | INFO |   CEV     : 1074692
+2026-03-08 21:41:08,250 | INFO |   CFND    : 2044327
+2026-03-08 21:41:08,250 | INFO |   CIF     : 833021
+2026-03-08 21:41:08,250 | INFO |   CMU     : 809844
+2026-03-08 21:41:08,250 | INFO |   CXH     : 847411
+2026-03-08 21:41:08,250 | INFO |   DMA     : 1523289
+2026-03-08 21:41:08,250 | INFO |   DTF     : 879535
+2026-03-08 21:41:08,250 | INFO |   DXYZ    : 1843974
+2026-03-08 21:41:08,250 | INFO |   EARN    : 1560672
+2026-03-08 21:41:08,250 | INFO |   EEA     : 791718
+2026-03-08 21:41:08,250 | INFO |   EVF     : 1070732
+2026-03-08 21:41:08,251 | INFO |   FCO     : 876717
+2026-03-08 21:41:08,251 | INFO |   FMN     : 1199004
+2026-03-08 21:41:08,251 | INFO |   FMY     : 1319183
+2026-03-08 21:41:08,251 | INFO |   FSSL    : 2065812
+2026-03-08 21:41:08,251 | INFO |   FXBY    : 1068897
+2026-03-08 21:41:08,252 | INFO |   GCV     : 845611
+2026-03-08 21:41:08,252 | INFO |   GDL     : 1378701
+2026-03-08 21:41:08,252 | INFO |   GDO     : 1472341
+2026-03-08 21:41:08,253 | INFO |   GLV     : 1288795
+2026-03-08 21:41:08,253 | INFO |   GRF     : 850027
+2026-03-08 21:41:08,253 | INFO |   HERZ    : 880406
+2026-03-08 21:41:08,253 | INFO |   IAE     : 1385632
+2026-03-08 21:41:08,253 | INFO |   IGI     : 1462586
+2026-03-08 21:41:08,253 | INFO |   JMM     : 838131
+2026-03-08 21:41:08,254 | INFO |   MGF     : 811922
+2026-03-08 21:41:08,254 | INFO |   MXE     : 863900
+2026-03-08 21:41:08,254 | INFO |   NMS     : 1607997
+2026-03-08 21:41:08,254 | INFO |   NOM     : 899782
+2026-03-08 21:41:08,254 | INFO |   OXLC    : 1495222
+2026-03-08 21:41:08,254 | INFO |   PCM     : 908187
+2026-03-08 21:41:08,254 | INFO |   PDCC    : 1998043
+2026-03-08 21:41:08,254 | INFO |   PGZ     : 1557523
+2026-03-08 21:41:08,254 | INFO |   RCG     : 919567
+2026-03-08 21:41:08,254 | INFO |   RFM     : 1790177
+2026-03-08 21:41:08,254 | INFO |   RGT     : 1514490
+2026-03-08 21:41:08,254 | INFO |   RMI     : 1746967
+2026-03-08 21:41:08,255 | INFO |   RSF     : 1644771
+2026-03-08 21:41:08,255 | INFO |   SWZ     : 813623
+2026-03-08 21:41:08,255 | INFO |   VGI     : 1528811
+2026-03-08 21:41:08,255 | INFO |   VLT     : 846671
+2026-03-08 21:41:08,255 | INFO | 
+2026-03-08 21:41:08,255 | INFO | NO SEC CIK (Canadian trusts, cik flagged -1):
+2026-03-08 21:41:08,255 | INFO |   CEF
+2026-03-08 21:41:08,255 | INFO |   PHYS
+2026-03-08 21:41:08,255 | INFO |   PSLV
+2026-03-08 21:41:08,255 | INFO |   SPPP
+2026-03-08 21:41:08,255 | INFO | 
+2026-03-08 21:41:08,255 | INFO | Dry-run complete -- no changes written.
+2026-03-09 06:20:12,702 | INFO | ============================================================
+2026-03-09 06:20:12,703 | INFO | === DRY-RUN MODE -- no database writes ===
+2026-03-09 06:20:12,703 | INFO | backfill_ciks.py | 2026-03-09 | dry_run=True
+2026-03-09 06:20:12,704 | INFO | ============================================================
+2026-03-09 06:20:13,023 | INFO | Found 47 active tickers with null CIK
+2026-03-09 06:20:13,024 | INFO | Fetching SEC company_tickers.json (one-time call) ...
+2026-03-09 06:20:13,247 | INFO |   Loaded 10,420 ticker->CIK mappings
+2026-03-09 06:20:13,249 | INFO | [  1/47] BHV      | BlackRock Virginia Municipal Bond Trust
+2026-03-09 06:20:13,488 | INFO |   [SEC MAP]  CIK=1169034 | BLACKROCK VIRGINIA MUNICIPAL BOND TRUST
+2026-03-09 06:20:13,790 | INFO | [  2/47] CCIF     | Carlyle Credit Income Fund Shares of Beneficial 
+2026-03-09 06:20:13,929 | INFO |   [SEC MAP]  CIK=1517767 | Carlyle Credit Income Fund
+2026-03-09 06:20:14,230 | INFO | [  3/47] CEF      | Sprott Physical Gold and Silver Trust Units
+2026-03-09 06:20:14,231 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-09 06:20:14,231 | INFO | [  4/47] CEV      | Eaton Vance California Municipal Income Trust Sh
+2026-03-09 06:20:14,380 | INFO |   [SEC MAP]  CIK=1074692 | Eaton Vance California Municipal Income Trust
+2026-03-09 06:20:14,681 | INFO | [  5/47] CFND     | C1 Fund Inc. Common Stock
+2026-03-09 06:20:14,805 | INFO |   [SEC MAP]  CIK=2044327 | C1 Fund Inc.
+2026-03-09 06:20:15,107 | INFO | [  6/47] CIF      | MFS Intermediate High Income Fund Common Stock
+2026-03-09 06:20:15,263 | INFO |   [SEC MAP]  CIK=833021 | MFS INTERMEDIATE HIGH INCOME FUND
+2026-03-09 06:20:15,564 | INFO | [  7/47] CMU      | MFS Municipal Income Trust Common Stock
+2026-03-09 06:20:15,718 | INFO |   [OVERRIDE] CIK=801961 | MFS MUNICIPAL INCOME TRUST
+2026-03-09 06:20:16,019 | INFO | [  8/47] CXH      | MFS Investment Grade Municipal Trust Common Stoc
+2026-03-09 06:20:16,160 | INFO |   [OVERRIDE] CIK=847411 | MFS INVESTMENT GRADE MUNICIPAL TRUST
+2026-03-09 06:20:16,462 | INFO | [  9/47] DMA      | Destra Multi-Alternative Fund Common Stock
+2026-03-09 06:20:16,630 | INFO |   [SEC MAP]  CIK=1523289 | Destra Multi-Alternative Fund
+2026-03-09 06:20:16,931 | INFO | [ 10/47] DTF      | DTF Tax-Free Income 2028 Term Fund Inc. Common S
+2026-03-09 06:20:17,076 | INFO |   [SEC MAP]  CIK=879535 | DTF TAX-FREE INCOME 2028 TERM FUND INC
+2026-03-09 06:20:17,377 | INFO | [ 11/47] DXYZ     | Destiny Tech100 Inc. Common Stock
+2026-03-09 06:20:17,506 | INFO |   [SEC MAP]  CIK=1843974 | Destiny Tech100 Inc.
+2026-03-09 06:20:17,807 | INFO | [ 12/47] EARN     | Ellington Credit Company Common Shares of Benefi
+2026-03-09 06:20:17,972 | INFO |   [OVERRIDE] CIK=1560672 | Ellington Credit Co
+2026-03-09 06:20:18,273 | INFO | [ 13/47] EEA      | The European Equity Fund, Inc. Common Stock
+2026-03-09 06:20:18,429 | INFO |   [SEC MAP]  CIK=791718 | EUROPEAN EQUITY FUND, INC / MD
+2026-03-09 06:20:18,730 | INFO | [ 14/47] EVF      | Eaton Vance Senior Income Trust Common Stock
+2026-03-09 06:20:18,895 | INFO |   [OVERRIDE] CIK=1070732 | Eaton Vance Senior Income Trust
+2026-03-09 06:20:19,196 | INFO | [ 15/47] FCO      | abrdn Global Income Fund, Inc. Common Stock
+2026-03-09 06:20:19,354 | INFO |   [SEC MAP]  CIK=876717 | ABRDN GLOBAL INCOME FUND, INC.
+2026-03-09 06:20:19,655 | INFO | [ 16/47] FMN      | Federated Hermes Premier Municipal Income Fund
+2026-03-09 06:20:19,815 | INFO |   [SEC MAP]  CIK=1199004 | Federated Hermes Premier Municipal Income Fund
+2026-03-09 06:20:20,116 | INFO | [ 17/47] FMY      | First Trust Mortgage Income Fund Common Shares o
+2026-03-09 06:20:20,241 | INFO |   [SEC MAP]  CIK=1319183 | FIRST TRUST MORTGAGE INCOME FUND
+2026-03-09 06:20:20,541 | INFO | [ 18/47] FSSL     | FS Specialty Lending Fund Common Shares of Benef
+2026-03-09 06:20:20,652 | INFO |   [SEC MAP]  CIK=2065812 | FS Specialty Lending Fund
+2026-03-09 06:20:20,953 | INFO | [ 19/47] FXBY     | FOXBY CORP
+2026-03-09 06:20:21,102 | INFO |   [SEC MAP]  CIK=1068897 | FOXBY CORP.
+2026-03-09 06:20:21,403 | INFO | [ 20/47] GCV      | Gabelli Convertible and Income Securities Fund, 
+2026-03-09 06:20:21,550 | INFO |   [SEC MAP]  CIK=845611 | GABELLI CONVERTIBLE & INCOME SECURITIES FUND INC
+2026-03-09 06:20:21,851 | INFO | [ 21/47] GDL      | GDL Fund, The Common Shares of Beneficial Intere
+2026-03-09 06:20:22,005 | INFO |   [SEC MAP]  CIK=1378701 | GDL FUND
+2026-03-09 06:20:22,305 | INFO | [ 22/47] GDO      | Western Asset Global Corporate Opportunity Fund 
+2026-03-09 06:20:22,440 | INFO |   [SEC MAP]  CIK=1472341 | WESTERN ASSET GLOBAL CORPORATE OPPORTUNITY FUND INC.
+2026-03-09 06:20:22,741 | INFO | [ 23/47] GLV      | Clough Global Dividend and Income Fund Common Sh
+2026-03-09 06:20:22,902 | INFO |   [SEC MAP]  CIK=1288795 | Clough Global Dividend & Income Fund
+2026-03-09 06:20:23,203 | INFO | [ 24/47] GRF      | Eagle Capital Growth Fund, Inc. Common Stock
+2026-03-09 06:20:23,360 | INFO |   [SEC MAP]  CIK=850027 | EAGLE CAPITAL GROWTH FUND, INC.
+2026-03-09 06:20:23,661 | INFO | [ 25/47] HERZ     | Herzfeld Credit Income Fund, Inc.  - Closed End 
+2026-03-09 06:20:23,831 | INFO |   [SEC MAP]  CIK=880406 | Herzfeld Credit Income Fund, Inc
+2026-03-09 06:20:24,132 | INFO | [ 26/47] IAE      | Voya Asia Pacific High Dividend Equity Income Fu
+2026-03-09 06:20:24,269 | INFO |   [OVERRIDE] CIK=1385632 | Voya Asia Pacific High Dividend Equity Income Fund
+2026-03-09 06:20:24,570 | INFO | [ 27/47] IGI      | Western Asset Investment Grade Opportunity Trust
+2026-03-09 06:20:24,695 | INFO |   [SEC MAP]  CIK=1462586 | Western Asset Investment Grade Opportunity Trust Inc.
+2026-03-09 06:20:24,996 | INFO | [ 28/47] JMM      | Nuveen Multi-Market Income Fund (MA)
+2026-03-09 06:20:25,168 | INFO |   [SEC MAP]  CIK=838131 | Nuveen Multi-Market Income Fund
+2026-03-09 06:20:25,469 | INFO | [ 29/47] MGF      | MFS Government Markets Income Trust Common Stock
+2026-03-09 06:20:25,628 | INFO |   [OVERRIDE] CIK=811922 | MFS GOVERNMENT MARKETS INCOME TRUST
+2026-03-09 06:20:25,929 | INFO | [ 30/47] MXE      | Mexico Equity and Income Fund, Inc. (The) Common
+2026-03-09 06:20:26,101 | INFO |   [SEC MAP]  CIK=863900 | MEXICO EQUITY & INCOME FUND INC
+2026-03-09 06:20:26,402 | INFO | [ 31/47] NMS      | Nuveen Minnesota Quality Municipal Income Fund
+2026-03-09 06:20:26,534 | INFO |   [SEC MAP]  CIK=1607997 | Nuveen Minnesota Quality Municipal Income Fund
+2026-03-09 06:20:26,834 | INFO | [ 32/47] NOM      | Nuveen Missouri Quality Municipal Income Fund
+2026-03-09 06:20:27,002 | INFO |   [SEC MAP]  CIK=899782 | NUVEEN MISSOURI QUALITY MUNICIPAL INCOME FUND
+2026-03-09 06:20:27,302 | INFO | [ 33/47] OXLC     | Oxford Lane Capital Corp. - Closed End Fund
+2026-03-09 06:20:27,446 | INFO |   [SEC MAP]  CIK=1495222 | Oxford Lane Capital Corp.
+2026-03-09 06:20:27,746 | INFO | [ 34/47] PCM      | PCM Fund, Inc. Common Stock
+2026-03-09 06:20:27,894 | INFO |   [SEC MAP]  CIK=908187 | PCM FUND, INC.
+2026-03-09 06:20:28,195 | INFO | [ 35/47] PDCC     | Pearl Diver Credit Company Inc. Common Stock
+2026-03-09 06:20:28,334 | INFO |   [SEC MAP]  CIK=1998043 | Pearl Diver Credit Co Inc.
+2026-03-09 06:20:28,634 | INFO | [ 36/47] PGZ      | Principal Real Estate Income Fund Common Shares 
+2026-03-09 06:20:28,794 | INFO |   [SEC MAP]  CIK=1557523 | Principal Real Estate Income Fund
+2026-03-09 06:20:29,095 | INFO | [ 37/47] PHYS     | Sprott Physical Gold Trust ETV
+2026-03-09 06:20:29,096 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-09 06:20:29,096 | INFO | [ 38/47] PSLV     | Sprott Physical Silver Trust ETV
+2026-03-09 06:20:29,097 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-09 06:20:29,097 | INFO | [ 39/47] RCG      | RENN Fund, Inc Common Stock
+2026-03-09 06:20:29,266 | INFO |   [SEC MAP]  CIK=919567 | RENN Fund, Inc.
+2026-03-09 06:20:29,567 | INFO | [ 40/47] RFM      | RiverNorth Flexible Municipal Income Fund, Inc. 
+2026-03-09 06:20:29,708 | INFO |   [SEC MAP]  CIK=1790177 | RiverNorth Flexible Municipal Income Fund, Inc.
+2026-03-09 06:20:30,008 | INFO | [ 41/47] RGT      | Royce Global Trust, Inc. Common Stock
+2026-03-09 06:20:30,173 | INFO |   [SEC MAP]  CIK=1514490 | ROYCE GLOBAL TRUST, INC.
+2026-03-09 06:20:30,474 | INFO | [ 42/47] RMI      | RiverNorth Opportunistic Municipal Income Fund, 
+2026-03-09 06:20:30,613 | INFO |   [OVERRIDE] CIK=1746967 | RiverNorth Opportunistic Municipal Income Fund, Inc.
+2026-03-09 06:20:30,915 | INFO | [ 43/47] RSF      | RiverNorth Capital and Income Fund Common Stock
+2026-03-09 06:20:31,077 | INFO |   [SEC MAP]  CIK=1644771 | RiverNorth Capital & Income Fund, Inc.
+2026-03-09 06:20:31,379 | INFO | [ 44/47] SPPP     | Sprott Physical Platinum and Palladium Trust
+2026-03-09 06:20:31,379 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-09 06:20:31,380 | INFO | [ 45/47] SWZ      | Total Return Securities Fund Common Stock
+2026-03-09 06:20:31,558 | INFO |   [SEC MAP]  CIK=813623 | Total Return Securities Fund
+2026-03-09 06:20:31,859 | INFO | [ 46/47] VGI      | Virtus Global Multi-Sector Income Fund Common Sh
+2026-03-09 06:20:31,997 | INFO |   [OVERRIDE] CIK=1528811 | Virtus Global Multi-Sector Income Fund
+2026-03-09 06:20:32,298 | INFO | [ 47/47] VLT      | Invesco High Income Trust II
+2026-03-09 06:20:32,452 | INFO |   [SEC MAP]  CIK=846671 | Invesco High Income Trust II
+2026-03-09 06:20:32,753 | INFO | 
+2026-03-09 06:20:32,754 | INFO | ============================================================
+2026-03-09 06:20:32,754 | INFO | BACKFILL COMPLETE
+2026-03-09 06:20:32,755 | INFO |   Resolved (CIK written):    43
+2026-03-09 06:20:32,755 | INFO |   No SEC CIK (flagged -1):   4
+2026-03-09 06:20:32,756 | INFO |   Not found (manual needed): 0
+2026-03-09 06:20:32,756 | INFO | ============================================================
+2026-03-09 06:20:32,757 | INFO | 
+2026-03-09 06:20:32,757 | INFO | RESOLVED:
+2026-03-09 06:20:32,757 | INFO |   BHV     : 1169034
+2026-03-09 06:20:32,758 | INFO |   CCIF    : 1517767
+2026-03-09 06:20:32,758 | INFO |   CEV     : 1074692
+2026-03-09 06:20:32,758 | INFO |   CFND    : 2044327
+2026-03-09 06:20:32,758 | INFO |   CIF     : 833021
+2026-03-09 06:20:32,758 | INFO |   CMU     : 801961
+2026-03-09 06:20:32,758 | INFO |   CXH     : 847411
+2026-03-09 06:20:32,758 | INFO |   DMA     : 1523289
+2026-03-09 06:20:32,758 | INFO |   DTF     : 879535
+2026-03-09 06:20:32,759 | INFO |   DXYZ    : 1843974
+2026-03-09 06:20:32,759 | INFO |   EARN    : 1560672
+2026-03-09 06:20:32,759 | INFO |   EEA     : 791718
+2026-03-09 06:20:32,759 | INFO |   EVF     : 1070732
+2026-03-09 06:20:32,760 | INFO |   FCO     : 876717
+2026-03-09 06:20:32,760 | INFO |   FMN     : 1199004
+2026-03-09 06:20:32,760 | INFO |   FMY     : 1319183
+2026-03-09 06:20:32,760 | INFO |   FSSL    : 2065812
+2026-03-09 06:20:32,760 | INFO |   FXBY    : 1068897
+2026-03-09 06:20:32,760 | INFO |   GCV     : 845611
+2026-03-09 06:20:32,760 | INFO |   GDL     : 1378701
+2026-03-09 06:20:32,760 | INFO |   GDO     : 1472341
+2026-03-09 06:20:32,760 | INFO |   GLV     : 1288795
+2026-03-09 06:20:32,761 | INFO |   GRF     : 850027
+2026-03-09 06:20:32,761 | INFO |   HERZ    : 880406
+2026-03-09 06:20:32,761 | INFO |   IAE     : 1385632
+2026-03-09 06:20:32,761 | INFO |   IGI     : 1462586
+2026-03-09 06:20:32,761 | INFO |   JMM     : 838131
+2026-03-09 06:20:32,761 | INFO |   MGF     : 811922
+2026-03-09 06:20:32,761 | INFO |   MXE     : 863900
+2026-03-09 06:20:32,761 | INFO |   NMS     : 1607997
+2026-03-09 06:20:32,761 | INFO |   NOM     : 899782
+2026-03-09 06:20:32,761 | INFO |   OXLC    : 1495222
+2026-03-09 06:20:32,761 | INFO |   PCM     : 908187
+2026-03-09 06:20:32,762 | INFO |   PDCC    : 1998043
+2026-03-09 06:20:32,762 | INFO |   PGZ     : 1557523
+2026-03-09 06:20:32,762 | INFO |   RCG     : 919567
+2026-03-09 06:20:32,762 | INFO |   RFM     : 1790177
+2026-03-09 06:20:32,762 | INFO |   RGT     : 1514490
+2026-03-09 06:20:32,762 | INFO |   RMI     : 1746967
+2026-03-09 06:20:32,762 | INFO |   RSF     : 1644771
+2026-03-09 06:20:32,762 | INFO |   SWZ     : 813623
+2026-03-09 06:20:32,762 | INFO |   VGI     : 1528811
+2026-03-09 06:20:32,762 | INFO |   VLT     : 846671
+2026-03-09 06:20:32,762 | INFO | 
+2026-03-09 06:20:32,762 | INFO | NO SEC CIK (Canadian trusts, cik flagged -1):
+2026-03-09 06:20:32,763 | INFO |   CEF
+2026-03-09 06:20:32,763 | INFO |   PHYS
+2026-03-09 06:20:32,763 | INFO |   PSLV
+2026-03-09 06:20:32,763 | INFO |   SPPP
+2026-03-09 06:20:32,763 | INFO | 
+2026-03-09 06:20:32,763 | INFO | Dry-run complete -- no changes written.
+2026-03-09 06:23:45,765 | INFO | ============================================================
+2026-03-09 06:23:45,766 | INFO | === LIVE MODE ===
+2026-03-09 06:23:45,766 | INFO | backfill_ciks.py | 2026-03-09 | dry_run=False
+2026-03-09 06:23:45,766 | INFO | ============================================================
+2026-03-09 06:23:45,910 | INFO | Found 47 active tickers with null CIK
+2026-03-09 06:23:45,910 | INFO | Fetching SEC company_tickers.json (one-time call) ...
+2026-03-09 06:23:46,115 | INFO |   Loaded 10,420 ticker->CIK mappings
+2026-03-09 06:23:46,116 | INFO | [  1/47] BHV      | BlackRock Virginia Municipal Bond Trust
+2026-03-09 06:23:46,305 | INFO |   [SEC MAP]  CIK=1169034 | BLACKROCK VIRGINIA MUNICIPAL BOND TRUST
+2026-03-09 06:23:46,696 | INFO | [  2/47] CCIF     | Carlyle Credit Income Fund Shares of Beneficial 
+2026-03-09 06:23:46,900 | INFO |   [SEC MAP]  CIK=1517767 | Carlyle Credit Income Fund
+2026-03-09 06:23:47,282 | INFO | [  3/47] CEF      | Sprott Physical Gold and Silver Trust Units
+2026-03-09 06:23:47,284 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-09 06:23:47,373 | INFO | [  4/47] CEV      | Eaton Vance California Municipal Income Trust Sh
+2026-03-09 06:23:47,519 | INFO |   [SEC MAP]  CIK=1074692 | Eaton Vance California Municipal Income Trust
+2026-03-09 06:23:47,905 | INFO | [  5/47] CFND     | C1 Fund Inc. Common Stock
+2026-03-09 06:23:48,021 | INFO |   [SEC MAP]  CIK=2044327 | C1 Fund Inc.
+2026-03-09 06:23:48,412 | INFO | [  6/47] CIF      | MFS Intermediate High Income Fund Common Stock
+2026-03-09 06:23:48,598 | INFO |   [SEC MAP]  CIK=833021 | MFS INTERMEDIATE HIGH INCOME FUND
+2026-03-09 06:23:48,994 | INFO | [  7/47] CMU      | MFS Municipal Income Trust Common Stock
+2026-03-09 06:23:49,131 | INFO |   [OVERRIDE] CIK=801961 | MFS MUNICIPAL INCOME TRUST
+2026-03-09 06:23:49,518 | INFO | [  8/47] CXH      | MFS Investment Grade Municipal Trust Common Stoc
+2026-03-09 06:23:49,698 | INFO |   [OVERRIDE] CIK=847411 | MFS INVESTMENT GRADE MUNICIPAL TRUST
+2026-03-09 06:23:50,079 | INFO | [  9/47] DMA      | Destra Multi-Alternative Fund Common Stock
+2026-03-09 06:23:50,222 | INFO |   [SEC MAP]  CIK=1523289 | Destra Multi-Alternative Fund
+2026-03-09 06:23:50,612 | INFO | [ 10/47] DTF      | DTF Tax-Free Income 2028 Term Fund Inc. Common S
+2026-03-09 06:23:50,784 | INFO |   [SEC MAP]  CIK=879535 | DTF TAX-FREE INCOME 2028 TERM FUND INC
+2026-03-09 06:23:51,176 | INFO | [ 11/47] DXYZ     | Destiny Tech100 Inc. Common Stock
+2026-03-09 06:23:51,319 | INFO |   [SEC MAP]  CIK=1843974 | Destiny Tech100 Inc.
+2026-03-09 06:23:51,708 | INFO | [ 12/47] EARN     | Ellington Credit Company Common Shares of Benefi
+2026-03-09 06:23:51,861 | INFO |   [OVERRIDE] CIK=1560672 | Ellington Credit Co
+2026-03-09 06:23:52,263 | INFO | [ 13/47] EEA      | The European Equity Fund, Inc. Common Stock
+2026-03-09 06:23:52,404 | INFO |   [SEC MAP]  CIK=791718 | EUROPEAN EQUITY FUND, INC / MD
+2026-03-09 06:23:52,795 | INFO | [ 14/47] EVF      | Eaton Vance Senior Income Trust Common Stock
+2026-03-09 06:23:52,943 | INFO |   [OVERRIDE] CIK=1070732 | Eaton Vance Senior Income Trust
+2026-03-09 06:23:53,330 | INFO | [ 15/47] FCO      | abrdn Global Income Fund, Inc. Common Stock
+2026-03-09 06:23:53,468 | INFO |   [SEC MAP]  CIK=876717 | ABRDN GLOBAL INCOME FUND, INC.
+2026-03-09 06:23:53,847 | INFO | [ 16/47] FMN      | Federated Hermes Premier Municipal Income Fund
+2026-03-09 06:23:53,989 | INFO |   [SEC MAP]  CIK=1199004 | Federated Hermes Premier Municipal Income Fund
+2026-03-09 06:23:54,384 | INFO | [ 17/47] FMY      | First Trust Mortgage Income Fund Common Shares o
+2026-03-09 06:23:54,509 | INFO |   [SEC MAP]  CIK=1319183 | FIRST TRUST MORTGAGE INCOME FUND
+2026-03-09 06:23:54,893 | INFO | [ 18/47] FSSL     | FS Specialty Lending Fund Common Shares of Benef
+2026-03-09 06:23:55,054 | INFO |   [SEC MAP]  CIK=2065812 | FS Specialty Lending Fund
+2026-03-09 06:23:55,437 | INFO | [ 19/47] FXBY     | FOXBY CORP
+2026-03-09 06:23:55,567 | INFO |   [SEC MAP]  CIK=1068897 | FOXBY CORP.
+2026-03-09 06:23:55,951 | INFO | [ 20/47] GCV      | Gabelli Convertible and Income Securities Fund, 
+2026-03-09 06:23:56,125 | INFO |   [SEC MAP]  CIK=845611 | GABELLI CONVERTIBLE & INCOME SECURITIES FUND INC
+2026-03-09 06:23:56,518 | INFO | [ 21/47] GDL      | GDL Fund, The Common Shares of Beneficial Intere
+2026-03-09 06:23:56,698 | INFO |   [SEC MAP]  CIK=1378701 | GDL FUND
+2026-03-09 06:23:57,076 | INFO | [ 22/47] GDO      | Western Asset Global Corporate Opportunity Fund 
+2026-03-09 06:23:57,235 | INFO |   [SEC MAP]  CIK=1472341 | WESTERN ASSET GLOBAL CORPORATE OPPORTUNITY FUND INC.
+2026-03-09 06:23:57,625 | INFO | [ 23/47] GLV      | Clough Global Dividend and Income Fund Common Sh
+2026-03-09 06:23:57,806 | INFO |   [SEC MAP]  CIK=1288795 | Clough Global Dividend & Income Fund
+2026-03-09 06:23:58,205 | INFO | [ 24/47] GRF      | Eagle Capital Growth Fund, Inc. Common Stock
+2026-03-09 06:23:58,360 | INFO |   [SEC MAP]  CIK=850027 | EAGLE CAPITAL GROWTH FUND, INC.
+2026-03-09 06:23:58,753 | INFO | [ 25/47] HERZ     | Herzfeld Credit Income Fund, Inc.  - Closed End 
+2026-03-09 06:23:58,909 | INFO |   [SEC MAP]  CIK=880406 | Herzfeld Credit Income Fund, Inc
+2026-03-09 06:23:59,289 | INFO | [ 26/47] IAE      | Voya Asia Pacific High Dividend Equity Income Fu
+2026-03-09 06:23:59,421 | INFO |   [OVERRIDE] CIK=1385632 | Voya Asia Pacific High Dividend Equity Income Fund
+2026-03-09 06:23:59,836 | INFO | [ 27/47] IGI      | Western Asset Investment Grade Opportunity Trust
+2026-03-09 06:24:00,033 | INFO |   [SEC MAP]  CIK=1462586 | Western Asset Investment Grade Opportunity Trust Inc.
+2026-03-09 06:24:00,413 | INFO | [ 28/47] JMM      | Nuveen Multi-Market Income Fund (MA)
+2026-03-09 06:24:00,603 | INFO |   [SEC MAP]  CIK=838131 | Nuveen Multi-Market Income Fund
+2026-03-09 06:24:01,008 | INFO | [ 29/47] MGF      | MFS Government Markets Income Trust Common Stock
+2026-03-09 06:24:01,235 | INFO |   [OVERRIDE] CIK=811922 | MFS GOVERNMENT MARKETS INCOME TRUST
+2026-03-09 06:24:01,643 | INFO | [ 30/47] MXE      | Mexico Equity and Income Fund, Inc. (The) Common
+2026-03-09 06:24:01,804 | INFO |   [SEC MAP]  CIK=863900 | MEXICO EQUITY & INCOME FUND INC
+2026-03-09 06:24:02,187 | INFO | [ 31/47] NMS      | Nuveen Minnesota Quality Municipal Income Fund
+2026-03-09 06:24:02,329 | INFO |   [SEC MAP]  CIK=1607997 | Nuveen Minnesota Quality Municipal Income Fund
+2026-03-09 06:24:02,713 | INFO | [ 32/47] NOM      | Nuveen Missouri Quality Municipal Income Fund
+2026-03-09 06:24:02,884 | INFO |   [SEC MAP]  CIK=899782 | NUVEEN MISSOURI QUALITY MUNICIPAL INCOME FUND
+2026-03-09 06:24:03,279 | INFO | [ 33/47] OXLC     | Oxford Lane Capital Corp. - Closed End Fund
+2026-03-09 06:24:03,448 | INFO |   [SEC MAP]  CIK=1495222 | Oxford Lane Capital Corp.
+2026-03-09 06:24:03,840 | INFO | [ 34/47] PCM      | PCM Fund, Inc. Common Stock
+2026-03-09 06:24:03,992 | INFO |   [SEC MAP]  CIK=908187 | PCM FUND, INC.
+2026-03-09 06:24:04,387 | INFO | [ 35/47] PDCC     | Pearl Diver Credit Company Inc. Common Stock
+2026-03-09 06:24:04,521 | INFO |   [SEC MAP]  CIK=1998043 | Pearl Diver Credit Co Inc.
+2026-03-09 06:24:04,919 | INFO | [ 36/47] PGZ      | Principal Real Estate Income Fund Common Shares 
+2026-03-09 06:24:05,045 | INFO |   [SEC MAP]  CIK=1557523 | Principal Real Estate Income Fund
+2026-03-09 06:24:05,433 | INFO | [ 37/47] PHYS     | Sprott Physical Gold Trust ETV
+2026-03-09 06:24:05,433 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-09 06:24:05,521 | INFO | [ 38/47] PSLV     | Sprott Physical Silver Trust ETV
+2026-03-09 06:24:05,521 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-09 06:24:05,604 | INFO | [ 39/47] RCG      | RENN Fund, Inc Common Stock
+2026-03-09 06:24:05,778 | INFO |   [SEC MAP]  CIK=919567 | RENN Fund, Inc.
+2026-03-09 06:24:06,173 | INFO | [ 40/47] RFM      | RiverNorth Flexible Municipal Income Fund, Inc. 
+2026-03-09 06:24:06,309 | INFO |   [SEC MAP]  CIK=1790177 | RiverNorth Flexible Municipal Income Fund, Inc.
+2026-03-09 06:24:06,693 | INFO | [ 41/47] RGT      | Royce Global Trust, Inc. Common Stock
+2026-03-09 06:24:06,840 | INFO |   [SEC MAP]  CIK=1514490 | ROYCE GLOBAL TRUST, INC.
+2026-03-09 06:24:07,225 | INFO | [ 42/47] RMI      | RiverNorth Opportunistic Municipal Income Fund, 
+2026-03-09 06:24:07,371 | INFO |   [OVERRIDE] CIK=1746967 | RiverNorth Opportunistic Municipal Income Fund, Inc.
+2026-03-09 06:24:07,758 | INFO | [ 43/47] RSF      | RiverNorth Capital and Income Fund Common Stock
+2026-03-09 06:24:07,880 | INFO |   [SEC MAP]  CIK=1644771 | RiverNorth Capital & Income Fund, Inc.
+2026-03-09 06:24:08,274 | INFO | [ 44/47] SPPP     | Sprott Physical Platinum and Palladium Trust
+2026-03-09 06:24:08,274 | INFO |   [SENTINEL] Canadian trust -- marking cik=-1 (not an SEC registrant)
+2026-03-09 06:24:08,364 | INFO | [ 45/47] SWZ      | Total Return Securities Fund Common Stock
+2026-03-09 06:24:08,540 | INFO |   [SEC MAP]  CIK=813623 | Total Return Securities Fund
+2026-03-09 06:24:08,947 | INFO | [ 46/47] VGI      | Virtus Global Multi-Sector Income Fund Common Sh
+2026-03-09 06:24:09,092 | INFO |   [OVERRIDE] CIK=1528811 | Virtus Global Multi-Sector Income Fund
+2026-03-09 06:24:09,482 | INFO | [ 47/47] VLT      | Invesco High Income Trust II
+2026-03-09 06:24:09,669 | INFO |   [SEC MAP]  CIK=846671 | Invesco High Income Trust II
+2026-03-09 06:24:10,064 | INFO | 
+2026-03-09 06:24:10,064 | INFO | ============================================================
+2026-03-09 06:24:10,064 | INFO | BACKFILL COMPLETE
+2026-03-09 06:24:10,065 | INFO |   Resolved (CIK written):    43
+2026-03-09 06:24:10,066 | INFO |   No SEC CIK (flagged -1):   4
+2026-03-09 06:24:10,066 | INFO |   Not found (manual needed): 0
+2026-03-09 06:24:10,066 | INFO | ============================================================
+2026-03-09 06:24:10,067 | INFO | 
+2026-03-09 06:24:10,067 | INFO | RESOLVED:
+2026-03-09 06:24:10,068 | INFO |   BHV     : 1169034
+2026-03-09 06:24:10,068 | INFO |   CCIF    : 1517767
+2026-03-09 06:24:10,068 | INFO |   CEV     : 1074692
+2026-03-09 06:24:10,068 | INFO |   CFND    : 2044327
+2026-03-09 06:24:10,068 | INFO |   CIF     : 833021
+2026-03-09 06:24:10,069 | INFO |   CMU     : 801961
+2026-03-09 06:24:10,069 | INFO |   CXH     : 847411
+2026-03-09 06:24:10,069 | INFO |   DMA     : 1523289
+2026-03-09 06:24:10,069 | INFO |   DTF     : 879535
+2026-03-09 06:24:10,069 | INFO |   DXYZ    : 1843974
+2026-03-09 06:24:10,069 | INFO |   EARN    : 1560672
+2026-03-09 06:24:10,069 | INFO |   EEA     : 791718
+2026-03-09 06:24:10,069 | INFO |   EVF     : 1070732
+2026-03-09 06:24:10,069 | INFO |   FCO     : 876717
+2026-03-09 06:24:10,069 | INFO |   FMN     : 1199004
+2026-03-09 06:24:10,070 | INFO |   FMY     : 1319183
+2026-03-09 06:24:10,070 | INFO |   FSSL    : 2065812
+2026-03-09 06:24:10,070 | INFO |   FXBY    : 1068897
+2026-03-09 06:24:10,070 | INFO |   GCV     : 845611
+2026-03-09 06:24:10,070 | INFO |   GDL     : 1378701
+2026-03-09 06:24:10,070 | INFO |   GDO     : 1472341
+2026-03-09 06:24:10,070 | INFO |   GLV     : 1288795
+2026-03-09 06:24:10,070 | INFO |   GRF     : 850027
+2026-03-09 06:24:10,070 | INFO |   HERZ    : 880406
+2026-03-09 06:24:10,070 | INFO |   IAE     : 1385632
+2026-03-09 06:24:10,071 | INFO |   IGI     : 1462586
+2026-03-09 06:24:10,071 | INFO |   JMM     : 838131
+2026-03-09 06:24:10,071 | INFO |   MGF     : 811922
+2026-03-09 06:24:10,071 | INFO |   MXE     : 863900
+2026-03-09 06:24:10,071 | INFO |   NMS     : 1607997
+2026-03-09 06:24:10,071 | INFO |   NOM     : 899782
+2026-03-09 06:24:10,071 | INFO |   OXLC    : 1495222
+2026-03-09 06:24:10,071 | INFO |   PCM     : 908187
+2026-03-09 06:24:10,071 | INFO |   PDCC    : 1998043
+2026-03-09 06:24:10,071 | INFO |   PGZ     : 1557523
+2026-03-09 06:24:10,072 | INFO |   RCG     : 919567
+2026-03-09 06:24:10,072 | INFO |   RFM     : 1790177
+2026-03-09 06:24:10,072 | INFO |   RGT     : 1514490
+2026-03-09 06:24:10,072 | INFO |   RMI     : 1746967
+2026-03-09 06:24:10,072 | INFO |   RSF     : 1644771
+2026-03-09 06:24:10,072 | INFO |   SWZ     : 813623
+2026-03-09 06:24:10,072 | INFO |   VGI     : 1528811
+2026-03-09 06:24:10,072 | INFO |   VLT     : 846671
+2026-03-09 06:24:10,072 | INFO | 
+2026-03-09 06:24:10,072 | INFO | NO SEC CIK (Canadian trusts, cik flagged -1):
+2026-03-09 06:24:10,072 | INFO |   CEF
+2026-03-09 06:24:10,072 | INFO |   PHYS
+2026-03-09 06:24:10,072 | INFO |   PSLV
+2026-03-09 06:24:10,073 | INFO |   SPPP
+2026-03-09 06:24:10,073 | INFO | 
+2026-03-09 06:24:10,073 | INFO | Live run complete.

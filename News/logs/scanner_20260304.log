@@ -1,0 +1,144 @@
+[Wed 03/04/2026  6:26:40.52] Starting CEF News Scan... 
+06:26:41 [INFO] Starting CEF News Scan — 277 tickers, 2-day lookback
+06:26:41 [INFO] Sources: SEC EDGAR + Finnhub
+06:26:41 [INFO] ============================================================
+06:26:41 [INFO] [1/277] Scanning ASA...
+06:26:41 [INFO]   EDGAR scan: ASA
+06:26:48 [INFO]   Finnhub scan: ASA
+06:26:50 [INFO]     \u2192 EARNINGS         | JNL SERIES TRUST published its annual shareholder report
+06:26:50 [INFO]     \u2192 EARNINGS         | Forethought Variable Insurance Trust published its annual sh
+06:26:50 [INFO]     \u2192 EARNINGS         | NEW YORK LIFE INVESTMENTS VP FUNDS TRUST published its annua
+06:26:50 [INFO]     \u2192 EARNINGS         | TOUCHSTONE STRATEGIC TRUST published its semi-annual shareho
+06:26:50 [INFO] [2/277] Scanning ADX...
+06:26:50 [INFO]   EDGAR scan: ADX
+06:26:53 [INFO]   Finnhub scan: ADX
+06:26:54 [INFO] [3/277] Scanning PEO...
+06:26:54 [INFO]   EDGAR scan: PEO
+06:26:57 [INFO]   Finnhub scan: PEO
+06:26:58 [INFO]     \u2192 OTHER            | Nuveen Churchill Private Capital Income Fund filed a materia
+06:26:58 [INFO]     \u2192 OTHER            | Prairie Operating Co. filed a material event report
+06:26:58 [INFO]     \u2192 OTHER            | Bloomin' Brands, Inc. filed a proxy statement — shareholder 
+06:26:58 [INFO]     \u2192 OTHER            | Broadcom Inc. filed a proxy statement — shareholder vote upc
+06:26:58 [INFO]     \u2192 EARNINGS         | US GLOBAL INVESTORS FUNDS published its annual shareholder r
+06:26:58 [INFO]     \u2192 EARNINGS         | NEW YORK LIFE INVESTMENTS VP FUNDS TRUST published its annua
+06:26:58 [INFO] [4/277] Scanning AVK...
+06:26:58 [INFO]   EDGAR scan: AVK
+06:27:01 [INFO]   Finnhub scan: AVK
+06:27:02 [INFO] [5/277] Scanning AWF...
+06:27:02 [INFO]   EDGAR scan: AWF
+06:27:06 [INFO]   Finnhub scan: AWF
+06:27:07 [INFO] [6/277] Scanning AFB...
+06:27:07 [INFO]   EDGAR scan: AFB
+06:27:10 [INFO]   Finnhub scan: AFB
+06:27:11 [INFO] [7/277] Scanning NFJ...
+06:27:11 [INFO]   EDGAR scan: NFJ
+06:27:14 [INFO]   Finnhub scan: NFJ
+06:27:15 [INFO] [8/277] Scanning EOD...
+06:27:15 [INFO]   EDGAR scan: EOD
+06:27:24 [INFO]   Finnhub scan: EOD
+06:27:25 [INFO] [9/277] Scanning EAD...
+06:27:25 [INFO]   EDGAR scan: EAD
+06:27:28 [INFO]   Finnhub scan: EAD
+06:27:29 [INFO] [10/277] Scanning ERC...
+06:27:29 [INFO]   EDGAR scan: ERC
+06:27:32 [INFO]   Finnhub scan: ERC
+06:27:34 [INFO]     \u2192 OTHER            | Turning Point Brands, Inc. filed a material event report
+06:27:34 [INFO] [11/277] Scanning ERH...
+06:27:34 [INFO]   EDGAR scan: ERH
+06:27:36 [INFO]   Finnhub scan: ERH
+06:27:38 [INFO] [12/277] Scanning FINS...
+06:27:38 [INFO]   EDGAR scan: FINS
+06:27:41 [INFO]   Finnhub scan: FINS
+06:27:42 [INFO] [13/277] Scanning ARDC...
+06:27:42 [INFO]   EDGAR scan: ARDC
+06:27:45 [INFO]   Finnhub scan: ARDC
+06:27:46 [INFO] [14/277] Scanning BANX...
+06:27:46 [INFO]   EDGAR scan: BANX
+06:27:49 [INFO]   Finnhub scan: BANX
+06:27:50 [INFO] [15/277] Scanning DHF...
+06:27:50 [INFO]   EDGAR scan: DHF
+06:27:53 [INFO]   Finnhub scan: DHF
+06:27:54 [INFO] [16/277] Scanning DMB...
+06:27:54 [INFO]   EDGAR scan: DMB
+06:28:03 [INFO]   Finnhub scan: DMB
+06:28:04 [INFO] [17/277] Scanning DSM...
+06:28:04 [INFO]   EDGAR scan: DSM
+06:28:08 [INFO]   Finnhub scan: DSM
+06:28:09 [INFO]     \u2192 EARNINGS         | Forethought Variable Insurance Trust published its annual sh
+06:28:09 [INFO]     \u2192 EARNINGS         | STATE STREET VARIABLE INSURANCE SERIES FUNDS INC published i
+06:28:09 [INFO]     \u2192 EARNINGS         | TOUCHSTONE STRATEGIC TRUST published its semi-annual shareho
+06:28:09 [INFO] [18/277] Scanning LEO...
+06:28:09 [INFO]   EDGAR scan: LEO
+06:28:12 [INFO]   Finnhub scan: LEO
+06:28:13 [INFO]     \u2192 OTHER            | AST SpaceMobile, Inc. filed a material event report
+06:28:13 [INFO]     \u2192 OTHER            | An insider bought or sold shares of LEO
+06:28:13 [INFO]     \u2192 OTHER            | An insider bought or sold shares of LEO
+06:28:13 [INFO]     \u2192 EARNINGS         | US GLOBAL INVESTORS FUNDS published its annual shareholder r
+06:28:13 [INFO] [19/277] Scanning BCV...
+06:28:13 [INFO]   EDGAR scan: BCV
+06:28:17 [INFO]   Finnhub scan: BCV
+06:28:18 [INFO] [20/277] Scanning MCI...
+06:28:18 [INFO]   EDGAR scan: MCI
+06:28:22 [INFO]   Finnhub scan: MCI
+06:28:23 [INFO] [21/277] Scanning BGH...
+06:28:23 [INFO]   EDGAR scan: BGH
+06:28:26 [INFO]   Finnhub scan: BGH
+06:28:27 [INFO] [22/277] Scanning MPV...
+06:28:27 [INFO]   EDGAR scan: MPV
+06:28:40 [INFO]   Finnhub scan: MPV
+06:28:41 [INFO] [23/277] Scanning BXSY...
+06:28:41 [INFO]   EDGAR scan: BXSY
+06:28:44 [INFO]   Finnhub scan: BXSY
+06:28:45 [INFO] [24/277] Scanning BMN...
+06:28:45 [INFO]   EDGAR scan: BMN
+06:28:48 [INFO]   Finnhub scan: BMN
+06:28:49 [INFO] [25/277] Scanning BCAT...
+06:28:49 [INFO]   EDGAR scan: BCAT
+06:28:52 [INFO]   Finnhub scan: BCAT
+06:28:53 [INFO]     \u2192 EARNINGS         | Touchstone ETF Trust published its annual shareholder report
+06:28:53 [INFO] [26/277] Scanning BHK...
+06:28:53 [INFO]   EDGAR scan: BHK
+06:28:56 [INFO]   Finnhub scan: BHK
+06:28:57 [INFO] [27/277] Scanning HYT...
+06:28:57 [INFO]   EDGAR scan: HYT
+06:29:00 [INFO]   Finnhub scan: HYT
+06:29:01 [INFO]     \u2192 EARNINGS         | JNL SERIES TRUST published its annual shareholder report
+06:29:01 [INFO] [28/277] Scanning BTZ...
+06:29:01 [INFO]   EDGAR scan: BTZ
+06:29:04 [INFO]   Finnhub scan: BTZ
+06:29:06 [INFO] [29/277] Scanning DSU...
+06:29:06 [INFO]   EDGAR scan: DSU
+06:29:08 [INFO]   Finnhub scan: DSU
+06:29:10 [INFO]     \u2192 OTHER            | Paramount Skydance Corp filed a material event report
+06:29:10 [INFO]     \u2192 OTHER            | CARRIER GLOBAL Corp filed a proxy statement — shareholder vo
+06:29:10 [INFO]     \u2192 OTHER            | Warner Bros. Discovery, Inc. filed additional proxy solicita
+06:29:10 [INFO]     \u2192 OTHER            | An insider bought or sold shares of DSU
+06:29:10 [INFO]     \u2192 OTHER            | An insider bought or sold shares of DSU
+06:29:10 [INFO] [30/277] Scanning ECAT...
+06:29:10 [INFO]   EDGAR scan: ECAT
+06:29:18 [INFO]   Finnhub scan: ECAT
+06:29:19 [INFO]     \u2192 OTHER            | An insider bought or sold shares of ECAT
+06:29:19 [INFO]     \u2192 OTHER            | An insider bought or sold shares of ECAT
+06:29:19 [INFO] [31/277] Scanning BGR...
+06:29:19 [INFO]   EDGAR scan: BGR
+06:29:22 [INFO]   Finnhub scan: BGR
+06:29:23 [INFO] [32/277] Scanning BDJ...
+06:29:23 [INFO]   EDGAR scan: BDJ
+06:29:26 [INFO]   Finnhub scan: BDJ
+06:29:28 [INFO] [33/277] Scanning BOE...
+06:29:28 [INFO]   EDGAR scan: BOE
+06:29:31 [INFO]   Finnhub scan: BOE
+06:29:32 [INFO]     \u2192 OTHER            | Kosmos Energy Ltd. filed a material event report
+06:29:32 [INFO]     \u2192 OTHER            | GRAN TIERRA ENERGY INC. filed a material event report
+06:29:32 [INFO]     \u2192 EARNINGS         | Forethought Variable Insurance Trust published its annual sh
+06:29:32 [INFO]     \u2192 EARNINGS         | STATE STREET VARIABLE INSURANCE SERIES FUNDS INC published i
+06:29:32 [INFO] [34/277] Scanning BGY...
+06:29:32 [INFO]   EDGAR scan: BGY
+06:29:35 [INFO]   Finnhub scan: BGY
+06:29:36 [INFO] [35/277] Scanning CII...
+06:29:36 [INFO]   EDGAR scan: CII
+06:29:39 [INFO]   Finnhub scan: CII
+06:29:40 [INFO]     \u2192 OTHER            | ANI PHARMACEUTICALS INC filed a material event report
+06:29:40 [INFO] [36/277] Scanning FRA...
+06:29:40 [INFO]   EDGAR scan: FRA
+06:29:45 [INFO]   Finnhub scan: FRA

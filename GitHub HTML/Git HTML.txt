@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gridiron Performance Dashboard — Updated (Large-flow review)</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+  <script src="https://unpkg.com/recharts@2.1.16/umd/Recharts.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: Tahoma, sans-serif; background: #f8fafc; color: #0f172a; }
+    .card { background: white; border: 1px solid #e6eef6; border-radius: 8px; padding: 16px; }
+    .flagged { background: #fff7ed; border-left: 4px solid #f97316; padding: 8px; border-radius: 4px; }
+    .modal-bg { position: fixed; inset:0; background: rgba(15,23,42,0.5); display:flex; align-items:center; justify-content:center; z-index:50; }
+    .modal { background:white; padding:16px; border-radius:8px; max-width:880px; width:100%; max-height:80vh; overflow:auto; }
+    .muted { color:#475569; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+    const SUPABASE_URL = 'https://nzinvxticgyjobkqxxhl.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aW52eHRpY2d5am9ia3F4eGhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5NTUwOTIsImV4cCI6MjA4NDUzMTA5Mn0.YhaW1zesBaEC6lRMWx6_gyZN5Uhh8FX2wgahunHQfok';
+    const CURRENT_USER = 'MschneckGrid'; // used for audit field when persisting review; replace if different operator
+
+    // Small helpers
+    const fmtCurrency = (n) => {
+      if (n===null || n===undefined || isNaN(n)) return '-';
+      return new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2 }).format(n);
+    };
+    const pct = (v, d=2) => {
+      if (v===null||v===undefined||isNaN(v)) return '-';
+      return (v*100).toFixed(d)+'%';
+    };
+
+    // ---------------------
+    // Utility math functions (robust)
+    // ---------------------
+    const daysInMonthFromDate = (monthEndDate) => {
+      if (!monthEndDate) return 30;
+      const [y,m,d] = monthEndDate.split('-').map(Number);
+      // get daysInMonth via Date
+      return new Date(y, m, 0).getDate();
+    };
+
+    const calcModifiedDietz = (begin, end, contrib, withdr, dayOfFlow, monthEndDate) => {
+      const netFlow = (contrib||0) - Math.abs(withdr||0);
+      const daysInMonth = daysInMonthFromDate(monthEndDate);
+      let weight = 0;
+      if (dayOfFlow) {
+        weight = (daysInMonth - dayOfFlow) / daysInMonth;
+      } else if ((begin === 0 || begin === null) && (contrib || 0) > 0) {
+        // inception: assume contribution at start if no day
+        weight = 1;
+      }
+      const avgCap = (begin || 0) + netFlow * weight;
+      if (avgCap === 0) return 0;
+      return (end - begin - netFlow) / avgCap;
+    };
+
+    const calcTimeWeightedMgmtFee = (begin, contrib, withdr, dayOfFlow, monthEndDate, annualFeeRate, contributionDay=null, withdrawalDay=null) => {
+      const monthlyRate = (annualFeeRate||0)/12;
+      const absWithdr = Math.abs(withdr||0);
+      const daysInMonth = daysInMonthFromDate(monthEndDate);
+      let avgCapital = begin || 0;
+
+      if (contributionDay || withdrawalDay) {
+        if (contrib && contributionDay) {
+          avgCapital += contrib * ((daysInMonth - contributionDay) / daysInMonth);
+        }
+        if (absWithdr && withdrawalDay) {
+          avgCapital -= absWithdr * ((daysInMonth - withdrawalDay) / daysInMonth);
+        }
+      } else if (dayOfFlow) {
+        const netFlow = (contrib||0) - absWithdr;
+        avgCapital += netFlow * ((daysInMonth - dayOfFlow) / daysInMonth);
+      } else if ((begin === 0 || begin === null) && (contrib || 0) > 0) {
+        avgCapital = contrib;
+      }
+      return avgCapital * monthlyRate;
+    };
+
+    // Detect large flow (>= threshold) for a row
+    const LARGE_FLOW_THRESHOLD = 0.4; // 40%
+    function detectLargeFlow(row, threshold=LARGE_FLOW_THRESHOLD) {
+      if (!row) return { flag: false, pct: 0 };
+      const contrib = Math.abs(row.contributions || 0);
+      const withdr = Math.abs(row.withdrawals || 0);
+      const maxFlow = Math.max(contrib, withdr);
+      let base = 0;
+      if (row.beginning_balance && Math.abs(row.beginning_balance) > 0) base = Math.abs(row.beginning_balance);
+      else if (row.ending_balance && Math.abs(row.ending_balance) > 0) base = Math.abs(row.ending_balance);
+      else base = Math.max(contrib, 1); // fallback to avoid div0
+      const pct = maxFlow / base;
+      return { flag: pct >= threshold, pct };
+    }
+
+    // ---------------------
+    // React App
+    // ---------------------
+    function App() {
+      const [clients, setClients] = useState([]);
+      const [selectedClientId, setSelectedClientId] = useState(null);
+      const [monthlyData, setMonthlyData] = useState([]);
+      const [selectedDate, setSelectedDate] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [showLargeFlowModal, setShowLargeFlowModal] = useState(false);
+      const [largeFlowCandidates, setLargeFlowCandidates] = useState([]);
+      const [feedback, setFeedback] = useState(null);
+
+      useEffect(() => {
+        // load clients
+        fetch(`${SUPABASE_URL}/rest/v1/clients?order=client_name`, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }})
+          .then(r=>r.json()).then(data => {
+            setClients(data);
+            if (data.length>0) setSelectedClientId(data[0].client_id);
+          }).catch(err => console.error(err));
+      }, []);
+
+      useEffect(() => {
+        if (!selectedClientId) return;
+        setLoading(true);
+        fetch(`${SUPABASE_URL}/rest/v1/monthly_data?client_id=eq.${selectedClientId}&order=month_end_date`, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }})
+          .then(r=>r.json())
+          .then(data => {
+            setMonthlyData(data);
+            if (data.length>0) setSelectedDate(data[data.length-1].month_end_date);
+          })
+          .catch(err => { console.error(err); setMonthlyData([]); })
+          .finally(()=>setLoading(false));
+      }, [selectedClientId]);
+
+      // compute metrics, detect large-flow in-memory
+      const metrics = useMemo(() => {
+        if (!monthlyData || monthlyData.length === 0) return null;
+        // sort ascending
+        const data = [...monthlyData].sort((a,b)=> new Date(a.month_end_date) - new Date(b.month_end_date));
+        // run detection and add flags in memory (do not persist automatically)
+        data.forEach(d => {
+          const { flag, pct } = detectLargeFlow(d, LARGE_FLOW_THRESHOLD);
+          d._large_flow_flag = flag;
+          d._large_flow_pct = pct;
+        });
+
+        // Build arrays of returns excluding flagged months for GIPS/composite stat computation
+        const returnsForStats = data.map(d => d._large_flow_flag ? null : calcModifiedDietz(d.beginning_balance, d.ending_balance, d.contributions, d.withdrawals, d.day_of_flow, d.month_end_date));
+        // compute management fees per month
+        const mgmtFees = data.map(d => {
+          const rates = { annualMgmtFeeRate: d.annual_mgmt_fee_rate || 0 };
+          const fee = calcTimeWeightedMgmtFee(d.beginning_balance, d.contributions, d.withdrawals, d.day_of_flow, d.month_end_date, rates.annualMgmtFeeRate, d.contribution_day, d.withdrawal_day);
+          return (d.fee_waived ? 0 : fee);
+        });
+
+        // performance fee accrual & HWM logic (simplified, consistent with requirements)
+        const perfAccrued = new Array(data.length).fill(0);
+        const dynamicHWM = new Array(data.length).fill(0);
+        // find first perf month
+        let perfStartIdx = -1;
+        for (let i=0;i<data.length;i++) if ((data[i].performance_fee_rate||0) > 0) { perfStartIdx=i; break; }
+        if (perfStartIdx >= 0) {
+          // initialize HWM at perfStartIdx
+          for (let i=perfStartIdx;i<data.length;i++) {
+            const r = data[i];
+            const rates = { perfFeeRate: r.performance_fee_rate || 0, hurdleIndexId: r.hurdle_index_id || null };
+            if (i === perfStartIdx) {
+              dynamicHWM[i] = (r.beginning_balance > 0 ? r.beginning_balance : (r.contributions||0)) + (mgmtFees[i] || 0) + (r.contributions||0) - (r.withdrawal_type === 'fee_payment' ? 0 : Math.abs(r.withdrawals||0));
+            } else {
+              dynamicHWM[i] = dynamicHWM[i-1] + (mgmtFees[i] || 0) + (r.contributions||0) - (r.withdrawal_type === 'fee_payment' ? 0 : Math.abs(r.withdrawals||0));
+            }
+            // compute accountGainSinceHWM & cumulative hurdle
+            let accountGain = 0;
+            for (let j=perfStartIdx;j<=i;j++) {
+              const m = data[j];
+              const change = (m.ending_balance||0) - (m.beginning_balance||0) - (m.contributions||0) + Math.abs(m.withdrawals||0);
+              accountGain += (change - (mgmtFees[j]||0));
+            }
+            // sum hurdle (if we had index returns stored; here we use any per-row provided monthly hurdle in column)
+            let cumulativeHurdle = 0;
+            for (let j=perfStartIdx;j<=i;j++) {
+              const m = data[j];
+              cumulativeHurdle += (m.hurdle_return_monthly || 0) * (m.beginning_balance > 0 ? m.beginning_balance : (m.contributions||0));
+            }
+            // gainAboveHWM with fee_payment add-back
+            let feePaymentSinceStart = 0;
+            for (let j=perfStartIdx;j<=i;j++) if (data[j].withdrawal_type === 'fee_payment') feePaymentSinceStart += Math.abs(data[j].withdrawals||0);
+            const adjustedHWM = dynamicHWM[i] - feePaymentSinceStart;
+            const gainAboveHWM = (r.ending_balance || 0) - adjustedHWM;
+            const spread = (gainAboveHWM > 0) ? Math.max(0, accountGain - cumulativeHurdle) : 0;
+            const rawPerf = spread > 0 ? spread * (r.performance_fee_rate || 0) : 0;
+            // YTD net gain cap (sum of change - mgmt fees for calendar year)
+            const year = new Date(r.month_end_date + 'T12:00:00').getFullYear();
+            let ytdNetGain = 0;
+            for (let j=0;j<=i;j++) {
+              if (new Date(data[j].month_end_date + 'T12:00:00').getFullYear() !== year) continue;
+              const m = data[j];
+              const grossChange = (m.ending_balance||0) - (m.beginning_balance||0) - (m.contributions||0) + Math.abs(m.withdrawals||0);
+              ytdNetGain += (grossChange - (mgmtFees[j]||0));
+            }
+            const allowed = Math.max(0, ytdNetGain - (perfAccrued[i-1]||0));
+            const thisAccrual = Math.min(rawPerf, allowed);
+            perfAccrued[i] = (i>0 ? perfAccrued[i-1] : 0) + thisAccrual;
+          }
+        }
+
+        // build VAMI etc using returnsForStats (skipping null months)
+        const validReturns = returnsForStats.filter(r => r !== null && r !== undefined && !isNaN(r));
+        const cumReturn = validReturns.reduce((acc, r) => acc * (1 + r), 1) - 1;
+        const netAfterFees = (validReturns.length ? validReturns.reduce((acc,r) => acc*(1+r), 1)-1 : 0); // simplified
+
+        // return aggregated object
+        return {
+          rawData: data,
+          returnsForStats,
+          mgmtFees,
+          perfAccrued,
+          dynamicHWM,
+          cumReturn,
+          netAfterFees
+        };
+      }, [monthlyData]);
+
+      // prepare list of large-flow months for review (from raw monthlyData)
+      useEffect(() => {
+        if (!metrics) { setLargeFlowCandidates([]); return; }
+        const candidates = metrics.rawData
+          .map(d => ({ month: d.month_end_date, flag: d._large_flow_flag, pct: d._large_flow_pct, beginning: d.beginning_balance, contributions: d.contributions, withdrawals: d.withdrawals }))
+          .filter(r => r.flag);
+        setLargeFlowCandidates(candidates);
+      }, [metrics]);
+
+      // Persist review (PATCH monthly_data for a specific client/month_end_date)
+      const persistLargeFlowFlag = async (month) => {
+        if (!selectedClientId) return;
+        const payload = {
+          large_flow_flag: true,
+          large_flow_pct: metrics.rawData.find(d => d.month_end_date === month)._large_flow_pct,
+          large_flow_reviewed_by: CURRENT_USER,
+          large_flow_reviewed_at: (new Date()).toISOString()
+        };
+        try {
+          const res = await fetch(`${SUPABASE_URL}/rest/v1/monthly_data?client_id=eq.${selectedClientId}&month_end_date=eq.${month}`, {
+            method: 'PATCH',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) {
+            const txt = await res.text();
+            throw new Error(txt || 'Failed to persist');
+          }
+          // refresh monthlyData
+          setFeedback({ type:'success', message: `Flag persisted for ${month}` });
+          const refreshed = await fetch(`${SUPABASE_URL}/rest/v1/monthly_data?client_id=eq.${selectedClientId}&order=month_end_date`, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }});
+          const json = await refreshed.json();
+          setMonthlyData(json);
+          // close modal refresh candidates
+        } catch (err) {
+          setFeedback({ type:'error', message: 'Error persisting flag: '+ err.message });
+          console.error(err);
+        }
+      };
+
+      // Unpersist (remove) flag — optional
+      const removeLargeFlowFlag = async (month) => {
+        if (!selectedClientId) return;
+        try {
+          const res = await fetch(`${SUPABASE_URL}/rest/v1/monthly_data?client_id=eq.${selectedClientId}&month_end_date=eq.${month}`, {
+            method: 'PATCH',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({ large_flow_flag: false, large_flow_reviewed_by: null, large_flow_reviewed_at: null, large_flow_pct: null })
+          });
+          if (!res.ok) throw new Error('Remove failed');
+          setFeedback({ type:'success', message: `Flag removed for ${month}` });
+          const refreshed = await fetch(`${SUPABASE_URL}/rest/v1/monthly_data?client_id=eq.${selectedClientId}&order=month_end_date`, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }});
+          setMonthlyData(await refreshed.json());
+        } catch (err) {
+          setFeedback({ type:'error', message: 'Error removing flag: '+ err.message });
+          console.error(err);
+        }
+      };
+
+      if (loading) return <div style={{ padding:20 }}>Loading...</div>;
+
+      const client = clients.find(c => c.client_id === selectedClientId);
+      const latest = metrics && metrics.rawData && metrics.rawData.length ? metrics.rawData[metrics.rawData.length-1] : null;
+      const latestFlag = latest && (latest._large_flow_flag || latest.large_flow_flag);
+
+      return (
+        <div style={{ padding:24 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', gap:12, marginBottom:12 }}>
+            <div style={{ display:'flex', gap:12, alignItems:'center' }}>
+              <select value={selectedClientId || ''} onChange={e => setSelectedClientId(Number(e.target.value))}>
+                {clients.map(c => <option key={c.client_id} value={c.client_id}>{c.client_name}</option>)}
+              </select>
+              <select value={selectedDate || ''} onChange={e => setSelectedDate(e.target.value)}>
+                {monthlyData.slice().sort((a,b)=> b.month_end_date.localeCompare(a.month_end_date)).map(d => <option key={d.month_end_date} value={d.month_end_date}>{new Date(d.month_end_date).toLocaleDateString()}</option>)}
+              </select>
+              <button className="card" onClick={() => setShowLargeFlowModal(true)}>Large Flow Review ({largeFlowCandidates.length})</button>
+            </div>
+
+            <div style={{ textAlign:'right' }}>
+              <div style={{ fontWeight:700 }}>{client?.client_name}</div>
+              <div className="muted">{client?.strategy_id === 1 ? 'GTFI' : 'GMA'}</div>
+            </div>
+          </div>
+
+          {/* Statement Header Warning */}
+          {latestFlag && (
+            <div className="flagged" style={{ marginBottom:12 }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                <div>
+                  <div style={{ fontWeight:700, color:'#7c2d12' }}>Large Cash Flow Detected — Excluded from GIPS Calculations</div>
+                  <div className="muted">This month had a cash flow of {(latest._large_flow_pct || latest.large_flow_pct || 0) * 100 % 1 === 0 ? ((latest._large_flow_pct || latest.large_flow_pct || 0)*100).toFixed(0) : ((latest._large_flow_pct || latest.large_flow_pct || 0)*100).toFixed(1)}% of the base; per policy the month is excluded from composite return calculations unless overridden.</div>
+                </div>
+                <div style={{ display:'flex', gap:8 }}>
+                  <button onClick={() => setShowLargeFlowModal(true)}>Review</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Statement / performance area */}
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 360px', gap:16 }}>
+            <div className="card">
+              <h3 style={{ marginTop:0 }}>Statement — latest month</h3>
+              {latest ? (
+                <div>
+                  <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                    <tbody>
+                      <tr><td className="muted">Month</td><td style={{ textAlign:'right' }}>{latest.month_end_date}</td></tr>
+                      <tr><td className="muted">Beginning Balance</td><td style={{ textAlign:'right' }}>{fmtCurrency(latest.beginning_balance)}</td></tr>
+                      <tr><td className="muted">Contributions</td><td style={{ textAlign:'right' }}>{fmtCurrency(latest.contributions || 0)}</td></tr>
+                      <tr><td className="muted">Withdrawals</td><td style={{ textAlign:'right' }}>{fmtCurrency(latest.withdrawals || 0)} {latest.withdrawal_type==='fee_payment' ? ' (fee payment)' : ''}</td></tr>
+                      <tr><td className="muted">Management Fee (accrued)</td><td style={{ textAlign:'right' }}>{fmtCurrency(latest.mgmt_fee || 0)}</td></tr>
+                      <tr><td className="muted">Accrued Performance Fee (YTD)</td><td style={{ textAlign:'right' }}>{fmtCurrency(latest.accrued_perf_fee || 0)}</td></tr>
+                      <tr><td className="muted">Change in Value (reported)</td>
+                        <td style={{ textAlign:'right' }}>
+                          {(() => {
+                            // compute change in value and add back fee_payment withdrawal if this month is fee_payment and that payment was already accrued
+                            const contrib = latest.contributions || 0;
+                            const rawWithdraw = Math.abs(latest.withdrawals || 0);
+                            const feePayment = (latest.withdrawal_type === 'fee_payment') ? rawWithdraw : 0;
+                            // We add back feePayment to change-in-value for reporting so the fee isn't double-counted
+                            const change = (latest.ending_balance || 0) - (latest.beginning_balance || 0) - contrib + rawWithdraw + feePayment;
+                            return fmtCurrency(change);
+                          })()}
+                        </td>
+                      </tr>
+                      <tr><td className="muted">Ending Balance</td><td style={{ textAlign:'right' }}>{fmtCurrency(latest.ending_balance)}</td></tr>
+                    </tbody>
+                  </table>
+
+                  <div style={{ marginTop:12 }}>
+                    <strong className="muted">Note:</strong> Months with large cash flows (≥40%) are flagged and excluded from composite/GIPS calculations by default; you can persist the flags via the Large Flow Review modal.
+                  </div>
+                </div>
+              ) : <div className="muted">No monthly data available for this client.</div>}
+            </div>
+
+            <div className="card">
+              <h4 style={{ marginTop:0 }}>Quick Stats</h4>
+              {metrics ? (
+                <div>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
+                    <div className="muted">Composite cumulative (gross)</div><div style={{ textAlign:'right' }} className="mono">{pct(metrics.cumReturn || 0)}</div>
+                    <div className="muted">Composite cumulative (net)</div><div style={{ textAlign:'right' }} className="mono">{pct(metrics.netAfterFees || metrics.netAfterFees)}</div>
+                    <div className="muted">Flagged months</div><div style={{ textAlign:'right' }}>{largeFlowCandidates.length}</div>
+                    <div className="muted">Latest month flagged</div><div style={{ textAlign:'right' }}>{latestFlag ? 'Yes' : 'No'}</div>
+                  </div>
+                  <div style={{ marginTop:12 }}>
+                    <button onClick={() => setShowLargeFlowModal(true)}>Open Large Flow Review</button>
+                  </div>
+                </div>
+              ) : <div className="muted">No metrics yet</div>}
+            </div>
+          </div>
+
+          {/* Feedback */}
+          {feedback && (
+            <div style={{ marginTop:12 }}>
+              <div style={{ padding:8, borderRadius:6, background: feedback.type==='success' ? '#ecfdf5' : '#fff1f2', color: feedback.type==='success' ? '#065f46' : '#9f1239' }}>
+                {feedback.message}
+              </div>
+            </div>
+          )}
+
+          {/* Large Flow Review Modal */}
+          {showLargeFlowModal && (
+            <div className="modal-bg">
+              <div className="modal">
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                  <h3 style={{ margin:0 }}>Large Flow Review — Client: {client?.client_name}</h3>
+                  <div>
+                    <button onClick={() => setShowLargeFlowModal(false)} style={{ marginLeft:8 }}>Close</button>
+                  </div>
+                </div>
+
+                <div style={{ marginTop:12 }}>
+                  <p className="muted">The table below lists months detected with large cash flows (≥40% of the base). Review each row and choose whether to persist the flag to the database. Persisting creates an auditable flag on monthly_data.</p>
+
+                  <table style={{ width:'100%', borderCollapse:'collapse', marginTop:8 }}>
+                    <thead>
+                      <tr style={{ textAlign:'left', background:'#f1f5f9' }}>
+                        <th style={{ padding:8 }}>Month</th>
+                        <th style={{ padding:8 }}>Beg Bal</th>
+                        <th style={{ padding:8 }}>Contrib</th>
+                        <th style={{ padding:8 }}>Withdraw</th>
+                        <th style={{ padding:8 }}>Flow %</th>
+                        <th style={{ padding:8 }}>Persist</th>
+                        <th style={{ padding:8 }}>Undo</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {largeFlowCandidates.length === 0 && <tr><td colSpan={7} style={{ padding:12 }} className="muted">No large-flow months detected.</td></tr>}
+                      {largeFlowCandidates.map(c => (
+                        <tr key={c.month}>
+                          <td style={{ padding:8 }}>{c.month}</td>
+                          <td style={{ padding:8, textAlign:'right' }}>{fmtCurrency(c.beginning)}</td>
+                          <td style={{ padding:8, textAlign:'right' }}>{fmtCurrency(c.contributions)}</td>
+                          <td style={{ padding:8, textAlign:'right' }}>{fmtCurrency(c.withdrawals)}</td>
+                          <td style={{ padding:8, textAlign:'right' }}>{pct(c.pct,2)}</td>
+                          <td style={{ padding:8 }}>
+                            <button onClick={() => { persistLargeFlowFlag(c.month); }}>Persist Flag</button>
+                          </td>
+                          <td style={{ padding:8 }}>
+                            <button onClick={() => { removeLargeFlowFlag(c.month); }}>Remove Persisted Flag</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <div style={{ marginTop:12 }}>
+                    <small className="muted">Persisting a flag writes large_flow_flag, large_flow_pct and reviewer audit fields to monthly_data. Use this after confirming a large flow should be excluded from composite/GIPS calculations.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>

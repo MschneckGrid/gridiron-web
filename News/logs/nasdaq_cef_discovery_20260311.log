@@ -1,0 +1,33 @@
+2026-03-11 09:00:01,569 | INFO | nasdaq_cef_discovery.py | run_date=2026-03-11 | dry_run=False
+2026-03-11 09:00:01,571 | INFO | Downloading nasdaqlisted from https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt
+2026-03-11 09:00:15,322 | INFO |   Downloaded 5373 rows from nasdaqlisted
+2026-03-11 09:00:15,324 | INFO | Downloading otherlisted from https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt
+2026-03-11 09:00:16,381 | INFO |   Downloaded 7030 rows from otherlisted
+2026-03-11 09:00:16,419 | INFO | Combined listing file: 12257 unique tickers
+2026-03-11 09:00:16,420 | INFO | Loading current universe from cef_tickers...
+2026-03-11 09:00:17,067 | INFO |   Loaded 368 rows (355 active)
+2026-03-11 09:00:17,067 | INFO | Running diff...
+2026-03-11 09:00:17,328 | INFO | 
+======================================================================
+2026-03-11 09:00:17,328 | INFO | DRY-RUN DIFF REPORT
+2026-03-11 09:00:17,328 | INFO | ======================================================================
+2026-03-11 09:00:17,328 | INFO | 
+[OK] CONFIRMED ACTIVE: 353 tickers
+2026-03-11 09:00:17,328 | INFO | 
+[NEW] CEF CANDIDATES: 0
+2026-03-11 09:00:17,328 | INFO | 
+[<<] RETURNED FROM DELISTED: 0
+2026-03-11 09:00:17,328 | INFO | 
+[!!] MISSING FROM LISTING FILES (potential delistings): 0
+2026-03-11 09:00:17,328 | INFO | 
+[~~] NAME CHANGES: 0
+2026-03-11 09:00:17,328 | INFO | 
+======================================================================
+2026-03-11 09:00:17,328 | INFO | Review new_candidates for false positives.
+2026-03-11 09:00:17,328 | INFO | Review missing_from_listing - may be halted, not delisted.
+2026-03-11 09:00:17,328 | INFO | ======================================================================
+
+2026-03-11 09:00:17,328 | INFO | Upserting 353 confirmed-active updates...
+2026-03-11 09:00:19,956 | INFO |   [OK] confirmed-active updates done
+2026-03-11 09:00:19,957 | INFO | DB write complete: 353 confirmed, 0 name updates, 0 status updates, 0 new candidates, 0 log events
+2026-03-11 09:00:19,957 | INFO | Done.

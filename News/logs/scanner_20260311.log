@@ -1,0 +1,570 @@
+[Wed 03/11/2026  7:31:49.41] Starting CEF News Scan... 
+07:31:51 [INFO] Starting CEF News Scan — 277 tickers, 2-day lookback
+07:31:51 [INFO] Sources: SEC EDGAR + Finnhub
+07:31:51 [INFO] ============================================================
+07:31:51 [INFO] [1/277] Scanning ASA...
+07:31:51 [INFO]   EDGAR scan: ASA
+07:31:55 [INFO]   Finnhub scan: ASA
+07:31:57 [INFO]     \u2192 OTHER            | Roadzen Inc. filed a proxy statement — shareholder vote upco
+07:31:57 [INFO]     \u2192 EARNINGS         | SPROTT FOCUS TRUST INC. published its annual shareholder rep
+07:31:57 [INFO]     \u2192 EARNINGS         | STATE STREET INSTITUTIONAL INVESTMENT TRUST published its an
+07:31:57 [INFO]     \u2192 EARNINGS         | SA FUNDS INVESTMENT TRUST published its semi-annual sharehol
+07:31:57 [INFO]     \u2192 EARNINGS         | CULLEN FUNDS TRUST published its semi-annual shareholder rep
+07:31:57 [INFO]     \u2192 EARNINGS         | ASA Gold and Precious Metals (NYSE:ASA) Stands Out in CANSLI
+07:31:57 [INFO] [2/277] Scanning ADX...
+07:31:57 [INFO]   EDGAR scan: ADX
+07:32:00 [INFO]   Finnhub scan: ADX
+07:32:01 [INFO]     \u2192 OTHER            | Q32 Bio Inc. filed a material event report
+07:32:01 [INFO]     \u2192 OTHER            | My Income Portfolio - The Land Of Toys
+07:32:01 [INFO] [3/277] Scanning PEO...
+07:32:01 [INFO]   EDGAR scan: PEO
+07:32:05 [INFO]   Finnhub scan: PEO
+07:32:06 [INFO]     \u2192 OTHER            | Nerdy Inc. filed a proxy statement — shareholder vote upcomi
+07:32:06 [INFO]     \u2192 OTHER            | FIFTH THIRD BANCORP filed a proxy statement — shareholder vo
+07:32:06 [INFO]     \u2192 OTHER            | RYDER SYSTEM INC filed a proxy statement — shareholder vote 
+07:32:06 [INFO]     \u2192 EARNINGS         | Tidal Trust III published its annual shareholder report
+07:32:06 [INFO]     \u2192 OTHER            | My Income Portfolio - The Land Of Toys
+07:32:06 [INFO] [4/277] Scanning AVK...
+07:32:06 [INFO]   EDGAR scan: AVK
+07:32:09 [INFO]   Finnhub scan: AVK
+07:32:10 [INFO]     \u2192 MERGER           | AVK: 11% Yield On Convertibles
+07:32:10 [INFO]     \u2192 MERGER           | AVK: This CEF Offers A Better Way To Invest In Bonds Than Mo
+07:32:10 [INFO] [5/277] Scanning AWF...
+07:32:10 [INFO]   EDGAR scan: AWF
+07:32:13 [INFO]   Finnhub scan: AWF
+07:32:14 [INFO] [6/277] Scanning AFB...
+07:32:14 [INFO]   EDGAR scan: AFB
+07:32:17 [INFO]   Finnhub scan: AFB
+07:32:18 [INFO] [7/277] Scanning NFJ...
+07:32:18 [INFO]   EDGAR scan: NFJ
+07:32:21 [INFO]   Finnhub scan: NFJ
+07:32:22 [INFO] [8/277] Scanning EOD...
+07:32:22 [INFO]   EDGAR scan: EOD
+07:32:26 [INFO]   Finnhub scan: EOD
+07:32:27 [INFO]     \u2192 OTHER            | Cadre Holdings, Inc. filed a material event report
+07:32:27 [INFO]     \u2192 DISTRIBUTION     | EOD: This Fund Still Makes Sense For Income-Seeking Investor
+07:32:27 [INFO] [9/277] Scanning EAD...
+07:32:27 [INFO]   EDGAR scan: EAD
+07:32:35 [INFO]   Finnhub scan: EAD
+07:32:37 [INFO]     \u2192 OTHER            | BCP Investment Corp filed a material event report
+07:32:37 [INFO]     \u2192 EARNINGS         | ADVANCED SERIES TRUST published its annual shareholder repor
+07:32:37 [INFO]     \u2192 EARNINGS         | VanEck ETF Trust published its annual shareholder report
+07:32:37 [INFO] [10/277] Scanning ERC...
+07:32:37 [INFO]   EDGAR scan: ERC
+07:32:40 [INFO]   Finnhub scan: ERC
+07:32:41 [INFO]     \u2192 OTHER            | WHIRLPOOL CORP /DE/ filed a proxy statement — shareholder vo
+07:32:41 [INFO] [11/277] Scanning ERH...
+07:32:41 [INFO]   EDGAR scan: ERH
+07:32:44 [INFO]   Finnhub scan: ERH
+07:32:45 [INFO] [12/277] Scanning FINS...
+07:32:45 [INFO]   EDGAR scan: FINS
+07:32:48 [INFO]   Finnhub scan: FINS
+07:32:49 [INFO] [13/277] Scanning ARDC...
+07:32:49 [INFO]   EDGAR scan: ARDC
+07:32:52 [INFO]   Finnhub scan: ARDC
+07:32:53 [INFO] [14/277] Scanning BANX...
+07:32:53 [INFO]   EDGAR scan: BANX
+07:32:56 [INFO]   Finnhub scan: BANX
+07:32:58 [INFO] [15/277] Scanning DHF...
+07:32:58 [INFO]   EDGAR scan: DHF
+07:33:01 [INFO]   Finnhub scan: DHF
+07:33:02 [INFO] [16/277] Scanning DMB...
+07:33:02 [INFO]   EDGAR scan: DMB
+07:33:06 [INFO]   Finnhub scan: DMB
+07:33:07 [INFO] [17/277] Scanning DSM...
+07:33:07 [INFO]   EDGAR scan: DSM
+07:33:14 [INFO]   Finnhub scan: DSM
+07:33:15 [INFO]     \u2192 EARNINGS         | TIMOTHY PLAN published its annual shareholder report
+07:33:15 [INFO]     \u2192 EARNINGS         | STATE STREET INSTITUTIONAL INVESTMENT TRUST published its an
+07:33:15 [INFO]     \u2192 EARNINGS         | UBS FUNDS published its semi-annual shareholder report
+07:33:15 [INFO] [18/277] Scanning LEO...
+07:33:15 [INFO]   EDGAR scan: LEO
+07:33:18 [INFO]   Finnhub scan: LEO
+07:33:19 [INFO]     \u2192 OTHER            | KVH INDUSTRIES INC \DE\ filed a material event report
+07:33:19 [INFO]     \u2192 OTHER            | ABBOTT LABORATORIES filed a material event report
+07:33:19 [INFO]     \u2192 OTHER            | CINTAS CORP filed a material event report
+07:33:19 [INFO]     \u2192 OTHER            | eXp World Holdings, Inc. filed a proxy statement — sharehold
+07:33:19 [INFO]     \u2192 OTHER            | An insider bought or sold shares of LEO
+07:33:19 [INFO]     \u2192 OTHER            | An insider bought or sold shares of LEO
+07:33:19 [INFO]     \u2192 EARNINGS         | SPROTT FUNDS TRUST published its annual shareholder report
+07:33:19 [INFO]     \u2192 EARNINGS         | STATE STREET INSTITUTIONAL INVESTMENT TRUST published its an
+07:33:19 [INFO] [19/277] Scanning BCV...
+07:33:19 [INFO]   EDGAR scan: BCV
+07:33:22 [INFO]   Finnhub scan: BCV
+07:33:23 [INFO]     \u2192 MERGER           | AVK: This CEF Offers A Better Way To Invest In Bonds Than Mo
+07:33:23 [INFO] [20/277] Scanning MCI...
+07:33:23 [INFO]   EDGAR scan: MCI
+07:33:27 [INFO]   Finnhub scan: MCI
+07:33:28 [INFO]     \u2192 OTHER            | Barings Capital Investment Corp filed a proxy statement — sh
+07:33:28 [INFO]     \u2192 EARNINGS         | BARINGS CORPORATE INVESTORS published its annual shareholder
+07:33:28 [INFO]     \u2192 OTHER            | My Income Portfolio - The Land Of Toys
+07:33:28 [INFO] [21/277] Scanning BGH...
+07:33:28 [INFO]   EDGAR scan: BGH
+07:33:31 [INFO]   Finnhub scan: BGH
+07:33:32 [INFO]     \u2192 OTHER            | Barings BDC, Inc. filed a proxy statement — shareholder vote
+07:33:32 [INFO]     \u2192 EARNINGS         | BARINGS GLOBAL SHORT DURATION HIGH YIELD FUND published its 
+07:33:32 [INFO] [22/277] Scanning MPV...
+07:33:32 [INFO]   EDGAR scan: MPV
+07:33:36 [INFO]   Finnhub scan: MPV
+07:33:37 [INFO]     \u2192 OTHER            | Barings Capital Investment Corp filed a proxy statement — sh
+07:33:37 [INFO]     \u2192 EARNINGS         | BARINGS PARTICIPATION INVESTORS published its annual shareho
+07:33:37 [INFO] [23/277] Scanning BXSY...
+07:33:37 [INFO]   EDGAR scan: BXSY
+07:33:41 [INFO]   Finnhub scan: BXSY
+07:33:42 [INFO] [24/277] Scanning BMN...
+07:33:42 [INFO]   EDGAR scan: BMN
+07:33:50 [INFO]   Finnhub scan: BMN
+07:33:51 [INFO] [25/277] Scanning BCAT...
+07:33:51 [INFO]   EDGAR scan: BCAT
+07:33:55 [INFO]   Finnhub scan: BCAT
+07:33:56 [INFO]     \u2192 EARNINGS         | PGIM Credit Income Fund published its annual shareholder rep
+07:33:56 [INFO]     \u2192 EARNINGS         | Victory Portfolios II published its semi-annual shareholder 
+07:33:56 [INFO] [26/277] Scanning BHK...
+07:33:56 [INFO]   EDGAR scan: BHK
+07:33:59 [INFO]   Finnhub scan: BHK
+07:34:00 [INFO] [27/277] Scanning HYT...
+07:34:00 [INFO]   EDGAR scan: HYT
+07:34:03 [INFO]   Finnhub scan: HYT
+07:34:04 [INFO]     \u2192 EARNINGS         | Victory Portfolios II published its semi-annual shareholder 
+07:34:04 [INFO] [28/277] Scanning BTZ...
+07:34:04 [INFO]   EDGAR scan: BTZ
+07:34:07 [INFO]   Finnhub scan: BTZ
+07:34:08 [INFO] [29/277] Scanning DSU...
+07:34:08 [INFO]   EDGAR scan: DSU
+07:34:12 [INFO]   Finnhub scan: DSU
+07:34:13 [INFO]     \u2192 OTHER            | MiniMed Group, Inc. filed a material event report
+07:34:13 [INFO]     \u2192 OTHER            | ENBRIDGE INC filed a material event report
+07:34:13 [INFO]     \u2192 OTHER            | RTX Corp filed a proxy statement — shareholder vote upcoming
+07:34:13 [INFO]     \u2192 OTHER            | W.W. GRAINGER, INC. filed a proxy statement — shareholder vo
+07:34:13 [INFO]     \u2192 OTHER            | JOHNSON & JOHNSON filed a proxy statement — shareholder vote
+07:34:13 [INFO]     \u2192 OTHER            | An insider bought or sold shares of DSU
+07:34:13 [INFO] [30/277] Scanning ECAT...
+07:34:13 [INFO]   EDGAR scan: ECAT
+07:34:16 [INFO]   Finnhub scan: ECAT
+07:34:17 [INFO]     \u2192 OTHER            | An insider bought or sold shares of ECAT
+07:34:17 [INFO] [31/277] Scanning BGR...
+07:34:17 [INFO]   EDGAR scan: BGR
+07:34:23 [INFO]   Finnhub scan: BGR
+07:34:24 [INFO] [32/277] Scanning BDJ...
+07:34:24 [INFO]   EDGAR scan: BDJ
+07:34:31 [INFO]   Finnhub scan: BDJ
+07:34:32 [INFO] [33/277] Scanning BOE...
+07:34:32 [INFO]   EDGAR scan: BOE
+07:34:36 [INFO]   Finnhub scan: BOE
+07:34:37 [INFO]     \u2192 OTHER            | PRESIDIO PRODUCTION Co filed a material event report
+07:34:37 [INFO]     \u2192 OTHER            | INFINITY NATURAL RESOURCES, INC. filed a material event repo
+07:34:37 [INFO]     \u2192 OTHER            | An insider bought or sold shares of BOE
+07:34:37 [INFO]     \u2192 EARNINGS         | STATE STREET INSTITUTIONAL INVESTMENT TRUST published its an
+07:34:37 [INFO]     \u2192 EARNINGS         | Voya INVESTORS TRUST published its annual shareholder report
+07:34:37 [INFO]     \u2192 EARNINGS         | SA FUNDS INVESTMENT TRUST published its semi-annual sharehol
+07:34:37 [INFO] [34/277] Scanning BGY...
+07:34:37 [INFO]   EDGAR scan: BGY
+07:34:41 [INFO]   Finnhub scan: BGY
+07:34:43 [INFO] [35/277] Scanning CII...
+07:34:43 [INFO]   EDGAR scan: CII
+07:34:46 [INFO]   Finnhub scan: CII
+07:34:47 [INFO] [36/277] Scanning FRA...
+07:34:47 [INFO]   EDGAR scan: FRA
+07:34:50 [INFO]   Finnhub scan: FRA
+07:34:51 [INFO] [37/277] Scanning BME...
+07:34:51 [INFO]   EDGAR scan: BME
+07:34:56 [INFO]   Finnhub scan: BME
+07:34:57 [INFO] [38/277] Scanning BMEZ...
+07:34:57 [INFO]   EDGAR scan: BMEZ
+07:35:08 [INFO]   Finnhub scan: BMEZ
+07:35:09 [INFO] [39/277] Scanning BKT...
+07:35:09 [INFO]   EDGAR scan: BKT
+07:35:13 [INFO]   Finnhub scan: BKT
+07:35:14 [INFO] [40/277] Scanning BKN...
+07:35:14 [INFO]   EDGAR scan: BKN
+07:35:17 [INFO]   Finnhub scan: BKN
+07:35:18 [INFO] [41/277] Scanning BLW...
+07:35:18 [INFO]   EDGAR scan: BLW
+07:35:33 [INFO]   Finnhub scan: BLW
+07:35:34 [INFO]     \u2192 EARNINGS         | STATE STREET INSTITUTIONAL INVESTMENT TRUST published its an
+07:35:34 [INFO] [42/277] Scanning BTA...
+07:35:34 [INFO]   EDGAR scan: BTA
+07:35:37 [INFO]   Finnhub scan: BTA
+07:35:38 [INFO]     \u2192 OTHER            | BETA Technologies, Inc. filed a material event report
+07:35:38 [INFO] [43/277] Scanning BIT...
+07:35:38 [INFO]   EDGAR scan: BIT
+07:35:41 [INFO]   Finnhub scan: BIT
+07:35:43 [INFO]     \u2192 OTHER            | Pelican Acquisition Corp filed a material event report
+07:35:43 [INFO]     \u2192 EARNINGS         | Grayscale Funds Trust published its annual shareholder repor
+07:35:43 [INFO]     \u2192 EARNINGS         | STATE STREET INSTITUTIONAL INVESTMENT TRUST published its an
+07:35:43 [INFO] [44/277] Scanning MUC...
+07:35:43 [INFO]   EDGAR scan: MUC
+07:35:46 [INFO]   Finnhub scan: MUC
+07:35:47 [INFO]     \u2192 OTHER            | Corbus Pharmaceuticals Holdings, Inc. filed a material event
+07:35:47 [INFO] [45/277] Scanning MUJ...
+07:35:47 [INFO]   EDGAR scan: MUJ
+07:35:50 [INFO]   Finnhub scan: MUJ
+07:35:51 [INFO] [46/277] Scanning MIY...
+07:35:51 [INFO]   EDGAR scan: MIY
+07:35:54 [INFO]   Finnhub scan: MIY
+07:35:55 [INFO] [47/277] Scanning MYN...
+07:35:55 [INFO]   EDGAR scan: MYN
+07:36:04 [INFO]   Finnhub scan: MYN
+07:36:05 [INFO] [48/277] Scanning MPA...
+07:36:05 [INFO]   EDGAR scan: MPA
+07:36:08 [INFO]   Finnhub scan: MPA
+07:36:09 [INFO]     \u2192 OTHER            | HUNTINGTON BANCSHARES INC /MD/ filed a material event report
+07:36:09 [INFO] [49/277] Scanning MYI...
+07:36:09 [INFO]   EDGAR scan: MYI
+07:36:17 [INFO]   Finnhub scan: MYI
+07:36:18 [INFO] [50/277] Scanning MUA...
+07:36:18 [INFO]   EDGAR scan: MUA
+07:36:21 [INFO]   Finnhub scan: MUA
+07:36:22 [INFO] [51/277] Scanning BTT...
+07:36:22 [INFO]   EDGAR scan: BTT
+07:36:25 [INFO]   Finnhub scan: BTT
+07:36:26 [INFO]     \u2192 EARNINGS         | Capital Group Fixed Income ETF Trust published its annual sh
+07:36:26 [INFO] [52/277] Scanning MHD...
+07:36:26 [INFO]   EDGAR scan: MHD
+07:36:29 [INFO]   Finnhub scan: MHD
+07:36:30 [INFO]     \u2192 EARNINGS         | Redwood Private Real Estate Debt Fund published its annual s
+07:36:30 [INFO] [53/277] Scanning MVF...
+07:36:30 [INFO]   EDGAR scan: MVF
+07:36:33 [INFO]   Finnhub scan: MVF
+07:36:34 [INFO] [54/277] Scanning MVT...
+07:36:34 [INFO]   EDGAR scan: MVT
+07:36:37 [INFO]   Finnhub scan: MVT
+07:36:39 [INFO] [55/277] Scanning MYD...
+07:36:39 [INFO]   EDGAR scan: MYD
+07:36:42 [INFO]   Finnhub scan: MYD
+07:36:43 [INFO] [56/277] Scanning MQY...
+07:36:43 [INFO]   EDGAR scan: MQY
+07:36:52 [INFO]   Finnhub scan: MQY
+07:36:53 [INFO] [57/277] Scanning MQT...
+07:36:53 [INFO]   EDGAR scan: MQT
+07:36:56 [INFO]   Finnhub scan: MQT
+07:36:57 [INFO] [58/277] Scanning BCX...
+07:36:57 [INFO]   EDGAR scan: BCX
+07:37:00 [INFO]   Finnhub scan: BCX
+07:37:01 [INFO] [59/277] Scanning BSTZ...
+07:37:01 [INFO]   EDGAR scan: BSTZ
+07:37:05 [INFO]   Finnhub scan: BSTZ
+07:37:06 [INFO] [60/277] Scanning BST...
+07:37:06 [INFO]   EDGAR scan: BST
+07:37:10 [INFO]   Finnhub scan: BST
+07:37:11 [INFO]     \u2192 OTHER            | My Income Portfolio - The Land Of Toys
+07:37:11 [INFO] [61/277] Scanning BBN...
+07:37:11 [INFO]   EDGAR scan: BBN
+07:37:14 [INFO]   Finnhub scan: BBN
+07:37:15 [INFO] [62/277] Scanning BFK...
+07:37:15 [INFO]   EDGAR scan: BFK
+07:37:18 [INFO]   Finnhub scan: BFK
+07:37:19 [INFO] [63/277] Scanning BTX...
+07:37:19 [INFO]   EDGAR scan: BTX
+07:37:28 [INFO]   Finnhub scan: BTX
+07:37:29 [INFO] [64/277] Scanning BUI...
+07:37:29 [INFO]   EDGAR scan: BUI
+07:37:32 [INFO]   Finnhub scan: BUI
+07:37:33 [INFO] [65/277] Scanning BGT...
+07:37:33 [INFO]   EDGAR scan: BGT
+07:37:36 [INFO]   Finnhub scan: BGT
+07:37:37 [INFO] [66/277] Scanning BGX...
+07:37:37 [INFO]   EDGAR scan: BGX
+07:37:40 [INFO]   Finnhub scan: BGX
+07:37:41 [INFO] [67/277] Scanning BSL...
+07:37:41 [INFO]   EDGAR scan: BSL
+07:37:44 [INFO]   Finnhub scan: BSL
+07:37:46 [INFO]     \u2192 OTHER            | PennantPark Private Income Fund filed a material event repor
+07:37:46 [INFO]     \u2192 EARNINGS         | BOND FUND OF AMERICA published its annual shareholder report
+07:37:46 [INFO]     \u2192 EARNINGS         | LITMAN GREGORY FUNDS TRUST published its annual shareholder 
+07:37:46 [INFO] [68/277] Scanning BGB...
+07:37:46 [INFO]   EDGAR scan: BGB
+07:37:48 [INFO]   Finnhub scan: BGB
+07:37:50 [INFO] [69/277] Scanning BPRE...
+07:37:50 [INFO]   EDGAR scan: BPRE
+07:37:52 [INFO]   Finnhub scan: BPRE
+07:37:54 [INFO]     \u2192 EARNINGS         | SPECIAL OPPORTUNITIES FUND, INC. published its annual shareh
+07:37:54 [INFO] [70/277] Scanning BWG...
+07:37:54 [INFO]   EDGAR scan: BWG
+07:37:58 [INFO]   Finnhub scan: BWG
+07:37:59 [INFO]     \u2192 OTHER            | BrandywineGLOBAL-Global Income Opportunities Fund Inc filed 
+07:37:59 [INFO] [71/277] Scanning RA...
+07:37:59 [INFO]   EDGAR scan: RA
+07:38:09 [INFO]   Finnhub scan: RA
+07:38:10 [INFO]     \u2192 OTHER            | Artiva Biotherapeutics, Inc. filed a material event report
+07:38:10 [INFO]     \u2192 OTHER            | BCP Investment Corp filed a material event report
+07:38:10 [INFO]     \u2192 OTHER            | CITIZENS FINANCIAL GROUP INC/RI filed a proxy statement — sh
+07:38:10 [INFO]     \u2192 OTHER            | INTERNATIONAL BUSINESS MACHINES CORP filed a proxy statement
+07:38:10 [INFO]     \u2192 OTHER            | An insider bought or sold shares of RA
+07:38:10 [INFO]     \u2192 EARNINGS         | VOYA GOVERNMENT MONEY MARKET PORTFOLIO published its annual 
+07:38:10 [INFO] [72/277] Scanning IGR...
+07:38:10 [INFO]   EDGAR scan: IGR
+07:38:13 [INFO]   Finnhub scan: IGR
+07:38:14 [INFO] [73/277] Scanning CHY...
+07:38:14 [INFO]   EDGAR scan: CHY
+07:38:17 [INFO]   Finnhub scan: CHY
+07:38:18 [INFO]     \u2192 MERGER           | Calamos Convertible And High Income Fund Q4 2025 Commentary
+07:38:18 [INFO] [74/277] Scanning CHI...
+07:38:18 [INFO]   EDGAR scan: CHI
+07:38:29 [INFO]   Finnhub scan: CHI
+07:38:30 [INFO]     \u2192 OTHER            | BITMINE IMMERSION TECHNOLOGIES, INC. filed a material event 
+07:38:30 [INFO]     \u2192 OTHER            | INTERNATIONAL BUSINESS MACHINES CORP filed a proxy statement
+07:38:30 [INFO]     \u2192 OTHER            | An insider bought or sold shares of CHI
+07:38:30 [INFO]     \u2192 EARNINGS         | Investment Managers Series Trust III published its annual sh
+07:38:30 [INFO]     \u2192 EARNINGS         | STATE STREET INSTITUTIONAL INVESTMENT TRUST published its an
+07:38:30 [INFO]     \u2192 EARNINGS         | CULLEN FUNDS TRUST published its semi-annual shareholder rep
+07:38:30 [INFO]     \u2192 MERGER           | AVK: This CEF Offers A Better Way To Invest In Bonds Than Mo
+07:38:30 [INFO] [75/277] Scanning CCD...
+07:38:30 [INFO]   EDGAR scan: CCD
+07:38:38 [INFO]   Finnhub scan: CCD
+07:38:39 [INFO] [76/277] Scanning CHW...
+07:38:39 [INFO]   EDGAR scan: CHW
+07:38:42 [INFO]   Finnhub scan: CHW
+07:38:43 [INFO] [77/277] Scanning CGO...
+07:38:43 [INFO]   EDGAR scan: CGO
+07:38:47 [INFO]   Finnhub scan: CGO
+07:38:48 [INFO] [78/277] Scanning CPZ...
+07:38:48 [INFO]   EDGAR scan: CPZ
+07:38:53 [INFO]   Finnhub scan: CPZ
+07:38:54 [INFO] [79/277] Scanning CSQ...
+07:38:54 [INFO]   EDGAR scan: CSQ
+07:39:01 [INFO]   Finnhub scan: CSQ
+07:39:02 [INFO]     \u2192 DISTRIBUTION     | GLO: Generous Dividend Is Hurting Performance
+07:39:02 [INFO] [80/277] Scanning CET...
+07:39:02 [INFO]   EDGAR scan: CET
+07:39:07 [INFO]   Finnhub scan: CET
+07:39:09 [INFO]     \u2192 OTHER            | Chemours Co filed a proxy statement — shareholder vote upcom
+07:39:09 [INFO] [81/277] Scanning EMO...
+07:39:09 [INFO]   EDGAR scan: EMO
+07:39:12 [INFO]   Finnhub scan: EMO
+07:39:13 [INFO]     \u2192 OTHER            | ClearBridge Energy Midstream Opportunity Fund Inc. filed a p
+07:39:13 [INFO] [82/277] Scanning GLQ...
+07:39:13 [INFO]   EDGAR scan: GLQ
+07:39:16 [INFO]   Finnhub scan: GLQ
+07:39:17 [INFO] [83/277] Scanning GLO...
+07:39:17 [INFO]   EDGAR scan: GLO
+07:39:20 [INFO]   Finnhub scan: GLO
+07:39:21 [INFO]     \u2192 OTHER            | SHENANDOAH TELECOMMUNICATIONS CO/VA/ filed a proxy statement
+07:39:21 [INFO]     \u2192 DISTRIBUTION     | GLO: Generous Dividend Is Hurting Performance
+07:39:21 [INFO] [84/277] Scanning FOF...
+07:39:21 [INFO]   EDGAR scan: FOF
+07:39:25 [INFO]   Finnhub scan: FOF
+07:39:26 [INFO]     \u2192 EARNINGS         | WESMARK FUNDS published its annual shareholder report
+07:39:26 [INFO] [85/277] Scanning UTF...
+07:39:26 [INFO]   EDGAR scan: UTF
+07:39:28 [INFO]   Finnhub scan: UTF
+07:39:30 [INFO]     \u2192 OTHER            | My Income Portfolio - The Land Of Toys
+07:39:30 [INFO] [86/277] Scanning LDP...
+07:39:30 [INFO]   EDGAR scan: LDP
+07:39:40 [INFO]   Finnhub scan: LDP
+07:39:42 [INFO] [87/277] Scanning RQI...
+07:39:42 [INFO]   EDGAR scan: RQI
+07:39:45 [INFO]   Finnhub scan: RQI
+07:39:46 [INFO]     \u2192 OTHER            | My Income Portfolio - The Land Of Toys
+07:39:46 [INFO] [88/277] Scanning RNP...
+07:39:46 [INFO]   EDGAR scan: RNP
+07:39:49 [INFO]   Finnhub scan: RNP
+07:39:50 [INFO] [89/277] Scanning RLTY...
+07:39:50 [INFO]   EDGAR scan: RLTY
+07:39:53 [INFO]   Finnhub scan: RLTY
+07:39:54 [INFO] [90/277] Scanning PSF...
+07:39:54 [INFO]   EDGAR scan: PSF
+07:39:57 [INFO]   Finnhub scan: PSF
+07:39:58 [INFO]     \u2192 OTHER            | ENTERPRISE FINANCIAL SERVICES CORP filed a material event re
+07:39:58 [INFO]     \u2192 EARNINGS         | Private Shares Fund published its annual shareholder report
+07:39:58 [INFO]     \u2192 EARNINGS         | LITMAN GREGORY FUNDS TRUST published its annual shareholder 
+07:39:58 [INFO]     \u2192 EARNINGS         | UBS FUNDS published its semi-annual shareholder report
+07:39:58 [INFO] [91/277] Scanning PTA...
+07:39:58 [INFO]   EDGAR scan: PTA
+07:40:02 [INFO]   Finnhub scan: PTA
+07:40:03 [INFO]     \u2192 OTHER            | Larimar Therapeutics, Inc. filed a material event report
+07:40:03 [INFO] [92/277] Scanning RFI...
+07:40:03 [INFO]   EDGAR scan: RFI
+07:40:06 [INFO]   Finnhub scan: RFI
+07:40:07 [INFO] [93/277] Scanning STK...
+07:40:07 [INFO]   EDGAR scan: STK
+07:40:16 [INFO]   Finnhub scan: STK
+07:40:17 [INFO]     \u2192 OTHER            | An insider bought or sold shares of STK
+07:40:17 [INFO] [94/277] Scanning CLM...
+07:40:17 [INFO]   EDGAR scan: CLM
+07:40:20 [INFO]   Finnhub scan: CLM
+07:40:21 [INFO] [95/277] Scanning CRF...
+07:40:21 [INFO]   EDGAR scan: CRF
+07:40:24 [INFO]   Finnhub scan: CRF
+07:40:25 [INFO]     \u2192 EARNINGS         | Segall Bryant & Hamill Trust published its annual shareholde
+07:40:25 [INFO] [96/277] Scanning CIK...
+07:40:25 [INFO]   EDGAR scan: CIK
+07:40:28 [INFO]   Finnhub scan: CIK
+07:40:29 [INFO]     \u2192 OTHER            | An insider bought or sold shares of CIK
+07:40:29 [INFO] [97/277] Scanning DHY...
+07:40:29 [INFO]   EDGAR scan: DHY
+07:40:32 [INFO]   Finnhub scan: DHY
+07:40:33 [INFO] [98/277] Scanning DNP...
+07:40:33 [INFO]   EDGAR scan: DNP
+07:40:36 [INFO]   Finnhub scan: DNP
+07:40:38 [INFO] [99/277] Scanning KTF...
+07:40:38 [INFO]   EDGAR scan: KTF
+07:40:40 [INFO]   Finnhub scan: KTF
+07:40:41 [INFO]     \u2192 DISTRIBUTION     | DWS Municipal Income Trust Declares Monthly Distribution
+07:40:41 [INFO] [100/277] Scanning DSL...
+07:40:41 [INFO]   EDGAR scan: DSL
+07:40:45 [INFO]   Finnhub scan: DSL
+07:40:46 [INFO]     \u2192 OTHER            | Roadzen Inc. filed a proxy statement — shareholder vote upco
+07:40:46 [INFO] [101/277] Scanning DLY...
+07:40:46 [INFO]   EDGAR scan: DLY
+07:41:07 [INFO]   Finnhub scan: DLY
+07:41:08 [INFO]     \u2192 EARNINGS         | VOYA GOVERNMENT MONEY MARKET PORTFOLIO published its annual 
+07:41:08 [INFO] [102/277] Scanning DBL...
+07:41:08 [INFO]   EDGAR scan: DBL
+07:41:11 [INFO]   Finnhub scan: DBL
+07:41:12 [INFO] [103/277] Scanning DPG...
+07:41:12 [INFO]   EDGAR scan: DPG
+07:41:15 [INFO]   Finnhub scan: DPG
+07:41:16 [INFO]     \u2192 OTHER            | Delek US Holdings, Inc. filed a proxy statement — shareholde
+07:41:16 [INFO] [104/277] Scanning ETX...
+07:41:16 [INFO]   EDGAR scan: ETX
+07:41:19 [INFO]   Finnhub scan: ETX
+07:41:20 [INFO]     \u2192 OTHER            | An insider bought or sold shares of ETX
+07:41:20 [INFO]     \u2192 EARNINGS         | Grayscale Funds Trust published its annual shareholder repor
+07:41:20 [INFO] [105/277] Scanning ECC...
+07:41:20 [INFO]   EDGAR scan: ECC
+07:41:23 [INFO]   Finnhub scan: ECC
+07:41:24 [INFO]     \u2192 OTHER            | Acurx Pharmaceuticals, Inc. filed a material event report
+07:41:24 [INFO] [106/277] Scanning EIC...
+07:41:24 [INFO]   EDGAR scan: EIC
+07:41:34 [INFO]   Finnhub scan: EIC
+07:41:35 [INFO] [107/277] Scanning EOI...
+07:41:35 [INFO]   EDGAR scan: EOI
+07:41:38 [INFO]   Finnhub scan: EOI
+07:41:39 [INFO] [108/277] Scanning EOS...
+07:41:39 [INFO]   EDGAR scan: EOS
+07:41:42 [INFO]   Finnhub scan: EOS
+07:41:43 [INFO]     \u2192 OTHER            | vTv Therapeutics Inc. filed a material event report
+07:41:43 [INFO]     \u2192 OTHER            | Planet Fitness, Inc. filed a material event report
+07:41:43 [INFO]     \u2192 OTHER            | An insider bought or sold shares of EOS
+07:41:43 [INFO]     \u2192 EARNINGS         | BARINGS PARTICIPATION INVESTORS published its annual shareho
+07:41:43 [INFO]     \u2192 EARNINGS         | LAZARD FUNDS INC published its annual shareholder report
+07:41:43 [INFO]     \u2192 OTHER            | My Income Portfolio - The Land Of Toys
+07:41:43 [INFO] [109/277] Scanning EFT...
+07:41:43 [INFO]   EDGAR scan: EFT
+07:41:46 [INFO]   Finnhub scan: EFT
+07:41:48 [INFO]     \u2192 OTHER            | Ally Auto Assets LLC filed a material event report
+07:41:48 [INFO] [110/277] Scanning EVV...
+07:41:48 [INFO]   EDGAR scan: EVV
+07:41:51 [INFO]   Finnhub scan: EVV
+07:41:52 [INFO] [111/277] Scanning EIM...
+07:41:52 [INFO]   EDGAR scan: EIM
+07:41:58 [INFO]   Finnhub scan: EIM
+07:41:59 [INFO] [112/277] Scanning EVN...
+07:41:59 [INFO]   EDGAR scan: EVN
+07:42:05 [INFO]   Finnhub scan: EVN
+07:42:06 [INFO]     \u2192 EARNINGS         | SCM Trust published its annual shareholder report
+07:42:06 [INFO] [113/277] Scanning EOT...
+07:42:06 [INFO]   EDGAR scan: EOT
+07:42:13 [INFO]   Finnhub scan: EOT
+07:42:14 [INFO] [114/277] Scanning ETJ...
+07:42:14 [INFO]   EDGAR scan: ETJ
+07:42:16 [INFO]   Finnhub scan: ETJ
+07:42:18 [INFO] [115/277] Scanning EFR...
+07:42:18 [INFO]   EDGAR scan: EFR
+07:42:21 [INFO]   Finnhub scan: EFR
+07:42:22 [INFO] [116/277] Scanning EVG...
+07:42:22 [INFO]   EDGAR scan: EVG
+07:42:40 [INFO]   Finnhub scan: EVG
+07:42:41 [INFO] [117/277] Scanning ETG...
+07:42:41 [INFO]   EDGAR scan: ETG
+07:42:45 [INFO]   Finnhub scan: ETG
+07:42:46 [INFO] [118/277] Scanning EVT...
+07:42:46 [INFO]   EDGAR scan: EVT
+07:42:49 [INFO]   Finnhub scan: EVT
+07:42:50 [INFO]     \u2192 EARNINGS         | STATE STREET INSTITUTIONAL INVESTMENT TRUST published its an
+07:42:50 [INFO]     \u2192 OTHER            | My Income Portfolio - The Land Of Toys
+07:42:50 [INFO] [119/277] Scanning ETO...
+07:42:50 [INFO]   EDGAR scan: ETO
+07:42:53 [INFO]   Finnhub scan: ETO
+07:42:55 [INFO]     \u2192 OTHER            | MiniMed Group, Inc. filed a material event report
+07:42:55 [INFO]     \u2192 OTHER            | My Income Portfolio - The Land Of Toys
+07:42:55 [INFO] [120/277] Scanning ETB...
+07:42:55 [INFO]   EDGAR scan: ETB
+07:42:57 [INFO]   Finnhub scan: ETB
+07:42:58 [INFO] [121/277] Scanning ETV...
+07:42:58 [INFO]   EDGAR scan: ETV
+07:43:02 [INFO]   Finnhub scan: ETV
+07:43:03 [INFO] [122/277] Scanning ETY...
+07:43:03 [INFO]   EDGAR scan: ETY
+07:43:16 [INFO]   Finnhub scan: ETY
+07:43:17 [INFO]     \u2192 OTHER            | SAB Biotherapeutics, Inc. filed a material event report
+07:43:17 [INFO] [123/277] Scanning EXG...
+07:43:17 [INFO]   EDGAR scan: EXG
+07:43:20 [INFO]   Finnhub scan: EXG
+07:43:21 [INFO] [124/277] Scanning ETW...
+07:43:21 [INFO]   EDGAR scan: ETW
+07:43:27 [INFO]   Finnhub scan: ETW
+07:43:28 [INFO] [125/277] Scanning EARN...
+07:43:28 [INFO]   EDGAR scan: EARN
+07:43:32 [INFO]   Finnhub scan: EARN
+07:43:34 [INFO]     \u2192 OTHER            | Aureus Greenway Holdings Inc filed a material event report
+07:43:34 [INFO]     \u2192 OTHER            | Evolv Technologies Holdings, Inc. filed a material event rep
+07:43:34 [INFO]     \u2192 OTHER            | Pelican Acquisition Corp filed a material event report
+07:43:34 [INFO]     \u2192 MERGER           | SEI Exchange Traded Funds filed a merger or reorganization r
+07:43:34 [INFO]     \u2192 MERGER           | Thrivent ETF Trust filed a merger or reorganization registra
+07:43:34 [INFO]     \u2192 OTHER            | WARRIOR MET COAL, INC. filed a proxy statement — shareholder
+07:43:34 [INFO]     \u2192 OTHER            | Kontoor Brands, Inc. filed a proxy statement — shareholder v
+07:43:34 [INFO]     \u2192 OTHER            | JOHNSON & JOHNSON filed a proxy statement — shareholder vote
+07:43:34 [INFO]     \u2192 OTHER            | Talkspace, Inc. filed additional proxy solicitation material
+07:43:34 [INFO]     \u2192 OTHER            | An insider bought or sold shares of EARN
+07:43:34 [INFO]     \u2192 EARNINGS         | HL Scope RIC LLC published its annual shareholder report
+07:43:34 [INFO]     \u2192 EARNINGS         | SPECIAL OPPORTUNITIES FUND, INC. published its annual shareh
+07:43:34 [INFO]     \u2192 EARNINGS         | Northern Lights Fund Trust published its semi-annual shareho
+07:43:34 [INFO]     \u2192 EARNINGS         | MUTUAL FUND SERIES TRUST published its semi-annual sharehold
+07:43:34 [INFO] [126/277] Scanning ECF...
+07:43:34 [INFO]   EDGAR scan: ECF
+07:43:37 [INFO]   Finnhub scan: ECF
+07:43:38 [INFO]     \u2192 OTHER            | TKO Group Holdings, Inc. filed a material event report
+07:43:38 [INFO]     \u2192 OTHER            | TPI COMPOSITES, INC filed a material event report
+07:43:38 [INFO]     \u2192 MERGER           | AVK: This CEF Offers A Better Way To Invest In Bonds Than Mo
+07:43:38 [INFO] [127/277] Scanning FTHY...
+07:43:38 [INFO]   EDGAR scan: FTHY
+07:43:41 [INFO]   Finnhub scan: FTHY
+07:43:42 [INFO] [128/277] Scanning FSCO...
+07:43:42 [INFO]   EDGAR scan: FSCO
+07:43:45 [INFO]   Finnhub scan: FSCO
+07:43:46 [INFO] [129/277] Scanning FSSL...
+07:43:46 [INFO]   EDGAR scan: FSSL
+07:43:54 [INFO]   Finnhub scan: FSSL
+07:43:56 [INFO]     \u2192 OTHER            | An insider bought or sold shares of FSSL
+07:43:56 [INFO]     \u2192 OTHER            | An insider bought or sold shares of FSSL
+07:43:56 [INFO] [130/277] Scanning FFA...
+07:43:56 [INFO]   EDGAR scan: FFA
+07:43:59 [INFO]   Finnhub scan: FFA
+07:44:00 [INFO]     \u2192 OTHER            | DOMINOS PIZZA INC filed a proxy statement — shareholder vote
+07:44:00 [INFO]     \u2192 EARNINGS         | Mutual Fund & Variable Insurance Trust published its annual 
+07:44:00 [INFO] [131/277] Scanning FPF...
+07:44:00 [INFO]   EDGAR scan: FPF
+07:44:03 [INFO]   Finnhub scan: FPF
+07:44:04 [INFO] [132/277] Scanning FCT...
+07:44:04 [INFO]   EDGAR scan: FCT
+07:44:07 [INFO]   Finnhub scan: FCT
+07:44:08 [INFO]     \u2192 OTHER            | An insider bought or sold shares of FCT
+07:44:08 [INFO]     \u2192 EARNINGS         | ETF Opportunities Trust published its annual shareholder rep
+07:44:08 [INFO] [133/277] Scanning DFP...
+07:44:08 [INFO]   EDGAR scan: DFP
+07:44:11 [INFO]   Finnhub scan: DFP
+07:44:12 [INFO]     \u2192 OTHER            | FLAHERTY & CRUMRINE PREFERRED & INCOME FUND INC filed a prox
+07:44:12 [INFO] [134/277] Scanning FFC...
+07:44:12 [INFO]   EDGAR scan: FFC
+07:44:15 [INFO]   Finnhub scan: FFC
+07:44:16 [INFO]     \u2192 OTHER            | Flaherty & Crumrine PREFERRED & INCOME OPPORTUNITY FUND INC 
+07:44:16 [INFO] [135/277] Scanning FLC...
+07:44:16 [INFO]   EDGAR scan: FLC
+07:44:19 [INFO]   Finnhub scan: FLC
+07:44:20 [INFO]     \u2192 OTHER            | Flaherty & Crumrine PREFERRED & INCOME OPPORTUNITY FUND INC 
+07:44:20 [INFO] [136/277] Scanning PFD...
+07:44:20 [INFO]   EDGAR scan: PFD
+07:44:29 [INFO]   Finnhub scan: PFD
+07:44:30 [INFO]     \u2192 OTHER            | Flaherty & Crumrine PREFERRED & INCOME SECURITIES FUND INC f
+07:44:30 [INFO] [137/277] Scanning PFO...
+07:44:30 [INFO]   EDGAR scan: PFO
+07:44:33 [INFO]   Finnhub scan: PFO
+07:44:34 [INFO]     \u2192 OTHER            | Flaherty & Crumrine PREFERRED & INCOME SECURITIES FUND INC f
+07:44:34 [INFO]     \u2192 OTHER            | An insider bought or sold shares of PFO
+07:44:34 [INFO]     \u2192 EARNINGS         | abrdn ETFs published its annual shareholder report
+07:44:34 [INFO]     \u2192 EARNINGS         | Forum Real Estate Income Fund published its annual sharehold
+07:44:34 [INFO] [138/277] Scanning FTF...
+07:44:34 [INFO]   EDGAR scan: FTF
+^C

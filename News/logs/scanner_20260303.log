@@ -1,0 +1,211 @@
+[Tue 03/03/2026  8:20:00.05] Starting CEF News Scan... 
+08:20:00 [INFO] Starting CEF News Scan — 277 tickers, 2-day lookback
+08:20:00 [INFO] Sources: SEC EDGAR + Finnhub
+08:20:00 [INFO] ============================================================
+08:20:00 [INFO] [1/277] Scanning ASA...
+08:20:00 [INFO]   EDGAR scan: ASA
+08:20:04 [INFO]   Finnhub scan: ASA
+08:20:06 [INFO]     \u2192 EARNINGS         | JNL SERIES TRUST published its annual shareholder report
+08:20:06 [INFO]     \u2192 EARNINGS         | TOUCHSTONE STRATEGIC TRUST published its semi-annual shareho
+08:20:06 [INFO] [2/277] Scanning ADX...
+08:20:06 [INFO]   EDGAR scan: ADX
+08:20:14 [INFO]   Finnhub scan: ADX
+08:20:15 [INFO]     \u2192 OTHER            | ADX + SCHD: The Ultimate Barbell Strategy To Navigate The 20
+08:20:15 [INFO] [3/277] Scanning PEO...
+08:20:15 [INFO]   EDGAR scan: PEO
+08:20:18 [INFO]   Finnhub scan: PEO
+08:20:19 [INFO]     \u2192 OTHER            | Nuveen Churchill Private Capital Income Fund filed a materia
+08:20:19 [INFO]     \u2192 OTHER            | Bloomin' Brands, Inc. filed a proxy statement — shareholder 
+08:20:19 [INFO]     \u2192 OTHER            | Broadcom Inc. filed a proxy statement — shareholder vote upc
+08:20:19 [INFO] [4/277] Scanning AVK...
+08:20:19 [INFO]   EDGAR scan: AVK
+08:20:22 [INFO]   Finnhub scan: AVK
+08:20:23 [INFO] [5/277] Scanning AWF...
+08:20:23 [INFO]   EDGAR scan: AWF
+08:20:26 [INFO]   Finnhub scan: AWF
+08:20:27 [INFO] [6/277] Scanning AFB...
+08:20:27 [INFO]   EDGAR scan: AFB
+08:20:30 [INFO]   Finnhub scan: AFB
+08:20:31 [INFO] [7/277] Scanning NFJ...
+08:20:31 [INFO]   EDGAR scan: NFJ
+08:20:34 [INFO]   Finnhub scan: NFJ
+08:20:35 [INFO] [8/277] Scanning EOD...
+08:20:35 [INFO]   EDGAR scan: EOD
+08:20:38 [INFO]   Finnhub scan: EOD
+08:20:39 [INFO] [9/277] Scanning EAD...
+08:20:39 [INFO]   EDGAR scan: EAD
+08:20:43 [INFO]   Finnhub scan: EAD
+08:20:44 [INFO] [10/277] Scanning ERC...
+08:20:44 [INFO]   EDGAR scan: ERC
+08:20:47 [INFO]   Finnhub scan: ERC
+08:20:48 [INFO]     \u2192 OTHER            | Turning Point Brands, Inc. filed a material event report
+08:20:48 [INFO] [11/277] Scanning ERH...
+08:20:48 [INFO]   EDGAR scan: ERH
+08:20:51 [INFO]   Finnhub scan: ERH
+08:20:52 [INFO] [12/277] Scanning FINS...
+08:20:52 [INFO]   EDGAR scan: FINS
+08:21:00 [INFO]   Finnhub scan: FINS
+08:21:01 [INFO] [13/277] Scanning ARDC...
+08:21:01 [INFO]   EDGAR scan: ARDC
+08:21:05 [INFO]   Finnhub scan: ARDC
+08:21:06 [INFO] [14/277] Scanning BANX...
+08:21:06 [INFO]   EDGAR scan: BANX
+08:21:09 [INFO]   Finnhub scan: BANX
+08:21:10 [INFO] [15/277] Scanning DHF...
+08:21:10 [INFO]   EDGAR scan: DHF
+08:21:13 [INFO]   Finnhub scan: DHF
+08:21:14 [INFO] [16/277] Scanning DMB...
+08:21:14 [INFO]   EDGAR scan: DMB
+08:21:18 [INFO]   Finnhub scan: DMB
+08:21:19 [INFO] [17/277] Scanning DSM...
+08:21:19 [INFO]   EDGAR scan: DSM
+08:21:22 [INFO]   Finnhub scan: DSM
+08:21:24 [INFO]     \u2192 EARNINGS         | STATE STREET VARIABLE INSURANCE SERIES FUNDS INC published i
+08:21:24 [INFO]     \u2192 EARNINGS         | TOUCHSTONE STRATEGIC TRUST published its semi-annual shareho
+08:21:24 [INFO] [18/277] Scanning LEO...
+08:21:24 [INFO]   EDGAR scan: LEO
+08:21:27 [INFO]   Finnhub scan: LEO
+08:21:28 [INFO]     \u2192 OTHER            | AST SpaceMobile, Inc. filed a material event report
+08:21:28 [INFO]     \u2192 OTHER            | An insider bought or sold shares of LEO
+08:21:28 [INFO] [19/277] Scanning BCV...
+08:21:28 [INFO]   EDGAR scan: BCV
+08:21:31 [INFO]   Finnhub scan: BCV
+08:21:32 [INFO] [20/277] Scanning MCI...
+08:21:32 [INFO]   EDGAR scan: MCI
+08:21:35 [INFO]   Finnhub scan: MCI
+08:21:36 [INFO] [21/277] Scanning BGH...
+08:21:36 [INFO]   EDGAR scan: BGH
+08:21:39 [INFO]   Finnhub scan: BGH
+08:21:41 [INFO] [22/277] Scanning MPV...
+08:21:41 [INFO]   EDGAR scan: MPV
+08:21:44 [INFO]   Finnhub scan: MPV
+08:21:45 [INFO] [23/277] Scanning BXSY...
+08:21:45 [INFO]   EDGAR scan: BXSY
+08:21:53 [INFO]   Finnhub scan: BXSY
+08:21:54 [INFO] [24/277] Scanning BMN...
+08:21:54 [INFO]   EDGAR scan: BMN
+08:21:57 [INFO]   Finnhub scan: BMN
+08:21:58 [INFO] [25/277] Scanning BCAT...
+08:21:58 [INFO]   EDGAR scan: BCAT
+08:22:01 [INFO]   Finnhub scan: BCAT
+08:22:02 [INFO]     \u2192 EARNINGS         | Touchstone ETF Trust published its annual shareholder report
+08:22:02 [INFO] [26/277] Scanning BHK...
+08:22:02 [INFO]   EDGAR scan: BHK
+08:22:05 [INFO]   Finnhub scan: BHK
+08:22:06 [INFO] [27/277] Scanning HYT...
+08:22:06 [INFO]   EDGAR scan: HYT
+08:22:10 [INFO]   Finnhub scan: HYT
+08:22:11 [INFO]     \u2192 EARNINGS         | JNL SERIES TRUST published its annual shareholder report
+08:22:11 [INFO] [28/277] Scanning BTZ...
+08:22:11 [INFO]   EDGAR scan: BTZ
+08:22:14 [INFO]   Finnhub scan: BTZ
+08:22:15 [INFO] [29/277] Scanning DSU...
+08:22:15 [INFO]   EDGAR scan: DSU
+08:22:18 [INFO]   Finnhub scan: DSU
+08:22:20 [INFO]     \u2192 OTHER            | Paramount Skydance Corp filed a material event report
+08:22:20 [INFO]     \u2192 OTHER            | Warner Bros. Discovery, Inc. filed additional proxy solicita
+08:22:20 [INFO]     \u2192 OTHER            | An insider bought or sold shares of DSU
+08:22:20 [INFO] [30/277] Scanning ECAT...
+08:22:20 [INFO]   EDGAR scan: ECAT
+08:22:24 [INFO]   Finnhub scan: ECAT
+08:22:25 [INFO]     \u2192 OTHER            | An insider bought or sold shares of ECAT
+08:22:25 [INFO] [31/277] Scanning BGR...
+08:22:25 [INFO]   EDGAR scan: BGR
+08:22:30 [INFO]   Finnhub scan: BGR
+08:22:32 [INFO] [32/277] Scanning BDJ...
+08:22:32 [INFO]   EDGAR scan: BDJ
+08:22:34 [INFO]   Finnhub scan: BDJ
+08:22:36 [INFO] [33/277] Scanning BOE...
+08:22:36 [INFO]   EDGAR scan: BOE
+08:22:39 [INFO]   Finnhub scan: BOE
+08:22:40 [INFO]     \u2192 OTHER            | Kosmos Energy Ltd. filed a material event report
+08:22:40 [INFO]     \u2192 EARNINGS         | STATE STREET VARIABLE INSURANCE SERIES FUNDS INC published i
+08:22:40 [INFO] [34/277] Scanning BGY...
+08:22:40 [INFO]   EDGAR scan: BGY
+08:22:43 [INFO]   Finnhub scan: BGY
+08:22:44 [INFO] [35/277] Scanning CII...
+08:22:44 [INFO]   EDGAR scan: CII
+08:22:47 [INFO]   Finnhub scan: CII
+08:22:48 [INFO]     \u2192 OTHER            | ANI PHARMACEUTICALS INC filed a material event report
+08:22:48 [INFO] [36/277] Scanning FRA...
+08:22:48 [INFO]   EDGAR scan: FRA
+08:22:52 [INFO]   Finnhub scan: FRA
+08:22:53 [INFO] [37/277] Scanning BME...
+08:22:53 [INFO]   EDGAR scan: BME
+08:22:56 [INFO]   Finnhub scan: BME
+08:22:57 [INFO] [38/277] Scanning BMEZ...
+08:22:57 [INFO]   EDGAR scan: BMEZ
+08:23:00 [INFO]   Finnhub scan: BMEZ
+08:23:01 [INFO] [39/277] Scanning BKT...
+08:23:01 [INFO]   EDGAR scan: BKT
+08:23:05 [INFO]   Finnhub scan: BKT
+08:23:06 [INFO] [40/277] Scanning BKN...
+08:23:06 [INFO]   EDGAR scan: BKN
+08:23:13 [INFO]   Finnhub scan: BKN
+08:23:15 [INFO] [41/277] Scanning BLW...
+08:23:15 [INFO]   EDGAR scan: BLW
+08:23:18 [INFO]   Finnhub scan: BLW
+08:23:19 [INFO]     \u2192 EARNINGS         | JNL SERIES TRUST published its annual shareholder report
+08:23:19 [INFO] [42/277] Scanning BTA...
+08:23:19 [INFO]   EDGAR scan: BTA
+08:23:22 [INFO]   Finnhub scan: BTA
+08:23:23 [INFO] [43/277] Scanning BIT...
+08:23:23 [INFO]   EDGAR scan: BIT
+08:23:26 [INFO]   Finnhub scan: BIT
+08:23:27 [INFO]     \u2192 OTHER            | HARROW, INC. filed a material event report
+08:23:27 [INFO]     \u2192 OTHER            | ProCap Financial, Inc. filed additional proxy solicitation m
+08:23:27 [INFO]     \u2192 EARNINGS         | STATE STREET VARIABLE INSURANCE SERIES FUNDS INC published i
+08:23:27 [INFO]     \u2192 EARNINGS         | JPMORGAN TRUST II published its semi-annual shareholder repo
+08:23:27 [INFO] [44/277] Scanning MUC...
+08:23:27 [INFO]   EDGAR scan: MUC
+08:23:30 [INFO]   Finnhub scan: MUC
+08:23:31 [INFO]     \u2192 OTHER            | Tyra Biosciences, Inc. filed a material event report
+08:23:31 [INFO] [45/277] Scanning MUJ...
+08:23:31 [INFO]   EDGAR scan: MUJ
+08:23:34 [INFO]   Finnhub scan: MUJ
+08:23:36 [INFO] [46/277] Scanning MIY...
+08:23:36 [INFO]   EDGAR scan: MIY
+08:23:39 [INFO]   Finnhub scan: MIY
+08:23:40 [INFO] [47/277] Scanning MYN...
+08:23:40 [INFO]   EDGAR scan: MYN
+08:23:43 [INFO]   Finnhub scan: MYN
+08:23:44 [INFO] [48/277] Scanning MPA...
+08:23:44 [INFO]   EDGAR scan: MPA
+08:23:47 [INFO]   Finnhub scan: MPA
+08:23:48 [INFO]     \u2192 OTHER            | Hepion Pharmaceuticals, Inc. filed a material event report
+08:23:48 [INFO]     \u2192 OTHER            | Astrana Health, Inc. filed a material event report
+08:23:48 [INFO] [49/277] Scanning MYI...
+08:23:48 [INFO]   EDGAR scan: MYI
+08:23:52 [INFO]   Finnhub scan: MYI
+08:23:53 [INFO] [50/277] Scanning MUA...
+08:23:53 [INFO]   EDGAR scan: MUA
+08:23:56 [INFO]   Finnhub scan: MUA
+08:23:57 [INFO] [51/277] Scanning BTT...
+08:23:57 [INFO]   EDGAR scan: BTT
+08:24:02 [INFO]   Finnhub scan: BTT
+08:24:03 [INFO]     \u2192 OTHER            | Pinnacle Financial Partners, Inc. filed a material event rep
+08:24:03 [INFO] [52/277] Scanning MHD...
+08:24:03 [INFO]   EDGAR scan: MHD
+08:24:09 [INFO]   Finnhub scan: MHD
+08:24:10 [INFO] [53/277] Scanning MVF...
+08:24:10 [INFO]   EDGAR scan: MVF
+08:24:13 [INFO]   Finnhub scan: MVF
+08:24:14 [INFO] [54/277] Scanning MVT...
+08:24:14 [INFO]   EDGAR scan: MVT
+08:24:17 [INFO]   Finnhub scan: MVT
+08:24:18 [INFO] [55/277] Scanning MYD...
+08:24:18 [INFO]   EDGAR scan: MYD
+08:24:22 [INFO]   Finnhub scan: MYD
+08:24:23 [INFO] [56/277] Scanning MQY...
+08:24:23 [INFO]   EDGAR scan: MQY
+08:24:26 [INFO]   Finnhub scan: MQY
+08:24:27 [INFO]     \u2192 OTHER            | An insider bought or sold shares of MQY
+08:24:27 [INFO] [57/277] Scanning MQT...
+08:24:27 [INFO]   EDGAR scan: MQT
+08:24:30 [INFO]   Finnhub scan: MQT
+08:24:31 [INFO] [58/277] Scanning BCX...
+08:24:31 [INFO]   EDGAR scan: BCX
+08:24:34 [INFO]   Finnhub scan: BCX
+08:24:36 [INFO] [59/277] Scanning BSTZ...
+08:24:36 [INFO]   EDGAR scan: BSTZ
+08:24:39 [INFO]   Finnhub scan: BSTZ

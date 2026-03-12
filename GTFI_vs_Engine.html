@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTFI · Portfolio Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1A1D23; --ink-mid:#3D4148; --ink-light:#63666B; --ink-faint:#9A9590;
+  --gold:#9A7A4A; --gold-l:#CAAA79; --gold-bg:#FBF8F2;
+  --parchment:#F8F6F1; --parch-mid:#EDE9DF; --parch-dark:#D4CCB8;
+  --white:#FFFFFF;
+  --green:#2A7A4F; --green-l:#4CAF7D; --green-bg:#EDF7F2; --green-b:#9DD4B8;
+  --red:#B83232;  --red-l:#E05C5C;   --red-bg:#FDF0EE;   --red-b:#F0B8B3;
+  --blue:#1A5070; --blue-l:#4A8DB8;  --blue-bg:#EBF3FA;  --blue-b:#9BC4DC;
+  --amber:#A06C10; --amber-bg:#FEF8EA; --amber-b:#E8C96A;
+  --border:#E2DDD5; --border-mid:#C8C0B0;
+  --shadow:0 1px 3px rgba(26,29,35,.07), 0 4px 14px rgba(26,29,35,.04);
+  --shadow-sm:0 1px 2px rgba(26,29,35,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--parchment);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:13px;min-height:100vh;}
+
+/* ── HEADER ─────────────────────────────────────────────────────── */
+.hdr{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:200;box-shadow:0 1px 0 var(--border),0 2px 6px rgba(26,29,35,.04);}
+.brand{display:flex;align-items:center;gap:11px;}
+.brand h1{font-family:'Libre Baskerville',serif;font-size:15px;font-weight:700;letter-spacing:.01em;}
+.brand p{font-size:9px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-top:2px;}
+.hdr-r{display:flex;align-items:center;gap:8px;}
+.chip{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-light);background:var(--parchment);border:1px solid var(--border);padding:3px 9px;border-radius:20px;}
+.rbtn{padding:5px 12px;font-size:11px;font-weight:500;border-radius:4px;cursor:pointer;border:1px solid var(--border-mid);background:var(--white);color:var(--ink-mid);transition:all .15s;font-family:'DM Sans',sans-serif;}
+.rbtn:hover{background:var(--parchment);border-color:var(--gold);color:var(--gold);}
+
+/* ── TABS ────────────────────────────────────────────────────────── */
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;display:flex;}
+.tab{padding:11px 18px;font-size:12px;font-weight:500;color:var(--ink-light);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap;letter-spacing:.02em;}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold-l);}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────── */
+.main{padding:24px 32px;max-width:1520px;margin:0 auto;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── METRIC STRIP ────────────────────────────────────────────────── */
+.metric-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px;}
+.mc{background:var(--white);border:1px solid var(--border);border-radius:7px;padding:14px 16px;box-shadow:var(--shadow-sm);}
+.mc .lbl{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;font-weight:500;}
+.mc .val{font-family:'Libre Baskerville',serif;font-size:21px;line-height:1;color:var(--ink);}
+.mc .sub{font-size:10.5px;color:var(--ink-light);margin-top:3px;}
+.mc.g .val{color:var(--green);}
+.mc.r .val{color:var(--red);}
+.mc.b .val{color:var(--blue);}
+.mc.a .val{color:var(--amber);}
+
+/* ── HOLDINGS GRID ───────────────────────────────────────────────── */
+.holdings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:20px;}
+.pos-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;box-shadow:var(--shadow-sm);transition:box-shadow .15s;}
+.pos-card:hover{box-shadow:var(--shadow);}
+.pos-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.pos-ticker{font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700;}
+.pos-sleeve{font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:2px 7px;border-radius:3px;margin-top:2px;}
+.sl-index{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-b);}
+.sl-cef  {background:var(--green-bg);color:var(--green);border:1px solid var(--green-b);}
+.pos-right{text-align:right;}
+.pos-mv{font-family:'Libre Baskerville',serif;font-size:16px;}
+.pos-pct{font-size:11px;color:var(--ink-light);margin-top:2px;}
+.pos-rows{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+.pos-cell .pl{font-size:9px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px;}
+.pos-cell .pv{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink);}
+.pos-bar-wrap{margin-top:10px;}
+.pos-bar-label{display:flex;justify-content:space-between;font-size:9.5px;color:var(--ink-faint);margin-bottom:4px;}
+.pos-bar-track{height:4px;background:var(--parch-mid);border-radius:2px;}
+.pos-bar-fill{height:100%;border-radius:2px;transition:width .5s;}
+.sig-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;font-size:9.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-top:8px;}
+
+/* ── ALLOCATION RING CHART ───────────────────────────────────────── */
+.alloc-section{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-bottom:20px;align-items:start;}
+@media(max-width:900px){.alloc-section{grid-template-columns:1fr;}}
+.ring-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:var(--shadow-sm);text-align:center;}
+.ring-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:16px;font-weight:500;}
+.ring-center{position:relative;width:160px;height:160px;margin:0 auto 16px;}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-nav{font-family:'Libre Baskerville',serif;font-size:20px;}
+.ring-sub{font-size:10px;color:var(--ink-faint);margin-top:2px;}
+.ring-legend{display:flex;flex-direction:column;gap:8px;text-align:left;}
+.rl-row{display:flex;align-items:center;gap:8px;}
+.rl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.rl-name{font-size:11px;color:var(--ink-mid);flex:1;}
+.rl-pct{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);}
+.rl-val{font-size:10.5px;color:var(--ink-faint);}
+
+.target-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:var(--shadow-sm);}
+.tcard-title{font-family:'Libre Baskerville',serif;font-size:14px;margin-bottom:16px;}
+.trow{margin-bottom:16px;}
+.trow-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.trow-name{font-size:12px;font-weight:500;color:var(--ink-mid);}
+.trow-right{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;}
+.drift-pill{padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;}
+.dp-ok   {background:var(--green-bg);color:var(--green);}
+.dp-over {background:var(--red-bg);color:var(--red);}
+.dp-under{background:var(--blue-bg);color:var(--blue);}
+.bar-tr{height:7px;background:var(--parch-mid);border-radius:4px;position:relative;}
+.bar-tgt{height:100%;border-radius:4px;position:absolute;left:0;opacity:.35;transition:width .6s;}
+.bar-act{height:100%;border-radius:4px;position:absolute;left:0;transition:width .6s;}
+.bar-tgt-line{position:absolute;top:-3px;width:2px;height:13px;border-radius:1px;transform:translateX(-50%);transition:left .6s;}
+
+/* ── NAV CHART ───────────────────────────────────────────────────── */
+.chart-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:var(--shadow-sm);margin-bottom:20px;}
+.chart-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;}
+.chart-title{font-family:'Libre Baskerville',serif;font-size:14px;}
+.chart-legend{display:flex;gap:16px;font-size:10.5px;color:var(--ink-light);}
+.cl-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;}
+#navChartSvg{width:100%;height:180px;display:block;}
+
+/* ── TABLES ──────────────────────────────────────────────────────── */
+.sec{margin-bottom:20px;}
+.sec-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.sec-title{font-family:'Libre Baskerville',serif;font-size:14px;}
+.sec-sub{font-size:11px;color:var(--ink-faint);}
+.tbl-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow-sm);}
+table{width:100%;border-collapse:collapse;}
+thead th{background:var(--parchment);padding:9px 13px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-light);text-align:left;white-space:nowrap;border-bottom:1px solid var(--border);font-weight:600;}
+thead th.r{text-align:right;}
+tbody tr{border-bottom:1px solid var(--parch-mid);transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--gold-bg);}
+td{padding:10px 13px;white-space:nowrap;font-size:12px;}
+td.r{text-align:right;}
+td.mono{font-family:'JetBrains Mono',monospace;font-size:11px;}
+.pos-c{color:var(--green);}
+.neg-c{color:var(--red);}
+.neu-c{color:var(--ink-faint);}
+
+/* ── MONTHLY TABLE ───────────────────────────────────────────────── */
+.month-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:20px;}
+.month-cell{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:12px 14px;box-shadow:var(--shadow-sm);text-align:center;}
+.month-lbl{font-size:10px;color:var(--ink-faint);margin-bottom:6px;letter-spacing:.06em;}
+.month-ret{font-family:'Libre Baskerville',serif;font-size:20px;}
+.month-alpha{font-size:10px;margin-top:3px;}
+
+/* ── BADGES ──────────────────────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;font-size:9.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;}
+.b-buy    {background:var(--green-bg);color:var(--green);border:1px solid var(--green-b);}
+.b-sell   {background:var(--red-bg);color:var(--red);border:1px solid var(--red-b);}
+.b-rbal-b {background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-b);}
+.b-rbal-s {background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-b);}
+.b-hold   {background:var(--parch-mid);color:var(--ink-light);border:1px solid var(--border-mid);}
+.b-wait   {background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-b);}
+.b-idx    {background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-b);}
+.b-open   {background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-b);}
+
+/* ── LOADING ─────────────────────────────────────────────────────── */
+#loader{position:fixed;inset:0;background:rgba(248,246,241,.92);display:flex;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(4px);}
+.spin{width:34px;height:34px;border:2px solid var(--border);border-top-color:var(--gold-l);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div id="loader"><div style="text-align:center"><div class="spin"></div><div style="font-size:10px;color:var(--ink-faint);letter-spacing:.14em;text-transform:uppercase">Loading Portfolio</div></div></div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="brand">
+    <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+      <rect x="15" y="2" width="6" height="32" fill="#9A7A4A"/>
+      <polygon points="15,2 21,2 24,8 12,8" fill="#9A7A4A"/>
+      <polygon points="15,34 21,34 24,28 12,28" fill="#9A7A4A"/>
+      <path d="M21 18 Q29 13 32 9" stroke="#CAAA79" stroke-width="1.5" fill="none" opacity=".9"/>
+      <path d="M21 18 Q30 18 33 18" stroke="#CAAA79" stroke-width="1.5" fill="none" opacity=".6"/>
+      <path d="M21 18 Q29 23 32 27" stroke="#CAAA79" stroke-width="1.5" fill="none" opacity=".4"/>
+    </svg>
+    <div><h1>GTFI Portfolio</h1><p>Hypothetical · Automated</p></div>
+  </div>
+  <div class="hdr-r">
+    <span class="chip" id="hdrDate">—</span>
+    <span class="chip" id="hdrNav">NAV —</span>
+    <button class="rbtn" onclick="loadAll()">↻ Refresh</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('overview',this)">Overview</div>
+  <div class="tab" onclick="switchTab('holdings',this)">Holdings</div>
+  <div class="tab" onclick="switchTab('transactions',this)">Transactions</div>
+  <div class="tab" onclick="switchTab('performance',this)">Performance</div>
+  <div class="tab" onclick="switchTab('allocation',this)">Allocation Engine</div>
+  <div class="tab" onclick="switchTab('bdc',this)">BDC Signals</div>
+</div>
+
+<div class="main">
+
+<!-- ═══════════ TAB: OVERVIEW ═══════════ -->
+<div class="page active" id="page-overview">
+  <div class="metric-strip" id="overviewMetrics"></div>
+
+  <div class="alloc-section">
+    <!-- Ring chart -->
+    <div class="ring-card">
+      <div class="ring-title">Portfolio Composition</div>
+      <div class="ring-center">
+        <svg id="ringSvg" width="160" height="160" viewBox="0 0 160 160"></svg>
+        <div class="ring-label">
+          <div class="ring-nav" id="ringNav">—</div>
+          <div class="ring-sub">Total NAV</div>
+        </div>
+      </div>
+      <div class="ring-legend" id="ringLegend"></div>
+    </div>
+    <!-- Target vs actual -->
+    <div class="target-card">
+      <div class="tcard-title">Target vs Actual Allocation</div>
+      <div id="allocBars"></div>
+    </div>
+  </div>
+
+  <!-- NAV chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <span class="chart-title">NAV Index <span style="font-size:11px;font-weight:400;color:var(--ink-faint)">(Inception = 100)</span></span>
+      <div class="chart-legend">
+        <span><span class="cl-dot" style="background:var(--green)"></span>GTFI Portfolio</span>
+        <span><span class="cl-dot" style="background:var(--blue-l)"></span>AGG Benchmark</span>
+      </div>
+    </div>
+    <svg id="navChartSvg"></svg>
+    <div id="navChartEmpty" style="text-align:center;padding:40px;color:var(--ink-faint);font-size:12px;display:none">NAV history will appear after first trading day</div>
+  </div>
+
+  <!-- Recent transactions -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <span class="sec-title">Recent Transactions</span>
+      <span class="sec-sub" style="cursor:pointer;color:var(--gold)" onclick="switchTab('transactions',document.querySelectorAll('.tab')[2])">View all →</span>
+    </div>
+    <div class="tbl-card"><div style="overflow-x:auto"><table>
+      <thead><tr><th>Date</th><th>Ticker</th><th>Sleeve</th><th>Action</th><th class="r">Shares</th><th class="r">Price</th><th class="r">Notional</th><th>Signal</th><th>Reason</th></tr></thead>
+      <tbody id="recentTxns"></tbody>
+    </table></div></div>
+  </div>
+</div>
+
+<!-- ═══════════ TAB: HOLDINGS ═══════════ -->
+<div class="page" id="page-holdings">
+  <div class="metric-strip" id="holdingsMetrics"></div>
+  <div class="holdings-grid" id="holdingsGrid"></div>
+  <div class="sec-hdr"><span class="sec-title">All Positions</span></div>
+  <div class="tbl-card"><div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Ticker</th><th>Sleeve</th><th>Sector</th>
+      <th class="r">Shares</th><th class="r">Avg Cost</th><th class="r">Current $</th>
+      <th class="r">Market Value</th><th class="r">Unreal. P&amp;L</th><th class="r">Return%</th>
+      <th class="r">Portfolio%</th><th>Signal</th><th class="r">Score</th><th>Since</th>
+    </tr></thead>
+    <tbody id="holdingsTable"></tbody>
+  </table></div></div>
+</div>
+
+<!-- ═══════════ TAB: TRANSACTIONS ═══════════ -->
+<div class="page" id="page-transactions">
+  <div class="metric-strip" id="txnMetrics"></div>
+  <div class="sec-hdr"><span class="sec-title">Transaction Ledger</span><span class="sec-sub" id="txnCount">—</span></div>
+  <div class="tbl-card"><div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Date</th><th>Ticker</th><th>Sleeve</th><th>Action</th>
+      <th class="r">Shares</th><th class="r">Price</th><th class="r">Notional</th>
+      <th>Signal</th><th class="r">Score</th><th>Reason</th>
+    </tr></thead>
+    <tbody id="txnTable"></tbody>
+  </table></div></div>
+</div>
+
+<!-- ═══════════ TAB: PERFORMANCE ═══════════ -->
+<div class="page" id="page-performance">
+
+  <!-- Head-to-head scoreboard -->
+  <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin-bottom:18px;background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow-sm);">
+    <div style="padding:20px 24px;">
+      <div style="font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);font-weight:600;margin-bottom:12px">GTFI Hypothetical</div>
+      <div style="font-family:'Libre Baskerville',serif;font-size:28px;color:var(--ink)" id="cmpGtfiNav">—</div>
+      <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;margin-bottom:16px">Portfolio Value</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div><div style="font-size:9px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Daily</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px" id="cmpGtfiDaily">—</div></div>
+        <div><div style="font-size:9px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">MTD</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px" id="cmpGtfiMtd">—</div></div>
+        <div><div style="font-size:9px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">YTD</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px" id="cmpGtfiYtd">—</div></div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="font-size:9px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Inception Return (Mar 4, 2026)</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:16px" id="cmpGtfiIncept">—</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;padding:0 20px;background:var(--parchment);border-left:1px solid var(--border);border-right:1px solid var(--border);">
+      <div style="font-family:'Libre Baskerville',serif;font-size:22px;color:var(--border-mid);font-style:italic">vs</div>
+    </div>
+    <div style="padding:20px 24px;">
+      <div style="font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:12px">Beaver County (Actual)</div>
+      <div style="font-family:'Libre Baskerville',serif;font-size:28px;color:var(--ink)" id="cmpBcNav">—</div>
+      <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;margin-bottom:16px">Portfolio Value</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div><div style="font-size:9px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Daily</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--ink-faint)">Monthly only</div></div>
+        <div><div style="font-size:9px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">MTD</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px" id="cmpBcMtd">—</div></div>
+        <div><div style="font-size:9px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">YTD</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px" id="cmpBcYtd">—</div></div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="font-size:9px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Cumulative Gross (full history)</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:16px" id="cmpBcCum">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side-by-side monthly comparison -->
+  <div class="sec-hdr">
+    <span class="sec-title">Month-by-Month Comparison</span>
+    <span class="sec-sub">Shared months · GTFI starts Mar 2026</span>
+  </div>
+  <div class="tbl-card" style="margin-bottom:18px;">
+    <div style="overflow-x:auto"><table>
+      <thead><tr>
+        <th>Month</th>
+        <th class="r" style="color:var(--green)">GTFI Return%</th>
+        <th class="r" style="color:var(--blue)">BC Gross%</th>
+        <th class="r">Alpha (GTFI−BC)</th>
+        <th class="r" style="color:var(--green)">GTFI NAV</th>
+        <th class="r" style="color:var(--blue)">BC Balance</th>
+        <th class="r">GTFI YTD%</th>
+        <th class="r">BC YTD%</th>
+      </tr></thead>
+      <tbody id="cmpMonthTable"></tbody>
+    </table></div>
+  </div>
+
+  <!-- Dual NAV index chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <span class="chart-title">Growth of $100 — NAV Index</span>
+      <div class="chart-legend">
+        <span><span class="cl-dot" style="background:var(--green)"></span>GTFI (daily, from Mar 4 2026)</span>
+        <span><span class="cl-dot" style="background:var(--blue-l)"></span>Beaver County (monthly)</span>
+        <span><span class="cl-dot" style="background:#C8C0B0"></span>AGG Benchmark</span>
+      </div>
+    </div>
+    <svg id="cmpChartSvg" style="width:100%;height:200px;display:block;"></svg>
+    <div id="cmpChartEmpty" style="display:none;text-align:center;padding:40px;color:var(--ink-faint);font-size:12px">Chart will populate as overlapping performance data builds</div>
+  </div>
+
+  <!-- GTFI daily table -->
+  <div class="sec-hdr" style="margin-top:8px"><span class="sec-title">GTFI Daily History</span></div>
+  <div class="tbl-card" style="margin-bottom:18px;"><div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Date</th><th class="r">Total NAV</th>
+      <th class="r">Daily Ret%</th><th class="r">MTD%</th><th class="r">YTD%</th>
+      <th class="r">NAV Index</th><th class="r">AGG Daily%</th>
+      <th class="r">Cash%</th><th class="r">Index%</th><th class="r">CEF%</th>
+    </tr></thead>
+    <tbody id="navTable"></tbody>
+  </table></div></div>
+
+  <!-- BC heatmap -->
+  <div class="sec-hdr">
+    <span class="sec-title">Beaver County Monthly Returns — Full History</span>
+    <span class="sec-sub" id="bcDateRange">—</span>
+  </div>
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:18px;box-shadow:var(--shadow-sm);overflow-x:auto;">
+    <table id="bcHeatmap" style="border-collapse:separate;border-spacing:3px;font-size:11px;min-width:700px;"></table>
+  </div>
+
+  <!-- BC detail table -->
+  <div class="sec-hdr"><span class="sec-title">Beaver County Monthly Detail</span></div>
+  <div class="tbl-card"><div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Month</th>
+      <th class="r">Begin Balance</th><th class="r">End Balance</th>
+      <th class="r">Gross Gain $</th><th class="r">Gross Ret%</th>
+      <th class="r">Net Ret%</th><th class="r">YTD Gross%</th>
+      <th class="r">Cumulative%</th>
+    </tr></thead>
+    <tbody id="bcTable"></tbody>
+  </table></div></div>
+</div>
+
+<!-- ═══════════ TAB: ALLOCATION ENGINE ═══════════ -->
+<div class="page" id="page-allocation">
+  <div class="metric-strip" id="allocMetrics"></div>
+
+  <!-- Formula bar -->
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:7px;padding:13px 16px;margin-bottom:16px;font-size:12px;color:var(--ink-light);line-height:1.7;">
+    <strong style="color:var(--ink-mid)">Allocation Logic:</strong> &nbsp;
+    <span style="color:var(--gold);font-weight:600">① CEF% = max(10%, 92% × Opp/100)</span> &nbsp;·&nbsp;
+    <span style="color:var(--gold);font-weight:600">② Index% = min(60%, 92% − CEF%)</span> &nbsp;·&nbsp;
+    <span style="color:var(--gold);font-weight:600">③ Cash% = residual (8%–40%)</span>
+    &nbsp;— CEF floor of <strong style="color:var(--ink-mid)">10%</strong> filled by top HOLD/WAIT. Index capped at <strong style="color:var(--ink-mid)">60%</strong>.
+    Rebalance triggers at ±5% drift. Trades auto-execute daily at 11:25 UTC.
+  </div>
+
+  <!-- Component scores -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;" id="allocComponents"></div>
+
+  <!-- Opp history -->
+  <div class="sec-hdr"><span class="sec-title">Opportunity Index History</span></div>
+  <div class="tbl-card"><div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Date</th><th class="r">Opp.</th><th>Label</th>
+      <th class="r">Target Cash</th><th class="r">Target Index</th><th class="r">Target CEF</th>
+      <th class="r">BUY Signals</th><th class="r">Avg Z1y</th><th class="r">Avg Disc%</th>
+      <th>Rebal?</th>
+    </tr></thead>
+    <tbody id="allocHistTable"></tbody>
+  </table></div></div>
+</div>
+
+
+<!-- ═══════════ TAB: BDC<!-- ═══════════ TAB: BDC SIGNALS ═══════════ -->
+<div class="page" id="page-bdc">
+  <div class="metric-strip" id="bdcMetrics"></div>
+
+  <!-- Open BUY recommendations -->
+  <div class="sec-hdr">
+    <span class="sec-title">Open BUY Recommendations</span>
+    <span class="sec-sub">Tracking from signal date — will close automatically when engine flips to SELL</span>
+  </div>
+  <div class="tbl-card" id="bdcOpenCard"><div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Ticker</th><th>Sector</th><th>Confidence</th>
+      <th class="r">Signal Date</th>
+      <th class="r">Entry $</th><th class="r">Current $</th>
+      <th class="r">Return%</th><th class="r">Days Held</th>
+      <th class="r">Score</th><th class="r">Z-Score</th><th class="r">Yield%</th>
+      <th>Status</th>
+    </tr></thead>
+    <tbody id="bdcOpenBody"></tbody>
+  </table></div></div>
+
+  <!-- Closed round-trips -->
+  <div class="sec-hdr" style="margin-top:8px">
+    <span class="sec-title">Closed Recommendations — Buy-to-Sell Performance</span>
+    <span class="sec-sub">Full round-trip: entry signal → exit signal</span>
+  </div>
+  <div class="tbl-card"><div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Ticker</th><th>Sector</th>
+      <th class="r">Buy Date</th><th class="r">Sell Date</th><th class="r">Days Held</th>
+      <th class="r">Entry $</th><th class="r">Exit $</th>
+      <th class="r">Return%</th>
+      <th class="r">Score at Entry</th>
+      <th>Outcome</th><th>Close Reason</th>
+    </tr></thead>
+    <tbody id="bdcClosedBody"></tbody>
+  </table></div></div>
+
+  <!-- WAIT signals -->
+  <div class="sec-hdr" style="margin-top:8px">
+    <span class="sec-title">WAIT — Score ≥ 65, Momentum Gate Failed</span>
+    <span class="sec-sub">Near-buy territory — monitoring for momentum confirmation</span>
+  </div>
+  <div class="tbl-card"><div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Ticker</th><th>Sector</th>
+      <th class="r">Signal Date</th><th class="r">Entry $</th><th class="r">Current $</th>
+      <th class="r">Return%</th><th class="r">Days</th>
+      <th class="r">Score</th><th class="r">Z-Score</th><th>Gate Blocker</th>
+    </tr></thead>
+    <tbody id="bdcWaitBody"></tbody>
+  </table></div></div>
+
+  <!-- SELL avoid list -->
+  <div class="sec-hdr" style="margin-top:8px">
+    <span class="sec-title">SELL Recommendations — Avoid List</span>
+    <span class="sec-sub">Negative outlook. Tracking price movement from recommendation date to measure accuracy.</span>
+  </div>
+  <div class="tbl-card"><div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Ticker</th><th>Sector</th>
+      <th class="r">Signal Date</th><th class="r">Price at Signal</th><th class="r">Current $</th>
+      <th class="r">Move Since Rec</th>
+      <th class="r">Score</th><th class="r">Z-Score</th><th class="r">Momentum 60d</th>
+      <th>Bear Case</th>
+    </tr></thead>
+    <tbody id="bdcSellBody"></tbody>
+  </table></div></div>
+</div>
+
+</div><!-- /.main -->
+
+<script>
+const SB  = 'https://nzinvxticgyjobkqxxhl.supabase.co';
+const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aW52eHRpY2d5am9ia3F4eGhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5NTUwOTIsImV4cCI6MjA4NDUzMTA5Mn0.YhaW1zesBaEC6lRMWx6_gyZN5Uhh8FX2wgahunHQfok';
+const H   = { apikey:KEY, Authorization:`Bearer ${KEY}` };
+const q   = (t,p='') => fetch(`${SB}/rest/v1/${t}?${p}`,{headers:H}).then(r=>r.json());
+const fP  = v => parseFloat(v||0).toFixed(1)+'%';
+const fPs = v => (parseFloat(v||0)>=0?'+':'')+parseFloat(v||0).toFixed(2)+'%';
+const fK  = v => { const n=parseFloat(v||0); return n>=1e6?'$'+(n/1e6).toFixed(2)+'M':'$'+(n/1e3).toFixed(0)+'K'; };
+const f2  = v => parseFloat(v||0).toFixed(2);
+const f3  = v => parseFloat(v||0).toFixed(3);
+const pCl = v => parseFloat(v||0)>=0?'pos-c':'neg-c';
+
+let _pos=[], _txns=[], _nav=[], _alloc=[], _monthly=[], _cash=0, _bcPerf=[], _bdcTrades=[];
+
+function switchTab(id,el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('page-'+id).classList.add('active');
+}
+
+// ── Ring chart ────────────────────────────────────────────────────
+function drawRing(slices) {
+  const svg = document.getElementById('ringSvg');
+  const cx=80, cy=80, r=65, ir=48;
+  let total = slices.reduce((s,sl)=>s+sl.val,0);
+  let startAngle = -Math.PI/2;
+  svg.innerHTML = '';
+  slices.forEach(sl => {
+    if(sl.val<=0) return;
+    const sweep = (sl.val/total)*2*Math.PI;
+    const endAngle = startAngle+sweep;
+    const x1=cx+r*Math.cos(startAngle), y1=cy+r*Math.sin(startAngle);
+    const x2=cx+r*Math.cos(endAngle),   y2=cy+r*Math.sin(endAngle);
+    const ix1=cx+ir*Math.cos(startAngle), iy1=cy+ir*Math.sin(startAngle);
+    const ix2=cx+ir*Math.cos(endAngle),   iy2=cy+ir*Math.sin(endAngle);
+    const la = sweep>Math.PI?1:0;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${x1} ${y1} A${r} ${r} 0 ${la} 1 ${x2} ${y2} L${ix2} ${iy2} A${ir} ${ir} 0 ${la} 0 ${ix1} ${iy1} Z`);
+    path.setAttribute('fill',sl.color);
+    path.setAttribute('opacity','0.9');
+    svg.appendChild(path);
+    startAngle = endAngle;
+  });
+}
+
+// ── NAV line chart ─────────────────────────────────────────────────
+function drawNavChart(navRows) {
+  const svg = document.getElementById('navChartSvg');
+  const empty = document.getElementById('navChartEmpty');
+  if(!navRows || navRows.length < 2) {
+    empty.style.display='block'; svg.style.display='none'; return;
+  }
+  svg.style.display='block'; empty.style.display='none';
+  const W=svg.clientWidth||900, H=180, pad={t:12,r:16,b:28,l:52};
+  const inner = {w:W-pad.l-pad.r, h:H-pad.t-pad.b};
+
+  const vals = navRows.map(r=>parseFloat(r.nav_index||100));
+  const aggVals = navRows.map((r,i) => {
+    if(!r.agg_price) return 100;
+    const first = navRows.find(x=>x.agg_price);
+    return first ? parseFloat(r.agg_price)/parseFloat(first.agg_price)*100 : 100;
+  });
+
+  const allVals = [...vals,...aggVals].filter(Boolean);
+  const minV=Math.min(...allVals)*0.998, maxV=Math.max(...allVals)*1.002;
+  const n = navRows.length;
+
+  const xScale = i => pad.l + (i/(n-1))*inner.w;
+  const yScale = v => pad.t + inner.h - ((v-minV)/(maxV-minV))*inner.h;
+
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+
+  // Grid lines
+  [0,.25,.5,.75,1].forEach(frac => {
+    const y = pad.t + inner.h * frac;
+    const val = maxV - frac*(maxV-minV);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',pad.l); line.setAttribute('x2',W-pad.r);
+    line.setAttribute('y1',y); line.setAttribute('y2',y);
+    line.setAttribute('stroke','#E2DDD5'); line.setAttribute('stroke-width','0.5');
+    svg.appendChild(line);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x',pad.l-6); txt.setAttribute('y',y+4);
+    txt.setAttribute('text-anchor','end'); txt.setAttribute('font-size','9');
+    txt.setAttribute('fill','#9A9590'); txt.setAttribute('font-family','JetBrains Mono');
+    txt.textContent = val.toFixed(1);
+    svg.appendChild(txt);
+  });
+
+  // Baseline at 100
+  const y100 = yScale(100);
+  const base = document.createElementNS('http://www.w3.org/2000/svg','line');
+  base.setAttribute('x1',pad.l); base.setAttribute('x2',W-pad.r);
+  base.setAttribute('y1',y100); base.setAttribute('y2',y100);
+  base.setAttribute('stroke','#C8C0B0'); base.setAttribute('stroke-width','1');
+  base.setAttribute('stroke-dasharray','4 4');
+  svg.appendChild(base);
+
+  const makePath = (values, color, width=2) => {
+    const d = values.map((v,i)=>`${i===0?'M':'L'}${xScale(i)} ${yScale(v)}`).join(' ');
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',d); path.setAttribute('fill','none');
+    path.setAttribute('stroke',color); path.setAttribute('stroke-width',width);
+    path.setAttribute('stroke-linecap','round'); path.setAttribute('stroke-linejoin','round');
+    svg.appendChild(path);
+  };
+
+  // AGG line
+  if(aggVals.some(v=>v!==100)) makePath(aggVals,'#4A8DB8',1.5);
+  // Portfolio line
+  makePath(vals,'#2A7A4F',2.5);
+
+  // X-axis dates (show ~5 labels)
+  const step = Math.ceil(n/5);
+  navRows.forEach((r,i)=>{
+    if(i%step!==0 && i!==n-1) return;
+    const x=xScale(i);
+    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x',x); txt.setAttribute('y',H-4);
+    txt.setAttribute('text-anchor','middle'); txt.setAttribute('font-size','9');
+    txt.setAttribute('fill','#9A9590'); txt.setAttribute('font-family','JetBrains Mono');
+    txt.textContent = r.nav_date?.slice(5);
+    svg.appendChild(txt);
+  });
+}
+
+// ── Allocation bars ────────────────────────────────────────────────
+function renderAllocBars(alloc, actualCash, actualIdx, actualCef) {
+  const bars = [
+    { name:'Cash', tgt:parseFloat(alloc.target_cash_pct), act:actualCash, color:'#9A9590', label:fK(alloc.target_cash_dollars) },
+    { name:'Index (AGG+BND)', tgt:parseFloat(alloc.target_index_pct), act:actualIdx, color:'#4A8DB8', label:fK(alloc.target_index_dollars) },
+    { name:'FI CEFs', tgt:parseFloat(alloc.target_cef_pct), act:actualCef, color:'#4CAF7D', label:fK(alloc.target_cef_dollars) },
+  ];
+  const container = document.getElementById('allocBars');
+  container.innerHTML = bars.map(b => {
+    const drift = b.act - b.tgt;
+    const dpCls = Math.abs(drift)<=2?'dp-ok':drift>0?'dp-over':'dp-under';
+    const dpTxt = Math.abs(drift)<=2?'on target':(drift>0?'+':'')+drift.toFixed(1)+'%';
+    return `<div class="trow">
+      <div class="trow-head">
+        <span class="trow-name">${b.name}</span>
+        <div class="trow-right">
+          <span>${fP(b.tgt)} target</span>
+          <span style="color:var(--ink-faint)">actual: ${fP(b.act)}</span>
+          <span class="drift-pill ${dpCls}">${dpTxt}</span>
+        </div>
+      </div>
+      <div class="bar-tr">
+        <div class="bar-tgt" style="background:${b.color};width:${b.tgt}%"></div>
+        <div class="bar-act" style="background:${b.color};width:${b.act}%"></div>
+        <div class="bar-tgt-line" style="background:${b.color};left:${b.tgt}%"></div>
+      </div>
+      <div style="font-size:10.5px;color:var(--ink-faint);margin-top:4px">Target: ${b.label}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Signal badge ───────────────────────────────────────────────────
+function sigBadge(s) {
+  if(!s) return '';
+  if(s==='BUY'||s==='STRONG BUY') return `<span class="badge b-buy">${s}</span>`;
+  if(s==='SELL'||s==='STRONG SELL') return `<span class="badge b-sell">${s}</span>`;
+  if(s==='WAIT') return `<span class="badge b-wait">WAIT</span>`;
+  if(s==='HOLD') return `<span class="badge b-hold">HOLD</span>`;
+  if(s==='INDEX') return `<span class="badge b-idx">Index</span>`;
+  return `<span class="badge b-hold">${s}</span>`;
+}
+
+function actionBadge(a) {
+  if(a==='BUY')           return `<span class="badge b-buy">BUY</span>`;
+  if(a==='SELL')          return `<span class="badge b-sell">SELL</span>`;
+  if(a==='REBALANCE_BUY') return `<span class="badge b-rbal-b">REBAL BUY</span>`;
+  if(a==='REBALANCE_SELL')return `<span class="badge b-rbal-s">REBAL SELL</span>`;
+  return `<span class="badge b-hold">${a}</span>`;
+}
+
+// ── MAIN LOAD ──────────────────────────────────────────────────────
+async function loadAll() {
+  document.getElementById('loader').style.display='flex';
+
+  [_pos, _txns, _nav, _alloc, _monthly, _bdcTrades] = await Promise.all([
+    q('gtfi_portfolio_positions','is_active=eq.true&order=sleeve.asc,market_value.desc'),
+    q('gtfi_transactions','order=id.desc&limit=200'),
+    q('gtfi_daily_nav','order=nav_date.asc'),
+    q('gtfi_allocation_daily','order=calc_date.desc&limit=30'),
+    q('gtfi_monthly_performance','order=year.desc,month.desc'),
+    q('bdc_signal_trades','order=signal_date.desc,composite_score.desc'),
+  ]);
+  _bcPerf = await q('v_client_performance_complete','client_id=eq.6&order=month_end_date.desc&limit=120');
+  const cashRow = await q('gtfi_cash_ledger','order=id.desc&limit=1');
+  _cash = parseFloat(cashRow[0]?.running_balance||0);
+
+  const latestNav = _nav[_nav.length-1];
+  const latestAlloc = _alloc[0];
+  const totalNav = parseFloat(latestNav?.total_nav || 0);
+  const navIdx   = parseFloat(latestNav?.nav_index || 100);
+  const inceptRet= parseFloat(latestNav?.inception_return_pct||0);
+  const todayRet = parseFloat(latestNav?.daily_return_pct||0);
+  const ytdRet   = parseFloat(latestNav?.ytd_return_pct||0);
+
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('hdrDate').textContent = today;
+  document.getElementById('hdrNav').textContent  = 'NAV '+fK(totalNav);
+
+  // Actual allocations from positions
+  const indexVal = _pos.filter(p=>p.sleeve==='index').reduce((s,p)=>s+parseFloat(p.market_value),0);
+  const cefVal   = _pos.filter(p=>p.sleeve==='cef').reduce((s,p)=>s+parseFloat(p.market_value),0);
+  const actualCashPct  = _cash/totalNav*100;
+  const actualIndexPct = indexVal/totalNav*100;
+  const actualCefPct   = cefVal/totalNav*100;
+
+  // ── OVERVIEW ─────────────────────────────────────────────────────
+  document.getElementById('overviewMetrics').innerHTML = [
+    {l:'Total NAV',      v:fK(totalNav),          s:'as of '+today,                         cls:''},
+    {l:'NAV Index',      v:navIdx.toFixed(2),      s:'inception = 100',                      cls:navIdx>=100?'g':'r'},
+    {l:'Inception Ret',  v:fPs(inceptRet),         s:'since Mar 4 2026',                     cls:inceptRet>=0?'g':'r'},
+    {l:'Daily Return',   v:fPs(todayRet),           s:'vs prior day',                         cls:todayRet>=0?'g':'r'},
+    {l:'YTD Return',     v:fPs(ytdRet),             s:'year to date',                         cls:ytdRet>=0?'g':'r'},
+    {l:'Positions',      v:_pos.length,             s:`${_pos.filter(p=>p.sleeve==='cef').length} CEF · ${_pos.filter(p=>p.sleeve==='index').length} index`, cls:'b'},
+    {l:'CEF Value',      v:fK(cefVal),              s:fP(actualCefPct)+' of portfolio',       cls:'g'},
+    {l:'Index Value',    v:fK(indexVal),             s:fP(actualIndexPct)+' of portfolio',     cls:'b'},
+  ].map(m=>`<div class="mc ${m.cls}"><div class="lbl">${m.l}</div><div class="val">${m.v}</div><div class="sub">${m.s}</div></div>`).join('');
+
+  // Ring chart
+  drawRing([
+    {val:_cash,      color:'#B0A898', label:'Cash'},
+    {val:indexVal,   color:'#4A8DB8', label:'Index'},
+    {val:cefVal,     color:'#4CAF7D', label:'CEFs'},
+  ]);
+  document.getElementById('ringNav').textContent = fK(totalNav);
+  document.getElementById('ringLegend').innerHTML = [
+    {color:'#B0A898', name:'Cash',  pct:actualCashPct,  val:_cash},
+    {color:'#4A8DB8', name:'Index', pct:actualIndexPct, val:indexVal},
+    {color:'#4CAF7D', name:'CEFs',  pct:actualCefPct,   val:cefVal},
+  ].map(r=>`<div class="rl-row">
+    <div class="rl-dot" style="background:${r.color}"></div>
+    <span class="rl-name">${r.name}</span>
+    <span class="rl-pct">${r.pct.toFixed(1)}%</span>
+    <span class="rl-val">${fK(r.val)}</span>
+  </div>`).join('');
+
+  // Target vs actual bars
+  if(latestAlloc) renderAllocBars(latestAlloc, actualCashPct, actualIndexPct, actualCefPct);
+
+  // NAV chart
+  drawNavChart(_nav);
+
+  // Recent transactions
+  document.getElementById('recentTxns').innerHTML = _txns.slice(0,8).map(t=>`<tr>
+    <td class="mono">${t.trade_date}</td>
+    <td><strong>${t.ticker}</strong></td>
+    <td><span class="badge ${t.sleeve==='index'?'b-idx':'b-hold'}">${t.sleeve}</span></td>
+    <td>${actionBadge(t.action)}</td>
+    <td class="r mono">${parseFloat(t.shares).toLocaleString()}</td>
+    <td class="r mono">$${f2(t.price)}</td>
+    <td class="r mono">${fK(t.notional)}</td>
+    <td>${sigBadge(t.signal)}</td>
+    <td style="font-size:11px;color:var(--ink-faint);max-width:250px;white-space:normal">${(t.reason||'').slice(0,80)}${(t.reason||'').length>80?'…':''}</td>
+  </tr>`).join('');
+
+  // ── HOLDINGS ───────────────────────────────────────────────────────
+  document.getElementById('holdingsMetrics').innerHTML = [
+    {l:'Total Positions', v:_pos.length,          s:'active holdings',          cls:''},
+    {l:'CEF Positions',   v:_pos.filter(p=>p.sleeve==='cef').length, s:'FI CEFs held', cls:'g'},
+    {l:'Index Positions', v:_pos.filter(p=>p.sleeve==='index').length, s:'AGG + BND', cls:'b'},
+    {l:'Unrealized P&L',  v:fK(_pos.reduce((s,p)=>s+parseFloat(p.unrealized_pnl),0)), s:'all positions', cls:_pos.reduce((s,p)=>s+parseFloat(p.unrealized_pnl),0)>=0?'g':'r'},
+    {l:'Avg CEF Score',   v:(_pos.filter(p=>p.sleeve==='cef'&&p.score_at_entry).reduce((s,p)=>s+parseFloat(p.score_at_entry),0)/Math.max(_pos.filter(p=>p.sleeve==='cef'&&p.score_at_entry).length,1)).toFixed(1), s:'at entry', cls:'a'},
+  ].map(m=>`<div class="mc ${m.cls}"><div class="lbl">${m.l}</div><div class="val">${m.v}</div><div class="sub">${m.s}</div></div>`).join('');
+
+  document.getElementById('holdingsGrid').innerHTML = _pos.map(p=>{
+    const portPct = totalNav>0?parseFloat(p.market_value)/totalNav*100:0;
+    const retPct  = parseFloat(p.unrealized_pct||0);
+    const barColor= p.sleeve==='index'?'#4A8DB8':'#4CAF7D';
+    return `<div class="pos-card">
+      <div class="pos-top">
+        <div>
+          <div class="pos-ticker">${p.ticker}</div>
+          <div class="pos-sleeve sl-${p.sleeve}">${p.sleeve}</div>
+        </div>
+        <div class="pos-right">
+          <div class="pos-mv">${fK(p.market_value)}</div>
+          <div class="pos-pct">${portPct.toFixed(1)}% of portfolio</div>
+        </div>
+      </div>
+      <div class="pos-rows">
+        <div class="pos-cell"><div class="pl">Shares</div><div class="pv">${parseFloat(p.shares).toLocaleString()}</div></div>
+        <div class="pos-cell"><div class="pl">Avg Cost</div><div class="pv">$${f2(p.avg_cost)}</div></div>
+        <div class="pos-cell"><div class="pl">Current</div><div class="pv">$${f2(p.current_price)}</div></div>
+        <div class="pos-cell"><div class="pl">P&L</div><div class="pv ${pCl(p.unrealized_pnl)}">${fK(p.unrealized_pnl)}</div></div>
+      </div>
+      <div class="pos-bar-wrap">
+        <div class="pos-bar-label"><span>Return</span><span class="${pCl(retPct)}">${fPs(retPct)}</span></div>
+        <div class="pos-bar-track"><div class="pos-bar-fill" style="width:${Math.min(Math.abs(retPct)*10,100)}%;background:${retPct>=0?'var(--green)':'var(--red)'}"></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        ${sigBadge(p.signal_at_entry)}
+        ${p.score_at_entry?`<span style="font-size:10px;color:var(--ink-faint)">score: ${parseFloat(p.score_at_entry).toFixed(1)}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('holdingsTable').innerHTML = _pos.map(p=>{
+    const portPct=totalNav>0?parseFloat(p.market_value)/totalNav*100:0;
+    return `<tr>
+      <td><strong>${p.ticker}</strong></td>
+      <td><span class="badge ${p.sleeve==='index'?'b-idx':'b-hold'}">${p.sleeve}</span></td>
+      <td style="color:var(--ink-faint);font-size:11px">${p.sector||'—'}</td>
+      <td class="r mono">${parseFloat(p.shares).toLocaleString()}</td>
+      <td class="r mono">$${f2(p.avg_cost)}</td>
+      <td class="r mono">$${f2(p.current_price)}</td>
+      <td class="r mono">${fK(p.market_value)}</td>
+      <td class="r mono ${pCl(p.unrealized_pnl)}">${fK(p.unrealized_pnl)}</td>
+      <td class="r mono ${pCl(p.unrealized_pct)}">${fPs(p.unrealized_pct)}</td>
+      <td class="r mono">${portPct.toFixed(1)}%</td>
+      <td>${sigBadge(p.signal_at_entry)}</td>
+      <td class="r mono">${p.score_at_entry?parseFloat(p.score_at_entry).toFixed(1):'—'}</td>
+      <td class="mono" style="color:var(--ink-faint)">${p.first_buy_date||'—'}</td>
+    </tr>`;
+  }).join('');
+
+  // ── TRANSACTIONS ────────────────────────────────────────────────────
+  const buyCnt  = _txns.filter(t=>t.action.includes('BUY')).length;
+  const sellCnt = _txns.filter(t=>t.action.includes('SELL')).length;
+  document.getElementById('txnMetrics').innerHTML = [
+    {l:'Total Trades',   v:_txns.length,  s:'all time',      cls:''},
+    {l:'Buys',           v:buyCnt,         s:'BUY + REBAL',   cls:'g'},
+    {l:'Sells',          v:sellCnt,        s:'SELL + REBAL',  cls:'r'},
+    {l:'Total Deployed', v:fK(_txns.filter(t=>t.action.includes('BUY')).reduce((s,t)=>s+parseFloat(t.notional),0)), s:'gross notional bought', cls:'b'},
+  ].map(m=>`<div class="mc ${m.cls}"><div class="lbl">${m.l}</div><div class="val">${m.v}</div><div class="sub">${m.s}</div></div>`).join('');
+  document.getElementById('txnCount').textContent = `${_txns.length} total`;
+  document.getElementById('txnTable').innerHTML = _txns.map(t=>`<tr>
+    <td class="mono">${t.trade_date}</td>
+    <td><strong>${t.ticker}</strong></td>
+    <td><span class="badge ${t.sleeve==='index'?'b-idx':'b-hold'}">${t.sleeve}</span></td>
+    <td>${actionBadge(t.action)}</td>
+    <td class="r mono">${parseFloat(t.shares).toLocaleString()}</td>
+    <td class="r mono">$${f2(t.price)}</td>
+    <td class="r mono">${fK(t.notional)}</td>
+    <td>${sigBadge(t.signal)}</td>
+    <td class="r mono">${t.signal_score?parseFloat(t.signal_score).toFixed(1):'—'}</td>
+    <td style="font-size:11px;color:var(--ink-faint);max-width:280px;white-space:normal;line-height:1.5">${(t.reason||'').slice(0,100)}${(t.reason||'').length>100?'…':''}</td>
+  </tr>`).join('');
+
+  // ── PERFORMANCE COMPARISON ─────────────────────────────────────────
+  if (_bcPerf.length > 0 || _nav.length > 0) {
+    const latestNav = _nav[_nav.length - 1];
+    const bcLatest  = _bcPerf[0];
+    const bcOldest  = _bcPerf[_bcPerf.length - 1];
+
+    // ── Scoreboard ──────────────────────────────────────────────────
+    const gtfiNav   = parseFloat(latestNav?.total_nav || 0);
+    const gtfiDaily = parseFloat(latestNav?.daily_return_pct || 0);
+    const gtfiMtd   = parseFloat(latestNav?.mtd_return_pct || 0);
+    const gtfiYtd   = parseFloat(latestNav?.ytd_return_pct || 0);
+    const gtfiIncept= parseFloat(latestNav?.inception_return_pct || 0);
+
+    const bcEndBal  = parseFloat(bcLatest?.ending_balance || 0);
+    const bcCumGross= parseFloat(bcLatest?.cumulative_gross_return || 0) * 100;
+    const bcYtdGross= parseFloat(bcLatest?.ytd_gross_return || 0) * 100;
+    // BC MTD = latest month's gross return (the most recent partial month)
+    const bcMtd     = parseFloat(bcLatest?.gross_return_pct || 0) * 100;
+
+    const retColor = v => parseFloat(v) >= 0 ? 'var(--green)' : 'var(--red)';
+
+    const setEl = (id, val, color) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = val;
+      if (color) el.style.color = color;
+    };
+
+    setEl('cmpGtfiNav',   fK(gtfiNav));
+    setEl('cmpGtfiDaily', fPs(gtfiDaily), retColor(gtfiDaily));
+    setEl('cmpGtfiMtd',   fPs(gtfiMtd),  retColor(gtfiMtd));
+    setEl('cmpGtfiYtd',   fPs(gtfiYtd),  retColor(gtfiYtd));
+    setEl('cmpGtfiIncept',fPs(gtfiIncept),retColor(gtfiIncept));
+
+    setEl('cmpBcNav',  fK(bcEndBal));
+    setEl('cmpBcMtd',  fPs(bcMtd),      retColor(bcMtd));
+    setEl('cmpBcYtd',  fPs(bcYtdGross), retColor(bcYtdGross));
+    setEl('cmpBcCum',  fPs(bcCumGross), retColor(bcCumGross));
+
+    // ── Month comparison table ───────────────────────────────────────
+    // Build BC lookup: "YYYY-MM" -> row
+    const bcByYM = {};
+    _bcPerf.forEach(r => { bcByYM[`${r.year}-${String(r.month).padStart(2,'0')}`] = r; });
+
+    // Build GTFI monthly lookup from gtfi_monthly_performance
+    const gtfiByYM = {};
+    _monthly.forEach(m => { gtfiByYM[`${m.year}-${String(m.month).padStart(2,'0')}`] = m; });
+
+    // All months that appear in either dataset since GTFI inception (2026-03)
+    const MONTH_LABELS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    // Collect all overlapping months (BC months where GTFI also has data)
+    const allMonthKeys = Object.keys(bcByYM).filter(k => k >= '2026-03' || gtfiByYM[k]).sort().reverse();
+    // Also include recent BC-only months for context
+    const recentBcKeys = Object.keys(bcByYM).filter(k => k >= '2025-01').sort().reverse();
+    const displayKeys  = [...new Set([...allMonthKeys, ...recentBcKeys])].sort().reverse().slice(0, 24);
+
+    document.getElementById('cmpMonthTable').innerHTML = displayKeys.length === 0
+      ? `<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--ink-faint)">Comparison data builds from Mar 31, 2026 month-end close onward</td></tr>`
+      : displayKeys.map(ym => {
+          const [yr, mo] = ym.split('-').map(Number);
+          const label = `${MONTH_LABELS[mo-1]} ${yr}`;
+          const bcRow = bcByYM[ym];
+          const gtRow = gtfiByYM[ym];
+
+          const bcGross  = bcRow ? parseFloat(bcRow.gross_return_pct || 0) * 100 : null;
+          const gtRet    = gtRow ? parseFloat(gtRow.monthly_return || 0) : null;
+          const alpha    = (gtRet !== null && bcGross !== null) ? gtRet - bcGross : null;
+          const bcYtd    = bcRow ? parseFloat(bcRow.ytd_gross_return || 0) * 100 : null;
+          const gtYtd    = gtRow ? parseFloat(gtRow.monthly_return || 0) : null; // approximate
+
+          const c = v => v === null ? '—' : (v >= 0 ? 'pos-c' : 'neg-c');
+          const fmt = v => v === null ? `<span style="color:var(--ink-faint)">—</span>` : `<span class="${c(v)}">${fPs(v)}</span>`;
+          const alphaFmt = alpha === null ? `<span style="color:var(--ink-faint)">—</span>`
+            : `<span class="${alpha>=0?'pos-c':'neg-c'}" style="font-weight:600">${alpha>=0?'+':''}${alpha.toFixed(2)}%</span>`;
+
+          return `<tr>
+            <td class="mono" style="font-weight:500">${label}</td>
+            <td class="r mono">${fmt(gtRet)}</td>
+            <td class="r mono">${fmt(bcGross)}</td>
+            <td class="r">${alphaFmt}</td>
+            <td class="r mono" style="color:var(--ink-faint)">${gtRow ? fK(gtRow.end_nav||0) : '—'}</td>
+            <td class="r mono" style="color:var(--ink-faint)">${bcRow ? fK(bcRow.ending_balance) : '—'}</td>
+            <td class="r mono">${fmt(gtYtd)}</td>
+            <td class="r mono">${fmt(bcYtd)}</td>
+          </tr>`;
+        }).join('');
+
+    // ── Dual NAV chart ───────────────────────────────────────────────
+    // GTFI: daily nav_index series
+    // BC: index each month-end to 100 at first BC data point that overlaps with GTFI
+    // For now index BC from its own start to show full history separately, GTFI from inception
+    const cmpSvg   = document.getElementById('cmpChartSvg');
+    const cmpEmpty = document.getElementById('cmpChartEmpty');
+    const W = cmpSvg.clientWidth || 900, H = 200;
+    const pad = {t:12, r:16, b:28, l:52};
+    const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+    cmpSvg.innerHTML = '';
+    cmpSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+    // Build BC indexed series (100 = first month we have)
+    const bcSorted = [..._bcPerf].sort((a,b) => a.month_end_date > b.month_end_date ? 1 : -1);
+    let bcIdx = 100;
+    const bcSeries = bcSorted.map(r => {
+      bcIdx *= (1 + parseFloat(r.gross_return_pct||0));
+      return { date: r.month_end_date, val: bcIdx };
+    });
+
+    // GTFI daily
+    const gtSeries = _nav.map(r => ({ date: r.nav_date, val: parseFloat(r.nav_index||100) }));
+
+    // AGG: index from GTFI start
+    const aggSeries = _nav.filter(r => r.agg_price).map(r => ({ date: r.nav_date, val: parseFloat(r.agg_price) }));
+    if (aggSeries.length > 1) {
+      const aggBase = aggSeries[0].val;
+      aggSeries.forEach(p => { p.val = p.val / aggBase * 100; });
+    }
+
+    const allVals = [...gtSeries.map(p=>p.val), ...bcSeries.map(p=>p.val), ...aggSeries.map(p=>p.val)];
+    if (allVals.length < 2) { cmpEmpty.style.display='block'; cmpSvg.style.display='none'; }
+    else {
+      cmpSvg.style.display='block'; cmpEmpty.style.display='none';
+      const minV = Math.min(...allVals) * 0.997;
+      const maxV = Math.max(...allVals) * 1.003;
+
+      // Combine all dates for x-axis
+      const allDates = [...new Set([...gtSeries.map(p=>p.date), ...bcSeries.map(p=>p.date)])].sort();
+      const n = allDates.length;
+      const xOf = d => pad.l + allDates.indexOf(d) / Math.max(n-1,1) * iw;
+      const yOf = v => pad.t + ih - (v - minV) / (maxV - minV) * ih;
+
+      // Grid
+      [0,.25,.5,.75,1].forEach(f => {
+        const y = pad.t + ih*f;
+        const val = maxV - f*(maxV-minV);
+        const gl = document.createElementNS('http://www.w3.org/2000/svg','line');
+        gl.setAttribute('x1',pad.l); gl.setAttribute('x2',W-pad.r);
+        gl.setAttribute('y1',y); gl.setAttribute('y2',y);
+        gl.setAttribute('stroke','#E2DDD5'); gl.setAttribute('stroke-width','0.5');
+        cmpSvg.appendChild(gl);
+        const gt = document.createElementNS('http://www.w3.org/2000/svg','text');
+        gt.setAttribute('x',pad.l-6); gt.setAttribute('y',y+4);
+        gt.setAttribute('text-anchor','end'); gt.setAttribute('font-size','9');
+        gt.setAttribute('fill','#9A9590'); gt.setAttribute('font-family','JetBrains Mono');
+        gt.textContent = val.toFixed(0);
+        cmpSvg.appendChild(gt);
+      });
+
+      // Baseline 100
+      const y100 = yOf(100);
+      const bl = document.createElementNS('http://www.w3.org/2000/svg','line');
+      bl.setAttribute('x1',pad.l); bl.setAttribute('x2',W-pad.r);
+      bl.setAttribute('y1',y100); bl.setAttribute('y2',y100);
+      bl.setAttribute('stroke','#C8C0B0'); bl.setAttribute('stroke-width','1');
+      bl.setAttribute('stroke-dasharray','4 4');
+      cmpSvg.appendChild(bl);
+
+      const mkPath = (series, color, w=2, dash='') => {
+        if (series.length < 2) return;
+        const pts = series.filter(p => allDates.includes(p.date));
+        if (pts.length < 2) return;
+        const d = pts.map((p,i) => `${i===0?'M':'L'}${xOf(p.date)} ${yOf(p.val)}`).join(' ');
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d',d); path.setAttribute('fill','none');
+        path.setAttribute('stroke',color); path.setAttribute('stroke-width',w);
+        path.setAttribute('stroke-linecap','round'); path.setAttribute('stroke-linejoin','round');
+        if (dash) path.setAttribute('stroke-dasharray', dash);
+        cmpSvg.appendChild(path);
+      };
+
+      if (aggSeries.length > 1) mkPath(aggSeries, '#C8C0B0', 1.5, '3 3');
+      mkPath(bcSeries, '#4A8DB8', 2.5);
+      mkPath(gtSeries, '#2A7A4F', 2.5);
+
+      // X labels
+      const step = Math.ceil(n / 6);
+      allDates.forEach((d,i) => {
+        if (i % step !== 0 && i !== n-1) return;
+        const xt = document.createElementNS('http://www.w3.org/2000/svg','text');
+        xt.setAttribute('x', xOf(d)); xt.setAttribute('y', H-4);
+        xt.setAttribute('text-anchor','middle'); xt.setAttribute('font-size','9');
+        xt.setAttribute('fill','#9A9590'); xt.setAttribute('font-family','JetBrains Mono');
+        xt.textContent = d.slice(0,7);
+        cmpSvg.appendChild(xt);
+      });
+    }
+
+    // ── GTFI daily table ─────────────────────────────────────────────
+    document.getElementById('navTable').innerHTML = [..._nav].reverse().map(r=>`<tr>
+      <td class="mono">${r.nav_date}</td>
+      <td class="r mono">${fK(r.total_nav)}</td>
+      <td class="r mono ${pCl(r.daily_return_pct)}">${fPs(r.daily_return_pct)}</td>
+      <td class="r mono ${pCl(r.mtd_return_pct)}">${fPs(r.mtd_return_pct)}</td>
+      <td class="r mono ${pCl(r.ytd_return_pct)}">${fPs(r.ytd_return_pct)}</td>
+      <td class="r mono">${parseFloat(r.nav_index||100).toFixed(4)}</td>
+      <td class="r mono ${pCl(r.agg_daily_return)}">${r.agg_daily_return!=null?fPs(r.agg_daily_return):'—'}</td>
+      <td class="r mono">${parseFloat(r.cash_pct||0).toFixed(1)}%</td>
+      <td class="r mono">${parseFloat(r.index_pct||0).toFixed(1)}%</td>
+      <td class="r mono">${parseFloat(r.cef_pct||0).toFixed(1)}%</td>
+    </tr>`).join('') || `<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--ink-faint)">NAV data loads after first trading day</td></tr>`;
+
+    // ── BC heatmap ───────────────────────────────────────────────────
+    document.getElementById('bcDateRange').textContent =
+      `${bcOldest?.month_end_date} → ${bcLatest?.month_end_date}`;
+
+    const MONTHS12 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const byYearMonth = {};
+    _bcPerf.forEach(r => {
+      if (!byYearMonth[r.year]) byYearMonth[r.year] = {};
+      byYearMonth[r.year][r.month] = parseFloat(r.gross_return_pct || 0) * 100;
+    });
+    const years = Object.keys(byYearMonth).sort((a,b) => b - a);
+
+    const heatColor = v => {
+      if (v === undefined || v === null) return '#F0ECE4';
+      const c = Math.max(-2, Math.min(2, v));
+      if (c >= 0) {
+        const t = c / 2;
+        return `rgb(${Math.round(255-t*213)},${Math.round(122+t*0)},${Math.round(255-t*176)})`;
+      } else {
+        const t = Math.abs(c) / 2;
+        return `rgb(${Math.round(255-t*71)},${Math.round(255-t*205)},${Math.round(255-t*205)})`;
+      }
+    };
+    const textCol = v => (v === undefined || Math.abs(v||0) < 0.7) ? 'var(--ink)' : '#fff';
+
+    let hmHTML = `<tr><th style="text-align:left;padding:4px 8px;font-size:10px;color:var(--ink-faint);font-weight:500;white-space:nowrap">Year</th>`;
+    MONTHS12.forEach(m => {
+      hmHTML += `<th style="padding:4px 6px;font-size:10px;color:var(--ink-faint);font-weight:500;text-align:center;min-width:52px">${m}</th>`;
+    });
+    hmHTML += `<th style="padding:4px 8px;font-size:10px;color:var(--ink-faint);font-weight:500;text-align:right;white-space:nowrap">YTD</th></tr>`;
+
+    years.forEach(yr => {
+      const yrData = byYearMonth[yr];
+      const ytdVal = Object.values(yrData).reduce((acc,mv) => acc * (1+mv/100), 1) - 1;
+      hmHTML += `<tr><td style="padding:4px 8px;font-size:11px;font-weight:600;color:var(--ink);font-family:'JetBrains Mono',monospace">${yr}</td>`;
+      for (let m = 1; m <= 12; m++) {
+        const v = yrData[m];
+        hmHTML += `<td style="padding:5px 3px;text-align:center;background:${heatColor(v)};border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px;color:${textCol(v)}">
+          ${v !== undefined ? (v>=0?'+':'')+v.toFixed(2)+'%' : ''}
+        </td>`;
+      }
+      const ytdBg = heatColor(ytdVal*100);
+      const ytdTc = textCol(ytdVal*100);
+      hmHTML += `<td style="padding:5px 8px;text-align:right;background:${ytdBg};border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:${ytdTc}">
+        ${(ytdVal>=0?'+':'')+(ytdVal*100).toFixed(2)}%
+      </td></tr>`;
+    });
+    document.getElementById('bcHeatmap').innerHTML = hmHTML;
+
+    // ── BC detail table ──────────────────────────────────────────────
+    document.getElementById('bcTable').innerHTML = _bcPerf.map(r => {
+      const gross = parseFloat(r.gross_return_pct||0)*100;
+      const net   = parseFloat(r.net_return_pct||0)*100;
+      const ytd   = parseFloat(r.ytd_gross_return||0)*100;
+      const cum   = parseFloat(r.cumulative_gross_return||0)*100;
+      return `<tr>
+        <td class="mono">${r.month_end_date}</td>
+        <td class="r mono">${fK(r.beginning_balance)}</td>
+        <td class="r mono">${fK(r.ending_balance)}</td>
+        <td class="r mono ${pCl(r.gross_gain_dollars)}">${fK(r.gross_gain_dollars)}</td>
+        <td class="r mono ${gross>=0?'pos-c':'neg-c'}">${fPs(gross)}</td>
+        <td class="r mono ${net>=0?'pos-c':'neg-c'}">${fPs(net)}</td>
+        <td class="r mono ${ytd>=0?'pos-c':'neg-c'}">${fPs(ytd)}</td>
+        <td class="r mono ${cum>=0?'pos-c':'neg-c'}">${fPs(cum)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+    // ── ALLOCATION ENGINE ────────────────────────────────────────────────
+  if(latestAlloc) {
+    document.getElementById('allocMetrics').innerHTML = [
+      {l:'Opportunity Index', v:parseFloat(latestAlloc.opportunity_index).toFixed(1)+'/100', s:latestAlloc.opportunity_label, cls: parseFloat(latestAlloc.opportunity_index)>=50?'g':parseFloat(latestAlloc.opportunity_index)>=25?'a':'r'},
+      {l:'BUY Signals',       v:latestAlloc.buy_signal_count,   s:`of ${latestAlloc.fi_cef_universe_count} FI CEFs`, cls:latestAlloc.buy_signal_count>0?'g':''},
+      {l:'Avg Z-Score 1yr',   v:f2(latestAlloc.avg_z1y),        s:'positive = expensive', cls:parseFloat(latestAlloc.avg_z1y)<=0?'g':'r'},
+      {l:'Avg Discount',      v:fP(latestAlloc.avg_discount_pct), s:`${parseFloat(latestAlloc.pct_at_wide_discount).toFixed(0)}% at >10% disc`, cls:parseFloat(latestAlloc.avg_discount_pct)<=-5?'g':''},
+    ].map(m=>`<div class="mc ${m.cls}"><div class="lbl">${m.l}</div><div class="val">${m.v}</div><div class="sub">${m.s}</div></div>`).join('');
+
+    const comps=[
+      {l:'BUY Signal Rate',  w:'30%', score:latestAlloc.score_buy_rate,       detail:`${latestAlloc.buy_signal_count} BUYs / ${latestAlloc.fi_cef_universe_count} CEFs`},
+      {l:'Discount Z-Score', w:'30%', score:latestAlloc.score_zscore,         detail:`z1y ${f2(latestAlloc.avg_z1y)} · z3y ${f2(latestAlloc.avg_z3y)}`},
+      {l:'Top-Q Score',      w:'25%', score:latestAlloc.score_composite,      detail:`Top 25% avg: ${parseFloat(latestAlloc.top_quartile_score).toFixed(1)}`},
+      {l:'Discount Depth',   w:'15%', score:latestAlloc.score_discount_depth, detail:`Avg disc: ${parseFloat(latestAlloc.avg_discount_pct).toFixed(2)}%`},
+    ];
+    document.getElementById('allocComponents').innerHTML = comps.map(c=>{
+      const s=parseFloat(c.score);
+      const col=s<25?'var(--red)':s<50?'var(--amber)':s<75?'var(--green-l)':'var(--green)';
+      return `<div style="background:var(--white);border:1px solid var(--border);border-radius:7px;padding:14px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:2px">${c.l}</div>
+        <div style="font-size:9.5px;color:var(--ink-faint);margin-bottom:8px">Weight ${c.w}</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:26px;color:${col}">${Math.round(s)}</div>
+        <div style="font-size:10.5px;color:var(--ink-faint);margin-top:3px">${c.detail}</div>
+        <div style="height:3px;background:var(--parch-mid);border-radius:2px;margin-top:8px"><div style="height:100%;border-radius:2px;background:${col};width:${s}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('allocHistTable').innerHTML = _alloc.map(r=>{
+    const opp=parseFloat(r.opportunity_index);
+    const oc=opp<20?'var(--red)':opp<40?'var(--amber)':opp<60?'var(--ink-light)':'var(--green)';
+    return `<tr>
+      <td class="mono">${r.calc_date}</td>
+      <td class="r mono" style="color:${oc}">${fP(opp)}</td>
+      <td style="font-size:11px;color:${oc}">${r.opportunity_label}</td>
+      <td class="r mono">${fP(r.target_cash_pct)}</td>
+      <td class="r mono">${fP(r.target_index_pct)}</td>
+      <td class="r mono">${fP(r.target_cef_pct)}</td>
+      <td class="r mono">${r.buy_signal_count}</td>
+      <td class="r mono ${parseFloat(r.avg_z1y)<=0?'pos-c':'neg-c'}">${f2(r.avg_z1y)}</td>
+      <td class="r mono ${parseFloat(r.avg_discount_pct)<=-5?'pos-c':'neu-c'}">${fP(r.avg_discount_pct)}</td>
+      <td>${r.rebalance_needed?'<span style="color:var(--amber);font-weight:600">Yes</span>':'<span style="color:var(--ink-faint)">—</span>'}</td>
+    </tr>`;
+  }).join('');
+
+
+  // ── BDC SIGNALS ──────────────────────────────────────────────────────
+  const bdcOpen   = _bdcTrades.filter(t => ['BUY','STRONG BUY'].includes(t.signal) && !t.close_date);
+  const bdcClosed = _bdcTrades.filter(t => ['BUY','STRONG BUY'].includes(t.signal) && t.close_date);
+  const bdcWait   = _bdcTrades.filter(t => t.signal === 'WAIT' && !t.close_date);
+  const bdcSell   = _bdcTrades.filter(t => ['SELL','STRONG SELL'].includes(t.signal));
+
+  // Win rate from closed trades
+  const wins  = bdcClosed.filter(t => parseFloat(t.realized_return||0) > 0).length;
+  const avgRet = bdcClosed.length > 0
+    ? bdcClosed.reduce((s,t) => s + parseFloat(t.realized_return||0), 0) / bdcClosed.length : null;
+  // SELL accuracy: how many SELLs actually went down
+  const sellAccurate = bdcSell.filter(t => t.current_price && parseFloat(t.sell_signal_outcome||0) < 0).length;
+
+  document.getElementById('bdcMetrics').innerHTML = [
+    {l:'Open BUYs',      v:bdcOpen.length,   s:'active recommendations',              cls:'g'},
+    {l:'Closed BUYs',    v:bdcClosed.length, s:'completed round-trips',               cls:bdcClosed.length>0?'b':''},
+    {l:'Win Rate',       v:bdcClosed.length>0?Math.round(wins/bdcClosed.length*100)+'%':'—', s:`${wins} wins of ${bdcClosed.length} closed`, cls:bdcClosed.length>0&&wins/bdcClosed.length>=0.5?'g':'r'},
+    {l:'Avg Return',     v:avgRet!==null?fPs(avgRet):'—', s:'closed BUYs only',        cls:avgRet===null?'':avgRet>=0?'g':'r'},
+    {l:'SELL Accuracy',  v:bdcSell.length>0?Math.round(sellAccurate/bdcSell.length*100)+'%':'—', s:`${sellAccurate}/${bdcSell.length} went down`, cls:'b'},
+    {l:'WAIT Watching',  v:bdcWait.length,   s:'awaiting momentum confirmation',       cls:'a'},
+  ].map(m=>`<div class="mc ${m.cls}"><div class="lbl">${m.l}</div><div class="val">${m.v}</div><div class="sub">${m.s}</div></div>`).join('');
+
+  // Open BUYs table
+  const today2 = new Date();
+  document.getElementById('bdcOpenBody').innerHTML = bdcOpen.length === 0
+    ? `<tr><td colspan="12" style="text-align:center;padding:32px;color:var(--ink-faint)">No open BUY recommendations — engine is waiting for the right conditions</td></tr>`
+    : bdcOpen.map(t => {
+        const entry = parseFloat(t.signal_price||0);
+        const cur   = parseFloat(t.current_price||entry);
+        const ret   = entry > 0 ? (cur - entry) / entry * 100 : null;
+        const days  = Math.round((today2 - new Date(t.signal_date)) / 86400000);
+        return `<tr>
+          <td><strong>${t.ticker}</strong></td>
+          <td style="font-size:11px;color:var(--ink-faint)">${t.sector||'—'}</td>
+          <td><span class="badge ${t.confidence==='HIGH'?'b-buy':t.confidence==='MODERATE'?'b-wait':'b-hold'}">${t.confidence||'—'}</span></td>
+          <td class="r mono">${t.signal_date}</td>
+          <td class="r mono">$${f2(entry)}</td>
+          <td class="r mono">$${f2(cur)}</td>
+          <td class="r mono ${ret===null?'neu-c':ret>=0?'pos-c':'neg-c'}">${ret===null?'—':fPs(ret)}</td>
+          <td class="r mono">${days}d</td>
+          <td class="r mono" style="color:var(--amber)">${parseFloat(t.composite_score||0).toFixed(1)}</td>
+          <td class="r mono ${parseFloat(t.z1y||0)<=-1?'pos-c':parseFloat(t.z1y||0)>=0.5?'neg-c':'neu-c'}">${parseFloat(t.z1y||0).toFixed(3)}</td>
+          <td class="r mono">${parseFloat(t.yield_pct||0).toFixed(2)}%</td>
+          <td><span class="badge b-open">Open</span></td>
+        </tr>`;
+      }).join('');
+
+  // Closed BUYs table
+  document.getElementById('bdcClosedBody').innerHTML = bdcClosed.length === 0
+    ? `<tr><td colspan="11" style="text-align:center;padding:32px;color:var(--ink-faint)">No completed round-trips yet — positions close when signal flips to SELL</td></tr>`
+    : bdcClosed.sort((a,b) => new Date(b.close_date) - new Date(a.close_date)).map(t => {
+        const ret = parseFloat(t.realized_return||0);
+        const outcome = ret >= 0 ? 'WIN' : 'LOSS';
+        return `<tr>
+          <td><strong>${t.ticker}</strong></td>
+          <td style="font-size:11px;color:var(--ink-faint)">${t.sector||'—'}</td>
+          <td class="r mono">${t.signal_date}</td>
+          <td class="r mono">${t.close_date}</td>
+          <td class="r mono">${t.hold_days||'—'}d</td>
+          <td class="r mono">$${f2(t.signal_price)}</td>
+          <td class="r mono">$${f2(t.close_price)}</td>
+          <td class="r mono ${ret>=0?'pos-c':'neg-c'}" style="font-weight:600">${fPs(ret)}</td>
+          <td class="r mono">${parseFloat(t.composite_score||0).toFixed(1)}</td>
+          <td><span class="badge ${outcome==='WIN'?'b-buy':'b-sell'}">${outcome}</span></td>
+          <td style="font-size:11px;color:var(--ink-faint);max-width:220px;white-space:normal">${(t.close_reason||'').slice(0,80)}</td>
+        </tr>`;
+      }).join('');
+
+  // WAIT table
+  document.getElementById('bdcWaitBody').innerHTML = bdcWait.length === 0
+    ? `<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--ink-faint)">No WAIT signals</td></tr>`
+    : bdcWait.map(t => {
+        const entry = parseFloat(t.signal_price||0);
+        const cur   = parseFloat(t.current_price||entry);
+        const ret   = entry > 0 ? (cur - entry) / entry * 100 : null;
+        const days  = Math.round((today2 - new Date(t.signal_date)) / 86400000);
+        const blocker = parseFloat(t.momentum_60d||0) < 0 ? 'Neg. momentum' : 'Low volume';
+        return `<tr>
+          <td><strong>${t.ticker}</strong></td>
+          <td style="font-size:11px;color:var(--ink-faint)">${t.sector||'—'}</td>
+          <td class="r mono">${t.signal_date}</td>
+          <td class="r mono">$${f2(entry)}</td>
+          <td class="r mono">$${f2(cur)}</td>
+          <td class="r mono ${ret===null?'neu-c':ret>=0?'pos-c':'neg-c'}">${ret===null?'—':fPs(ret)}</td>
+          <td class="r mono">${days}d</td>
+          <td class="r mono" style="color:var(--amber)">${parseFloat(t.composite_score||0).toFixed(1)}</td>
+          <td class="r mono ${parseFloat(t.z1y||0)<=-1?'pos-c':'neu-c'}">${parseFloat(t.z1y||0).toFixed(3)}</td>
+          <td style="font-size:11px;color:var(--amber)">${blocker}</td>
+        </tr>`;
+      }).join('');
+
+  // SELL avoid list
+  document.getElementById('bdcSellBody').innerHTML = bdcSell.length === 0
+    ? `<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--ink-faint)">No SELL signals</td></tr>`
+    : bdcSell.map(t => {
+        const move = parseFloat(t.sell_signal_outcome||0);
+        const hasMoved = t.current_price != null;
+        return `<tr>
+          <td><strong>${t.ticker}</strong></td>
+          <td style="font-size:11px;color:var(--ink-faint)">${t.sector||'—'}</td>
+          <td class="r mono">${t.signal_date}</td>
+          <td class="r mono">$${f2(t.signal_price)}</td>
+          <td class="r mono">${hasMoved?'$'+f2(t.current_price):'—'}</td>
+          <td class="r mono ${!hasMoved?'neu-c':move<=0?'pos-c':'neg-c'}" style="font-weight:${hasMoved?'600':'400'}">
+            ${hasMoved?(move<=0?'▼ ':'▲ ')+fPs(move):'—'}
+          </td>
+          <td class="r mono" style="color:var(--red)">${parseFloat(t.composite_score||0).toFixed(1)}</td>
+          <td class="r mono ${parseFloat(t.z1y||0)>=1?'neg-c':'neu-c'}">${parseFloat(t.z1y||0).toFixed(3)}</td>
+          <td class="r mono ${parseFloat(t.momentum_60d||0)<0?'neg-c':'pos-c'}">${parseFloat(t.momentum_60d||0).toFixed(2)}%</td>
+          <td style="font-size:11px;color:var(--ink-faint);max-width:260px;white-space:normal;line-height:1.5">${(t.bear_case||'—').slice(0,110)}${(t.bear_case||'').length>110?'…':''}</td>
+        </tr>`;
+      }).join('');
+
+  document.getElementById('loader').style.display='none';
+}
+
+loadAll();
+setInterval(loadAll, 300000);
+</script>
+</body>
+</html>

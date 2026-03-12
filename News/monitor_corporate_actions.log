@@ -1,0 +1,742 @@
+2026-03-09 06:37:51,765 | INFO | ============================================================
+2026-03-09 06:37:51,765 | INFO | === DRY-RUN | monitor_corporate_actions.py | 2026-03-09 ===
+2026-03-09 06:37:51,766 | INFO | ============================================================
+2026-03-09 06:37:52,052 | INFO | Checking 364 tickers for corporate actions
+2026-03-09 06:37:52,052 | INFO |   ACP      [active                ] CIK=1503290 | abrdn Income Credit Strategies Fund Common Sh
+2026-03-09 06:37:52,603 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:52,604 | INFO |   ACV      [active                ] CIK=1636289 | Virtus Diversified Income & Convertible Fund 
+2026-03-09 06:37:53,138 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:53,138 | INFO |   ADX      [active                ] CIK=2230 | Adams Diversified Equity Fund Inc.
+2026-03-09 06:37:53,703 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:53,703 | INFO |   AEF      [active                ] CIK=846676 | abrdn Emerging Markets ex-China Fund, Inc. Co
+2026-03-09 06:37:54,253 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:54,254 | INFO |   AFB      [active                ] CIK=1162027 | AllianceBernstein National Municipal Income F
+2026-03-09 06:37:54,792 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:54,792 | INFO |   AGD      [active                ] CIK=1362481 | abrdn Global Dynamic Dividend Fund Common Sha
+2026-03-09 06:37:55,333 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:55,334 | INFO |   AIO      [active                ] CIK=1778114 | Virtus Artificial Intelligence & Technology O
+2026-03-09 06:37:55,899 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:55,899 | INFO |   AOD      [active                ] CIK=1379400 | abrdn Total Dynamic Dividend Fund Common Shar
+2026-03-09 06:37:56,473 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:56,473 | INFO |   ARDC     [active                ] CIK=1515324 | Ares Dynamic Credit Allocation Fund, Inc. Com
+2026-03-09 06:37:57,032 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:57,033 | INFO |   ASA      [active                ] CIK=1230869 | ASA  Gold and Precious Metals Limited
+2026-03-09 06:37:57,647 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:57,648 | INFO |   ASG      [active                ] CIK=786035 | Liberty All-Star Growth Fund, Inc.
+2026-03-09 06:37:58,237 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:58,237 | INFO |   ASGI     [active                ] CIK=1793855 | abrdn Global Infrastructure Income Fund Commo
+2026-03-09 06:37:58,771 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:58,772 | INFO |   AVK      [active                ] CIK=1219120 | Advent Convertible and Income Fund
+2026-03-09 06:37:59,329 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:59,330 | INFO |   AWF      [active                ] CIK=906013 | Alliancebernstein Global High Income Fund
+2026-03-09 06:37:59,873 | INFO |     No action signals in last 120 days
+2026-03-09 06:37:59,874 | INFO |   AWP      [active                ] CIK=1390195 | abrdn Global Premier Properties Fund Common S
+2026-03-09 06:38:00,433 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:00,433 | INFO |   BANX     [active                ] CIK=1578987 | ArrowMark Financial Corp. - Closed End Fund
+2026-03-09 06:38:01,002 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:01,002 | INFO |   BBN      [active                ] CIK=1493683 | BlackRock Taxable Municipal Bond Trust Common
+2026-03-09 06:38:01,539 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:01,539 | INFO |   BCAT     [active                ] CIK=1809541 | BlackRock Capital Allocation Term Trust Commo
+2026-03-09 06:38:02,101 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:02,102 | INFO |   BCV      [active                ] CIK=9521 | Bancroft Fund, Ltd.
+2026-03-09 06:38:02,661 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:02,662 | INFO |   BCX      [active                ] CIK=1506289 | BlackRock Resources Common Shares of Benefici
+2026-03-09 06:38:03,236 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:03,237 | INFO |   BDJ      [active                ] CIK=1332283 | Blackrock Enhanced Equity Dividend Trust
+2026-03-09 06:38:03,801 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:03,801 | INFO |   BGB      [active                ] CIK=1546429 | Blackstone Strategic Credit 2027 Term Fund Co
+2026-03-09 06:38:04,333 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:04,333 | INFO |   BGH      [active                ] CIK=1521404 | Barings Global Short Duration High Yield Fund
+2026-03-09 06:38:04,904 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:04,904 | INFO |   BGR      [active                ] CIK=1306550 | BlackRock Energy and Resources Trust
+2026-03-09 06:38:05,477 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:05,478 | INFO |   BGT      [active                ] CIK=1287480 | BlackRock Floating Rate Income Trust
+2026-03-09 06:38:06,069 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:06,069 | INFO |   BGX      [active                ] CIK=1504234 | Blackstone Long Short Credit Income Fund Comm
+2026-03-09 06:38:06,593 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:06,594 | INFO |   BGY      [active                ] CIK=1393299 | Blackrock Enhanced International Dividend Tru
+2026-03-09 06:38:07,157 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:07,157 | INFO |   BHK      [active                ] CIK=1160864 | Blackrock Core Bond Trust
+2026-03-09 06:38:07,713 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:07,713 | INFO |   BHV      [active                ] CIK=1169034 | BlackRock Virginia Municipal Bond Trust
+2026-03-09 06:38:08,289 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:08,290 | INFO |   BIT      [active                ] CIK=1562818 | BlackRock Multi-Sector Income Trust Common Sh
+2026-03-09 06:38:08,828 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:08,829 | INFO |   BKT      [active                ] CIK=832327 | BlackRock Income Trust Inc. (The)
+2026-03-09 06:38:09,387 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:09,387 | INFO |   BLW      [active                ] CIK=1233681 | Blackrock Limited Duration Income Trust
+2026-03-09 06:38:09,967 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:09,967 | INFO |   BME      [active                ] CIK=1314966 | Blackrock Health Sciences Trust
+2026-03-09 06:38:10,526 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:10,526 | INFO |   BMEZ     [active                ] CIK=1785971 | BlackRock Health Sciences Term Trust Common S
+2026-03-09 06:38:11,059 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:11,059 | INFO |   BMN      [active                ] CIK=1832871 | BlackRock 2037 Municipal Target Term Trust Co
+2026-03-09 06:38:11,641 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:11,641 | INFO |   BOE      [active                ] CIK=1320375 | Blackrock Enhanced Global Dividend Trust Comm
+2026-03-09 06:38:12,181 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:12,181 | INFO |   BPRE     [active                ] CIK=1551047 | Bluerock Private Real Estate Fund Common Shar
+2026-03-09 06:38:12,735 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:12,735 | INFO |   BRW      [active                ] CIK=826020 | Saba Capital Income & Opportunities Fund SBI
+2026-03-09 06:38:13,340 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:13,341 | INFO |   BSL      [active                ] CIK=1486298 | Blackstone Senior Floating Rate 2027 Term Fun
+2026-03-09 06:38:13,907 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:13,908 | INFO |   BST      [active                ] CIK=1616678 | BlackRock Science and Technology Trust Common
+2026-03-09 06:38:14,439 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:14,439 | INFO |   BSTZ     [active                ] CIK=1768666 | BlackRock Science and Technology Term Trust C
+2026-03-09 06:38:14,979 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:14,980 | INFO |   BTO      [active                ] CIK=925683 | John Hancock Financial Opportunities Fund Com
+2026-03-09 06:38:15,520 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:15,521 | INFO |   BTT      [active                ] CIK=1528437 | BlackRock Municipal 2030 Target Term Trust
+2026-03-09 06:38:16,077 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:16,077 | INFO |   BTX      [active                ] CIK=1836057 | BlackRock Technology and Private Equity Term 
+2026-03-09 06:38:16,635 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:16,635 | INFO |   BTZ      [active                ] CIK=1379384 | BlackRock Credit Allocation Income Trust
+2026-03-09 06:38:17,212 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:17,213 | INFO |   BUI      [active                ] CIK=1528988 | BlackRock Utility, Infrastructure & Power Opp
+2026-03-09 06:38:17,764 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:17,765 | INFO |   BWG      [active                ] CIK=1504545 | BrandywineGLOBAL Global Income Opportunities 
+2026-03-09 06:38:18,298 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:18,299 | INFO |   BXMX     [active                ] CIK=1298699 | Nuveen S&P 500 Buy-Write Income Fund Common S
+2026-03-09 06:38:18,870 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:18,871 | INFO |   BXSY     [active                ] CIK=1059213 | 
+2026-03-09 06:38:19,424 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:19,425 | INFO |   CAF      [active                ] CIK=1368493 | Morgan Stanley China A Share Fund Inc. Common
+2026-03-09 06:38:19,970 | INFO |     [TENDER] SC TO-C filed 2025-12-05: SC TO-C
+2026-03-09 06:38:19,971 | INFO |   CCD      [active                ] CIK=1602584 | Calamos Dynamic Convertible & Income Fund - C
+2026-03-09 06:38:20,512 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:20,512 | INFO |   CCIF     [active                ] CIK=1517767 | Carlyle Credit Income Fund Shares of Benefici
+2026-03-09 06:38:21,083 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:21,084 | INFO |   CEE      [active                ] CIK=860489 | The Central and Eastern Europe Fund, Inc. (Th
+2026-03-09 06:38:21,671 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:21,671 | INFO |   CET      [active                ] CIK=18748 | Central Securities Corporation Common Stock
+2026-03-09 06:38:22,263 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:22,264 | INFO |   CEV      [active                ] CIK=1074692 | Eaton Vance California Municipal Income Trust
+2026-03-09 06:38:22,846 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:22,846 | INFO |   CFND     [active                ] CIK=2044327 | C1 Fund Inc. Common Stock
+2026-03-09 06:38:23,383 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:23,384 | INFO |   CGO      [active                ] CIK=1285650 | Calamos Global Total Return Fund - Closed End
+2026-03-09 06:38:23,918 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:23,919 | INFO |   CHI      [active                ] CIK=1171471 | Calamos Convertible Opportunities and Income 
+2026-03-09 06:38:24,483 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:24,483 | INFO |   CHW      [active                ] CIK=1396277 | Calamos Global Dynamic Income Fund - Closed E
+2026-03-09 06:38:25,033 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:25,033 | INFO |   CHY      [active                ] CIK=1222719 | Calamos Convertible and High Income Fund - Cl
+2026-03-09 06:38:25,584 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:25,585 | INFO |   CIF      [active                ] CIK=833021 | MFS Intermediate High Income Fund Common Stoc
+2026-03-09 06:38:26,121 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:26,121 | INFO |   CII      [active                ] CIK=1278895 | BlackRock Enhanced Large Cap Core Fund, Inc. 
+2026-03-09 06:38:26,667 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:26,668 | INFO |   CIK      [active                ] CIK=810766 | Credit Suisse Asset Management Income Fund, I
+2026-03-09 06:38:27,261 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:27,262 | INFO |   CLM      [active                ] CIK=814083 | Cornerstone Strategic Investment Fund, Inc. C
+2026-03-09 06:38:27,834 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:27,834 | INFO |   CMU      [active                ] CIK=801961 | MFS Municipal Income Trust Common Stock
+2026-03-09 06:38:28,391 | INFO |     [MERGER] N-14 8C/A filed 2026-01-27: 
+2026-03-09 06:38:28,392 | INFO |   CPZ      [active                ] CIK=1717457 | Calamos Long/Short Equity & Dynamic Income Tr
+2026-03-09 06:38:28,937 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:28,937 | INFO |   CRF      [active                ] CIK=33934 | Cornerstone Total Return Fund, Inc. (The) Com
+2026-03-09 06:38:29,467 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:29,467 | INFO |   CSQ      [active                ] CIK=1275214 | Calamos Strategic Total Return Fund - Closed 
+2026-03-09 06:38:30,043 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:30,043 | INFO |   CXE      [active                ] CIK=845606 | MFS High Income Municipal Trust Common Stock
+2026-03-09 06:38:30,606 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:30,606 | INFO |   CXH      [active                ] CIK=847411 | MFS Investment Grade Municipal Trust Common S
+2026-03-09 06:38:31,204 | INFO |     [TENDER] SC TO-C filed 2026-03-04: 
+2026-03-09 06:38:31,205 | INFO |   DBL      [active                ] CIK=1525201 | DoubleLine Opportunistic Credit Fund Common S
+2026-03-09 06:38:31,741 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:31,742 | INFO |   DFP      [active                ] CIK=1559991 | Flaherty & Crumrine Dynamic Preferred and Inc
+2026-03-09 06:38:32,326 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:32,327 | INFO |   DHF      [active                ] CIK=1057861 | BNY Mellon High Yield Strategies Fund Common 
+2026-03-09 06:38:32,889 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:32,889 | INFO |   DHY      [active                ] CIK=1061353 | Credit Suisse High Yield Credit Fund Common S
+2026-03-09 06:38:33,468 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:33,468 | INFO |   DIAX     [active                ] CIK=1608742 | Nuveen Dow 30SM Dynamic Overwrite Fund Common
+2026-03-09 06:38:33,993 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:33,994 | INFO |   DLY      [active                ] CIK=1788399 | DoubleLine Yield Opportunities Fund Common Sh
+2026-03-09 06:38:34,563 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:34,564 | INFO |   DMA      [active                ] CIK=1523289 | Destra Multi-Alternative Fund Common Stock
+2026-03-09 06:38:35,118 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:35,119 | INFO |   DMB      [active                ] CIK=1565381 | BNY Mellon Municipal Bond Infrastructure Fund
+2026-03-09 06:38:35,654 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:35,654 | INFO |   DMO      [active                ] CIK=1478102 | Western Asset Mortgage Opportunity Fund Inc. 
+2026-03-09 06:38:36,206 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:36,206 | INFO |   DNP      [active                ] CIK=806628 | DNP Select Income Fund, Inc. Common Stock
+2026-03-09 06:38:36,772 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:36,772 | INFO |   DPG      [active                ] CIK=1515671 | Duff & Phelps Utility and Infrastructure Fund
+2026-03-09 06:38:37,313 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:37,314 | INFO |   DSL      [active                ] CIK=1566388 | DoubleLine Income Solutions Fund Common Share
+2026-03-09 06:38:37,876 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:37,877 | INFO |   DSM      [active                ] CIK=855887 | BNY Mellon Strategic Municipal Bond Fund, Inc
+2026-03-09 06:38:38,429 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:38,429 | INFO |   DSU      [active                ] CIK=1051003 | Blackrock Debt Strategies Fund, Inc. Common S
+2026-03-09 06:38:38,972 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:38,972 | INFO |   DTF      [active                ] CIK=879535 | DTF Tax-Free Income 2028 Term Fund Inc. Commo
+2026-03-09 06:38:39,560 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:39,560 | INFO |   DXYZ     [active                ] CIK=1843974 | Destiny Tech100 Inc. Common Stock
+2026-03-09 06:38:40,081 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:40,082 | INFO |   EAD      [active                ] CIK=1210123 | Allspring Income Opportunities Fund Common Sh
+2026-03-09 06:38:40,670 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:40,670 | INFO |   EARN     [active                ] CIK=1560672 | Ellington Credit Company Common Shares of Ben
+2026-03-09 06:38:41,229 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:41,229 | INFO |   ECAT     [active                ] CIK=1864843 | BlackRock ESG Capital Allocation Term Trust C
+2026-03-09 06:38:41,791 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:41,792 | INFO |   ECC      [active                ] CIK=1604174 | Eagle Point Credit Company Inc. Common Stock
+2026-03-09 06:38:42,388 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:42,389 | INFO |   ECF      [active                ] CIK=793040 | Ellsworth Growth and Income Fund Ltd.
+2026-03-09 06:38:42,945 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:42,945 | INFO |   EDD      [active                ] CIK=1388141 | Morgan Stanley Emerging Markets Domestic Debt
+2026-03-09 06:38:43,488 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:43,489 | INFO |   EDF      [active                ] CIK=1501103 | Virtus Stone Harbor Emerging Markets Income F
+2026-03-09 06:38:44,052 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:44,052 | INFO |   EEA      [active                ] CIK=791718 | The European Equity Fund, Inc. Common Stock
+2026-03-09 06:38:44,603 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:44,603 | INFO |   EFR      [active                ] CIK=1258623 | Eaton Vance Senior Floating-Rate Fund Common 
+2026-03-09 06:38:45,192 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:45,192 | INFO |   EFT      [active                ] CIK=1288992 | Eaton Vance Floating Rate Income Trust Common
+2026-03-09 06:38:45,750 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:45,750 | INFO |   EHI      [active                ] CIK=1228509 | Western Asset Global High Income Fund Inc Com
+2026-03-09 06:38:46,346 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:46,346 | INFO |   EIC      [active                ] CIK=1754836 | Eagle Point Income Company Inc. Common Stock
+2026-03-09 06:38:46,930 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:46,930 | INFO |   EIM      [active                ] CIK=1176984 | Eaton Vance Municipal Bond Fund Common Shares
+2026-03-09 06:38:47,561 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:47,562 | INFO |   EMD      [active                ] CIK=1227862 | Western Asset Emerging Markets Debt Fund Inc 
+2026-03-09 06:38:48,183 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:48,184 | INFO |   EMF      [active                ] CIK=809708 | Templeton Emerging Markets Fund Common Stock
+2026-03-09 06:38:48,849 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:48,850 | INFO |   EMO      [active                ] CIK=1517518 | ClearBridge Energy Midstream Opportunity Fund
+2026-03-09 06:38:49,606 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:49,606 | INFO |   EOD      [active                ] CIK=1386067 | Allspring Global Dividend Opportunity Fund Co
+2026-03-09 06:38:50,145 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:50,145 | INFO |   EOI      [active                ] CIK=1300391 | Eaton Vance Enhance Equity Income Fund Eaton 
+2026-03-09 06:38:50,688 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:50,688 | INFO |   EOS      [active                ] CIK=1308335 | Eaton Vance Enhance Equity Income Fund II Com
+2026-03-09 06:38:51,275 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:51,276 | INFO |   EOT      [active                ] CIK=1454741 | Eaton Vance Municipal Income Trust EATON VANC
+2026-03-09 06:38:51,830 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:51,830 | INFO |   ERC      [active                ] CIK=1227073 | Allspring Multi-Sector Income Fund Common Sto
+2026-03-09 06:38:52,381 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:52,382 | INFO |   ERH      [active                ] CIK=1279014 | Allspring Utilities and High Income Fund Comm
+2026-03-09 06:38:52,923 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:52,923 | INFO |   ETB      [active                ] CIK=1308927 | Eaton Vance Tax-Managed Buy-Write Income Fund
+2026-03-09 06:38:53,482 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:53,482 | INFO |   ETG      [active                ] CIK=1270523 | Eaton Vance Tax-Advantaged Global Dividend In
+2026-03-09 06:38:54,020 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:54,020 | INFO |   ETJ      [active                ] CIK=1395325 | Eaton Vance Risk-Managed Diversified Equity I
+2026-03-09 06:38:54,561 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:54,561 | INFO |   ETO      [active                ] CIK=1281926 | Eaton Vance Tax-Advantage Global Dividend Opp
+2026-03-09 06:38:55,127 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:55,127 | INFO |   ETV      [active                ] CIK=1322436 | Eaton Vance Corporation Eaton Vance Tax-Manag
+2026-03-09 06:38:55,740 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:55,740 | INFO |   ETW      [active                ] CIK=1322435 | Eaton Vance Corporation Eaton Vance Tax-Manag
+2026-03-09 06:38:56,322 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:56,322 | INFO |   ETX      [active                ] CIK=1563696 | Eaton Vance Municipal Income 2028 Term Trust 
+2026-03-09 06:38:56,844 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:56,844 | INFO |   ETY      [active                ] CIK=1340736 | Eaton Vance Tax-Managed Diversified Equity In
+2026-03-09 06:38:57,400 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:57,400 | INFO |   EVF      [active                ] CIK=1070732 | Eaton Vance Senior Income Trust Common Stock
+2026-03-09 06:38:57,956 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:57,957 | INFO |   EVG      [active                ] CIK=1287498 | Eaton Vance Short Diversified Income Fund Eat
+2026-03-09 06:38:58,526 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:58,526 | INFO |   EVN      [active                ] CIK=1074540 | Eaton Vance Municipal Income Trust Common Sto
+2026-03-09 06:38:59,114 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:59,115 | INFO |   EVT      [active                ] CIK=1253327 | Eaton Vance Tax Advantaged Dividend Income Fu
+2026-03-09 06:38:59,642 | INFO |     No action signals in last 120 days
+2026-03-09 06:38:59,643 | INFO |   EVV      [active                ] CIK=1222922 | Eaton Vance Limited Duration Income Fund Comm
+2026-03-09 06:39:00,209 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:00,210 | INFO |   EXG      [active                ] CIK=1379438 | Eaton Vance Tax-Managed Global Diversified Eq
+2026-03-09 06:39:00,772 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:00,773 | INFO |   FAX      [active                ] CIK=790500 | abrdn Asia-Pacific Income Fund, Inc. Common S
+2026-03-09 06:39:01,315 | INFO |     [MERGER] N-14 8C/A filed 2025-12-29: N-14 8C/A
+2026-03-09 06:39:01,315 | INFO |   FCO      [active                ] CIK=876717 | abrdn Global Income Fund, Inc. Common Stock
+2026-03-09 06:39:01,910 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:01,911 | INFO |   FCT      [active                ] CIK=1282850 | First Trust Senior Floating Rate Income Fund 
+2026-03-09 06:39:02,474 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:02,474 | INFO |   FFA      [active                ] CIK=1291334 | First Trust Enhanced Equity Income Fund Commo
+2026-03-09 06:39:03,029 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:03,029 | INFO |   FFC      [active                ] CIK=1174164 | Flaherty & Crumrine Preferred and Income Secu
+2026-03-09 06:39:03,559 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:03,559 | INFO |   FINS     [active                ] CIK=1745059 | Angel Oak Financial Strategies Income Term Tr
+2026-03-09 06:39:04,109 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:04,110 | INFO |   FLC      [active                ] CIK=1245648 | Flaherty & Crumrine Total Return Fund Inc Com
+2026-03-09 06:39:04,648 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:04,648 | INFO |   FMN      [active                ] CIK=1199004 | Federated Hermes Premier Municipal Income Fun
+2026-03-09 06:39:05,205 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:05,206 | INFO |   FMY      [active                ] CIK=1319183 | First Trust Mortgage Income Fund Common Share
+2026-03-09 06:39:05,755 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:05,756 | INFO |   FOF      [active                ] CIK=1375340 | Cohen & Steers Closed-End Opportunity Fund, I
+2026-03-09 06:39:06,320 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:06,321 | INFO |   FPF      [active                ] CIK=1567569 | First Trust Intermediate Duration Preferred &
+2026-03-09 06:39:06,872 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:06,873 | INFO |   FRA      [active                ] CIK=1259708 | Blackrock Floating Rate Income Strategies Fun
+2026-03-09 06:39:07,437 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:07,438 | INFO |   FSCO     [active                ] CIK=1568194 | FS Credit Opportunities Corp. Common Stock
+2026-03-09 06:39:07,989 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:07,989 | INFO |   FSSL     [active                ] CIK=2065812 | FS Specialty Lending Fund Common Shares of Be
+2026-03-09 06:39:08,491 | INFO |     [MERGER] N-14 8C/A filed 2025-11-21: N-14 8C/A
+2026-03-09 06:39:08,492 | INFO |   FT       [active                ] CIK=833040 | Franklin Universal Trust Common Stock
+2026-03-09 06:39:09,046 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:09,046 | INFO |   FTF      [active                ] CIK=1233087 | Franklin Limited Duration Income Trust Common
+2026-03-09 06:39:09,601 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:09,602 | INFO |   FTHY     [active                ] CIK=1810523 | First Trust High Yield Opportunities 2027 Ter
+2026-03-09 06:39:10,121 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:10,121 | INFO |   FUND     [active                ] CIK=825202 | Sprott Focus Trust, Inc. - Closed End Fund
+2026-03-09 06:39:10,711 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:10,711 | INFO |   FXBY     [active                ] CIK=1068897 | FOXBY CORP
+2026-03-09 06:39:11,259 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:11,259 | INFO |   GAB      [active                ] CIK=794685 | Gabelli Equity Trust, Inc. (The) Common Stock
+2026-03-09 06:39:11,859 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:11,860 | INFO |   GAM      [active                ] CIK=40417 | General American Investors, Inc. Common Stock
+2026-03-09 06:39:12,471 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:12,472 | INFO |   GBAB     [active                ] CIK=1495825 | Guggenheim Taxable Municipal Bond & Investmen
+2026-03-09 06:39:13,016 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:13,017 | INFO |   GCV      [active                ] CIK=845611 | Gabelli Convertible and Income Securities Fun
+2026-03-09 06:39:13,561 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:13,561 | INFO |   GDL      [active                ] CIK=1378701 | GDL Fund, The Common Shares of Beneficial Int
+2026-03-09 06:39:14,143 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:14,144 | INFO |   GDO      [active                ] CIK=1472341 | Western Asset Global Corporate Opportunity Fu
+2026-03-09 06:39:14,696 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:14,696 | INFO |   GDV      [active                ] CIK=1260729 | Gabelli Dividend & Income Trust Common Shares
+2026-03-09 06:39:15,243 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:15,244 | INFO |   GF       [active                ] CIK=858706 | New Germany Fund, Inc. (The) Common Stock
+2026-03-09 06:39:15,824 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:15,825 | INFO |   GGN      [active                ] CIK=1313510 | GAMCO Global Gold, Natural Resources & Income
+2026-03-09 06:39:16,397 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:16,398 | INFO |   GGT      [active                ] CIK=921671 | Gabelli Multi-Media Trust, Inc. (The) Common 
+2026-03-09 06:39:16,951 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:16,952 | INFO |   GGZ      [active                ] CIK=1585855 | Gabelli Global Small and Mid Cap Value Trust 
+2026-03-09 06:39:17,487 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:17,488 | INFO |   GHY      [active                ] CIK=1554697 | PGIM Global High Yield Fund, Inc.
+2026-03-09 06:39:18,028 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:18,028 | INFO |   GLO      [active                ] CIK=1350869 | Clough Global Opportunities Fund Common Stock
+2026-03-09 06:39:18,593 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:18,593 | INFO |   GLQ      [active                ] CIK=1316463 | Clough Global Equity Fund Clough Global Equit
+2026-03-09 06:39:19,155 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:19,156 | INFO |   GLU      [active                ] CIK=1282957 | Gabelli Global Utility Common Shares of Benef
+2026-03-09 06:39:19,689 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:19,689 | INFO |   GLV      [active                ] CIK=1288795 | Clough Global Dividend and Income Fund Common
+2026-03-09 06:39:20,243 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:20,244 | INFO |   GNT      [active                ] CIK=1438893 | GAMCO Natural Resources, Gold & Income Trust
+2026-03-09 06:39:20,785 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:20,786 | INFO |   GOF      [active                ] CIK=1380936 | Guggenheim Strategic Opportunities Fund Commo
+2026-03-09 06:39:21,333 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:21,333 | INFO |   GRF      [active                ] CIK=850027 | Eagle Capital Growth Fund, Inc. Common Stock
+2026-03-09 06:39:21,886 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:21,886 | INFO |   GRX      [active                ] CIK=1391437 | The Gabelli Healthcare & Wellness Trust Commo
+2026-03-09 06:39:22,454 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:22,454 | INFO |   GUG      [active                ] CIK=1864208 | Guggenheim Active Allocation Fund Common Shar
+2026-03-09 06:39:22,990 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:22,991 | INFO |   GUT      [active                ] CIK=1080720 | Gabelli Utility Trust (The) Common Stock
+2026-03-09 06:39:23,617 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:23,617 | INFO |   HEQ      [active                ] CIK=1496749 | John Hancock Diversified Income Fund Common S
+2026-03-09 06:39:24,164 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:24,165 | INFO |   HERZ     [active                ] CIK=880406 | Herzfeld Credit Income Fund, Inc.  - Closed E
+2026-03-09 06:39:24,762 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:24,763 | INFO |   HFRO     [active                ] CIK=1710680 | Highland Opportunities and Income Fund Common
+2026-03-09 06:39:25,300 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:25,301 | INFO |   HGLB     [active                ] CIK=1622148 | Highland Global Allocation Fund Common Stock
+2026-03-09 06:39:25,891 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:25,891 | INFO |   HIO      [active                ] CIK=910068 | Western Asset High Income Opportunity Fund, I
+2026-03-09 06:39:26,463 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:26,464 | INFO |   HIX      [active                ] CIK=1058239 | Western Asset High Income Fund II Inc. Common
+2026-03-09 06:39:27,007 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:27,008 | INFO |   HPF      [active                ] CIK=1189740 | John Hancock Pfd Income Fund II Pfd Income Fu
+2026-03-09 06:39:27,573 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:27,573 | INFO |   HPI      [active                ] CIK=1176199 | John Hancock Preferred Income Fund Common Sha
+2026-03-09 06:39:28,136 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:28,137 | INFO |   HPS      [active                ] CIK=1215913 | John Hancock Preferred Income Fund III Prefer
+2026-03-09 06:39:28,693 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:28,694 | INFO |   HQH      [active                ] CIK=805267 | abrdn Healthcare Investors Shares of Benefici
+2026-03-09 06:39:29,249 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:29,250 | INFO |   HQL      [active                ] CIK=884121 | abrdn Life Sciences Investors Shares of Benef
+2026-03-09 06:39:29,796 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:29,796 | INFO |   HTD      [active                ] CIK=1260041 | John Hancock Tax Advantaged Dividend Income F
+2026-03-09 06:39:30,361 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:30,361 | INFO |   HYI      [active                ] CIK=1497186 | Western Asset High Yield Opportunity Fund Inc
+2026-03-09 06:39:30,921 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:30,921 | INFO |   HYT      [active                ] CIK=1222401 | Blackrock Corporate High Yield Fund, Inc. Com
+2026-03-09 06:39:31,501 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:31,501 | INFO |   IAE      [active                ] CIK=1385632 | Voya Asia Pacific High Dividend Equity Income
+2026-03-09 06:39:32,071 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:32,071 | INFO |   IAF      [active                ] CIK=779336 | abrdn Australia Equity Fund, Inc. Common Stoc
+2026-03-09 06:39:32,653 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:32,653 | INFO |   IDE      [active                ] CIK=1417802 | Voya Infrastructure, Industrials and Material
+2026-03-09 06:39:33,201 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:33,202 | INFO |   IFN      [active                ] CIK=917100 | Aberdeen India Fund, Inc. Common Stock
+2026-03-09 06:39:33,746 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:33,746 | INFO |   IGA      [active                ] CIK=1332943 | Voya Global Advantage and Premium Opportunity
+2026-03-09 06:39:34,278 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:34,278 | INFO |   IGD      [active                ] CIK=1285890 | Voya Global Equity Dividend and Premium Oppor
+2026-03-09 06:39:34,817 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:34,817 | INFO |   IGI      [active                ] CIK=1462586 | Western Asset Investment Grade Opportunity Tr
+2026-03-09 06:39:35,369 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:35,369 | INFO |   IGR      [active                ] CIK=1268884 | CBRE Global Real Estate Income Fund Common Sh
+2026-03-09 06:39:35,919 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:35,919 | INFO |   IHD      [active                ] CIK=1496292 | Voya Emerging Markets High Income Dividend Eq
+2026-03-09 06:39:36,445 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:36,445 | INFO |   IIF      [active                ] CIK=916618 | Morgan Stanley India Investment Fund, Inc. Co
+2026-03-09 06:39:36,995 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:36,995 | INFO |   IIM      [active                ] CIK=885601 | Invesco Value Municipal Income Trust Common S
+2026-03-09 06:39:37,552 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:37,553 | INFO |   IQI      [active                ] CIK=885125 | Invesco Quality Municipal Income Trust Common
+2026-03-09 06:39:38,115 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:38,116 | INFO |   ISD      [active                ] CIK=1534880 | PGIM High Yield Bond Fund, Inc.
+2026-03-09 06:39:38,683 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:38,683 | INFO |   JCE      [active                ] CIK=1385763 | Nuveen Core Equity Alpha Fund Common Shares o
+2026-03-09 06:39:39,234 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:39,235 | INFO |   JFR      [active                ] CIK=1276533 | Nuveen Floating Rate Income Fund Common Stock
+2026-03-09 06:39:39,804 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:39,805 | INFO |   JGH      [active                ] CIK=1615905 | Nuveen Global High Income Fund Common Shares 
+2026-03-09 06:39:40,347 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:40,347 | INFO |   JHI      [active                ] CIK=759828 | John Hancock Investors Trust Common Stock
+2026-03-09 06:39:40,903 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:40,904 | INFO |   JHS      [active                ] CIK=759866 | John Hancock Income Securities Trust Common S
+2026-03-09 06:39:41,463 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:41,464 | INFO |   JLS      [active                ] CIK=1472215 | Nuveen Mortgage and Income Fund
+2026-03-09 06:39:41,991 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:41,991 | INFO |   JMM      [active                ] CIK=838131 | Nuveen Multi-Market Income Fund (MA)
+2026-03-09 06:39:42,527 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:42,528 | INFO |   JOF      [active                ] CIK=859796 | Japan Smaller Capitalization Fund Inc Common 
+2026-03-09 06:39:43,066 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:43,066 | INFO |   JPC      [active                ] CIK=1216583 | Nuveen Preferred & Income Opportunities Fund
+2026-03-09 06:39:43,629 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:43,629 | INFO |   JQC      [active                ] CIK=1227476 | Nuveen Credit Strategies Income Fund Shares o
+2026-03-09 06:39:44,180 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:44,180 | INFO |   JRI      [active                ] CIK=1539337 | Nuveen Real Asset Income and Growth Fund Comm
+2026-03-09 06:39:44,719 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:44,720 | INFO |   JRS      [active                ] CIK=1158289 | Nuveen Real Estate Income Fund Common Shares 
+2026-03-09 06:39:45,278 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:45,279 | INFO |   KF       [active                ] CIK=748691 | Korea Fund, Inc. (The) New Common Stock
+2026-03-09 06:39:45,830 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:45,830 | INFO |   KIO      [active                ] CIK=1515940 | KKR Income Opportunities Fund Common Shares
+2026-03-09 06:39:46,393 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:46,393 | INFO |   KTF      [active                ] CIK=839533 | DWS Municipal Income Trust
+2026-03-09 06:39:46,951 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:46,952 | INFO |   KYN      [active                ] CIK=1293613 | Kayne Anderson Energy Infrastructure Fund, In
+2026-03-09 06:39:47,516 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:47,516 | INFO |   LDP      [active                ] CIK=1548717 | Cohen & Steers Limited Duration Preferred and
+2026-03-09 06:39:48,041 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:48,041 | INFO |   LEO      [active                ] CIK=818972 | BNY Mellon Strategic Municipals, Inc. Common 
+2026-03-09 06:39:48,602 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:48,603 | INFO |   LGI      [active                ] CIK=1278211 | Lazard Global Total Return and Income Fund Co
+2026-03-09 06:39:49,154 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:49,155 | INFO |   MCI      [active                ] CIK=275694 | Barings Corporate Investors Common Stock
+2026-03-09 06:39:49,709 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:49,709 | INFO |   MCN      [active                ] CIK=1289868 | XAI Madison Equity Premium Income Fund Common
+2026-03-09 06:39:50,296 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:50,296 | INFO |   MCR      [active                ] CIK=851170 | MFS Charter Income Trust Common Stock
+2026-03-09 06:39:50,870 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:50,870 | INFO |   MEGI     [active                ] CIK=1855066 | NYLI CBRE Global Infrastructure Megatrends Te
+2026-03-09 06:39:51,403 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:51,404 | INFO |   MFM      [active                ] CIK=801961 | MFS Municipal Income Trust Common Stock
+2026-03-09 06:39:51,952 | INFO |     [MERGER] N-14 8C/A filed 2026-01-27: 
+2026-03-09 06:39:51,952 | INFO |   MGF      [active                ] CIK=811922 | MFS Government Markets Income Trust Common St
+2026-03-09 06:39:52,531 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:52,531 | INFO |   MHD      [active                ] CIK=1034665 | Blackrock MuniHoldings Fund, Inc. Common Stoc
+2026-03-09 06:39:53,078 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:53,078 | INFO |   MHF      [active                ] CIK=830487 | Western Asset Municipal High Income Fund, Inc
+2026-03-09 06:39:53,640 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:53,641 | INFO |   MIN      [active                ] CIK=826735 | MFS Intermediate Income Trust Common Stock
+2026-03-09 06:39:54,219 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:54,220 | INFO |   MIY      [active                ] CIK=890393 | Blackrock MuniYield Michigan Quality Fund, In
+2026-03-09 06:39:54,775 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:54,775 | INFO |   MMD      [active                ] CIK=1518557 | NYLI MacKay DefinedTerm Muni Opportunities Fu
+2026-03-09 06:39:55,323 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:55,324 | INFO |   MMT      [active                ] CIK=809173 | MFS Multimarket Income Trust Common Stock
+2026-03-09 06:39:55,875 | INFO |     [MERGER] N-14 8C/A filed 2026-01-27: 
+2026-03-09 06:39:55,876 | INFO |   MMU      [active                ] CIK=886043 | Western Asset Managed Municipals Fund, Inc. C
+2026-03-09 06:39:56,466 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:56,466 | INFO |   MPA      [active                ] CIK=891038 | Blackrock MuniYield Pennsylvania Quality Fund
+2026-03-09 06:39:57,045 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:57,045 | INFO |   MPV      [active                ] CIK=831655 | Barings Participation Investors Common Stock
+2026-03-09 06:39:57,591 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:57,591 | INFO |   MQY      [active                ] CIK=890196 | Blackrock MuniYield Quality Fund, Inc. Common
+2026-03-09 06:39:58,153 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:58,153 | INFO |   MSD      [active                ] CIK=904112 | Morgan Stanley Emerging Markets Debt Fund, In
+2026-03-09 06:39:58,686 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:58,686 | INFO |   MUA      [active                ] CIK=901243 | Blackrock MuniAssets Fund, Inc Common Stock
+2026-03-09 06:39:59,257 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:59,257 | INFO |   MUC      [active                ] CIK=1051004 | Blackrock MuniHoldings California Quality Fun
+2026-03-09 06:39:59,805 | INFO |     No action signals in last 120 days
+2026-03-09 06:39:59,806 | INFO |   MUJ      [active                ] CIK=1053988 | Blackrock MuniHoldings New Jersey Quality Fun
+2026-03-09 06:40:00,374 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:00,375 | INFO |   MXE      [active                ] CIK=863900 | Mexico Equity and Income Fund, Inc. (The) Com
+2026-03-09 06:40:00,918 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:00,918 | INFO |   MXF      [active                ] CIK=65433 | Mexico Fund, Inc. (The) Common Stock
+2026-03-09 06:40:01,474 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:01,475 | INFO |   MYI      [active                ] CIK=883412 | Blackrock MuniYield Quality Fund III, Inc Com
+2026-03-09 06:40:02,036 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:02,036 | INFO |   MYN      [active                ] CIK=882150 | Blackrock MuniYield New York Quality Fund, In
+2026-03-09 06:40:02,605 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:02,605 | INFO |   NAC      [active                ] CIK=1074952 | Nuveen California Quality Municipal Income Fu
+2026-03-09 06:40:03,201 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:03,202 | INFO |   NAD      [active                ] CIK=1083839 | Nuveen Quality Municipal Income Fund Common S
+2026-03-09 06:40:03,786 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:03,787 | INFO |   NAN      [active                ] CIK=1074769 | Nuveen New York Quality Municipal Income Fund
+2026-03-09 06:40:04,345 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:04,345 | INFO |   NAZ      [active                ] CIK=892992 | Nuveen Arizona Quality Municipal Income Fund 
+2026-03-09 06:40:04,900 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:04,900 | INFO |   NBB      [active                ] CIK=1478888 | Nuveen Taxable Municipal Income Fund Common S
+2026-03-09 06:40:05,455 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:05,456 | INFO |   NBH      [active                ] CIK=1178839 | Neuberger Municipal Fund Inc. Common Stock
+2026-03-09 06:40:06,009 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:06,010 | INFO |   NBXG     [active                ] CIK=1843181 | Neuberger Next Generation Connectivity Fund I
+2026-03-09 06:40:06,525 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:06,526 | INFO |   NCA      [active                ] CIK=818851 | Nuveen California Municipal Value Fund
+2026-03-09 06:40:07,060 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:07,060 | INFO |   NCV      [active                ] CIK=1214935 | Virtus Convertible & Income Fund Common Share
+2026-03-09 06:40:07,600 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:07,600 | INFO |   NCZ      [active                ] CIK=1227857 | Virtus Convertible & Income Fund II Common Sh
+2026-03-09 06:40:08,180 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:08,180 | INFO |   NDMO     [active                ] CIK=1793129 | Nuveen Dynamic Municipal Opportunities Fund C
+2026-03-09 06:40:08,708 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:08,709 | INFO |   NEA      [active                ] CIK=1195737 | Nuveen AMT-Free Quality Municipal Income Fund
+2026-03-09 06:40:09,272 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:09,273 | INFO |   NFJ      [active                ] CIK=1260563 | Virtus Dividend, Interest & Premium Strategy 
+2026-03-09 06:40:09,894 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:09,894 | INFO |   NHS      [active                ] CIK=1487610 | Neuberger High Yield Strategies Fund Inc. Com
+2026-03-09 06:40:10,440 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:10,441 | INFO |   NIE      [active                ] CIK=1383441 | Virtus Equity & Convertible Income Fund Commo
+2026-03-09 06:40:11,000 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:11,001 | INFO |   NIM      [active                ] CIK=890119 | Nuveen Select Maturities Municipal Fund Commo
+2026-03-09 06:40:11,558 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:11,559 | INFO |   NKX      [active                ] CIK=1195738 | Nuveen California AMT-Free Quality Municipal 
+2026-03-09 06:40:12,110 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:12,111 | INFO |   NMAI     [active                ] CIK=1861115 | Nuveen Multi-Asset Income Fund Common Shares 
+2026-03-09 06:40:12,662 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:12,662 | INFO |   NMCO     [active                ] CIK=1774342 | Nuveen Municipal Credit Opportunities Fund Co
+2026-03-09 06:40:13,199 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:13,200 | INFO |   NMI      [active                ] CIK=830271 | Nuveen Municipal Income Fund, Inc. Common Sto
+2026-03-09 06:40:13,736 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:13,736 | INFO |   NML      [active                ] CIK=1562051 | Neuberger Energy Infrastructure and Income Fu
+2026-03-09 06:40:14,290 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:14,291 | INFO |   NMS      [active                ] CIK=1607997 | Nuveen Minnesota Quality Municipal Income Fun
+2026-03-09 06:40:14,818 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:14,818 | INFO |   NMT      [active                ] CIK=897419 | Nuveen Massachusetts Quality Municipal Income
+2026-03-09 06:40:15,361 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:15,361 | INFO |   NMZ      [active                ] CIK=1266585 | Nuveen Municipal High Income Opportunity Fund
+2026-03-09 06:40:15,917 | INFO |     [MERGER] N-14 8C/A filed 2025-12-16: AMENDMENT TO FORM N-14 8C
+2026-03-09 06:40:15,917 | INFO |   NNY      [active                ] CIK=818850 | Nuveen New York Municipal Value Fund Common S
+2026-03-09 06:40:16,473 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:16,473 | INFO |   NOM      [active                ] CIK=899782 | Nuveen Missouri Quality Municipal Income Fund
+2026-03-09 06:40:17,014 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:17,014 | INFO |   NPCT     [active                ] CIK=1835068 | Nuveen Core Plus Impact Fund Common Shares of
+2026-03-09 06:40:17,534 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:17,534 | INFO |   NPFD     [active                ] CIK=1865389 | Nuveen Variable Rate Preferred & Income Fund 
+2026-03-09 06:40:18,069 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:18,069 | INFO |   NPV      [active                ] CIK=897421 | Nuveen Virginia Quality Municipal Income Fund
+2026-03-09 06:40:18,611 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:18,611 | INFO |   NQP      [active                ] CIK=870780 | Nuveen Pennsylvania Quality Municipal Income 
+2026-03-09 06:40:19,163 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:19,163 | INFO |   NRK      [active                ] CIK=1195739 | Nuveen New York AMT-Free Quality Municipal In
+2026-03-09 06:40:19,708 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:19,709 | INFO |   NRO      [active                ] CIK=1261166 | Neuberger Real Estate Securities Income Fund 
+2026-03-09 06:40:20,244 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:20,245 | INFO |   NUV      [active                ] CIK=812801 | Nuveen Municipal Value Fund, Inc. Common Stoc
+2026-03-09 06:40:20,797 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:20,797 | INFO |   NUW      [active                ] CIK=1450445 | Nuveen AMT-Free Municipal Value Fund
+2026-03-09 06:40:21,363 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:21,363 | INFO |   NVG      [active                ] CIK=1090116 | Nuveen AMT-Free Municipal Credit Income Fund
+2026-03-09 06:40:21,937 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:21,937 | INFO |   NXG      [active                ] CIK=1506488 | NXG NextGen Infrastructure Income Fund Common
+2026-03-09 06:40:22,467 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:22,468 | INFO |   NXJ      [active                ] CIK=1087786 | Nuveen New Jersey Qualified Municipal Fund
+2026-03-09 06:40:23,029 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:23,029 | INFO |   NXP      [active                ] CIK=883618 | Nuveen Select Tax Free Income Portfolio Commo
+2026-03-09 06:40:23,564 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:23,565 | INFO |   NZF      [active                ] CIK=1137887 | Nuveen Municipal Credit Income Fund
+2026-03-09 06:40:24,144 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:24,145 | INFO |   OCCI     [active                ] CIK=1716951 | OFS Credit Company, Inc. - Closed End Fund
+2026-03-09 06:40:24,694 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:24,694 | INFO |   OIA      [active                ] CIK=835333 | Invesco Municipal Income Opportunities Trust 
+2026-03-09 06:40:25,239 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:25,239 | INFO |   OPP      [active                ] CIK=1678130 | RiverNorth/DoubleLine Strategic Opportunity F
+2026-03-09 06:40:25,802 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:25,802 | INFO |   OXLC     [active                ] CIK=1495222 | Oxford Lane Capital Corp. - Closed End Fund
+2026-03-09 06:40:26,346 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:26,347 | INFO |   PAI      [active                ] CIK=75398 | Western Asset Investment Grade Income Fund In
+2026-03-09 06:40:26,881 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:26,882 | INFO |   PAXS     [active                ] CIK=1886878 | PIMCO Access Income Fund Common Shares of Ben
+2026-03-09 06:40:27,431 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:27,431 | INFO |   PCF      [active                ] CIK=810943 | High Income Securities Fund Common Stock
+2026-03-09 06:40:28,009 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:28,009 | INFO |   PCM      [active                ] CIK=908187 | PCM Fund, Inc. Common Stock
+2026-03-09 06:40:28,539 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:28,540 | INFO |   PCN      [active                ] CIK=1160990 | Pimco Corporate & Income Strategy Fund Common
+2026-03-09 06:40:29,118 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:29,119 | INFO |   PCQ      [active                ] CIK=1140411 | PIMCO California Municipal Income Fund Common
+2026-03-09 06:40:29,667 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:29,667 | INFO |   PDCC     [active                ] CIK=1998043 | Pearl Diver Credit Company Inc. Common Stock
+2026-03-09 06:40:30,194 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:30,195 | INFO |   PDI      [active                ] CIK=1510599 | PIMCO Dynamic Income Fund Common Stock
+2026-03-09 06:40:30,732 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:30,733 | INFO |   PDO      [active                ] CIK=1798618 | PIMCO Dynamic Income Opportunities Fund Commo
+2026-03-09 06:40:31,309 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:31,309 | INFO |   PDT      [active                ] CIK=855886 | John Hancock Premium Dividend Fund
+2026-03-09 06:40:31,860 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:31,861 | INFO |   PDX      [active                ] CIK=1756908 | PIMCO Dynamic Income Strategy Fund Common Sha
+2026-03-09 06:40:32,424 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:32,424 | INFO |   PEO      [active                ] CIK=216851 | Adams Natural Resources Fund, Inc. Common Sto
+2026-03-09 06:40:33,016 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:33,017 | INFO |   PFD      [active                ] CIK=868578 | Flaherty & Crumrine Preferred and Income Fund
+2026-03-09 06:40:33,579 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:33,580 | INFO |   PFL      [active                ] CIK=1244183 | PIMCO Income Strategy Fund Shares of Benefici
+2026-03-09 06:40:34,137 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:34,138 | INFO |   PFN      [active                ] CIK=1296250 | PIMCO Income Strategy Fund II
+2026-03-09 06:40:34,713 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:34,713 | INFO |   PFO      [active                ] CIK=882071 | Flaherty & Crumrine Preferred and Income Oppo
+2026-03-09 06:40:35,309 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:35,310 | INFO |   PGP      [active                ] CIK=1318025 | Pimco Global StocksPlus & Income Fund Common 
+2026-03-09 06:40:35,866 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:35,866 | INFO |   PGZ      [active                ] CIK=1557523 | Principal Real Estate Income Fund Common Shar
+2026-03-09 06:40:36,398 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:36,399 | INFO |   PHK      [active                ] CIK=1219360 | Pimco High Income Fund
+2026-03-09 06:40:36,971 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:36,972 | INFO |   PIM      [active                ] CIK=830622 | Putnam Master Intermediate Income Trust Commo
+2026-03-09 06:40:37,532 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:37,533 | INFO |   PML      [active                ] CIK=1170299 | Pimco Municipal Income Fund II Common Shares 
+2026-03-09 06:40:38,072 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:38,073 | INFO |   PMM      [active                ] CIK=844790 | Putnam Managed Municipal Income Trust Common 
+2026-03-09 06:40:38,616 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:38,616 | INFO |   PMO      [active                ] CIK=900422 | Putnam Municipal Opportunities Trust Common S
+2026-03-09 06:40:39,178 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:39,179 | INFO |   PNI      [active                ] CIK=1170311 | Pimco New York Municipal Income Fund II Commo
+2026-03-09 06:40:39,720 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:39,721 | INFO |   PPT      [active                ] CIK=827773 | Putnam Premier Income Trust Common Stock
+2026-03-09 06:40:40,295 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:40,295 | INFO |   PSF      [active                ] CIK=1498612 | Cohen & Steers Select Preferred and Income Fu
+2026-03-09 06:40:40,846 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:40,847 | INFO |   PTA      [active                ] CIK=1793882 | Cohen & Steers Tax-Advantaged Preferred Secur
+2026-03-09 06:40:41,368 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:41,368 | INFO |   PTY      [active                ] CIK=1190935 | Pimco Corporate & Income Opportunity Fund
+2026-03-09 06:40:41,930 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:41,931 | INFO |   QQQX     [active                ] CIK=1608741 | Nuveen NASDAQ 100 Dynamic Overwrite Fund - Cl
+2026-03-09 06:40:42,463 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:42,463 | INFO |   RA       [active                ] CIK=1655099 | Brookfield Real Assets Income Fund Inc. Commo
+2026-03-09 06:40:42,994 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:42,994 | INFO |   RCG      [active                ] CIK=919567 | RENN Fund, Inc Common Stock
+2026-03-09 06:40:43,554 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:43,554 | INFO |   RCS      [active                ] CIK=916183 | PIMCO Strategic Income Fund, Inc.
+2026-03-09 06:40:44,101 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:44,102 | INFO |   RFI      [active                ] CIK=891290 | Cohen & Steers Total Return Realty Fund, Inc.
+2026-03-09 06:40:44,660 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:44,660 | INFO |   RFM      [active                ] CIK=1790177 | RiverNorth Flexible Municipal Income Fund, In
+2026-03-09 06:40:45,192 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:45,192 | INFO |   RFMZ     [active                ] CIK=1817159 | RiverNorth Flexible Municipal Income Fund II,
+2026-03-09 06:40:45,744 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:45,744 | INFO |   RGT      [active                ] CIK=1514490 | Royce Global Trust, Inc. Common Stock
+2026-03-09 06:40:46,281 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:46,281 | INFO |   RIV      [active                ] CIK=1501072 | RiverNorth Opportunities Fund, Inc. Common St
+2026-03-09 06:40:46,815 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:46,816 | INFO |   RLTY     [active                ] CIK=1866874 | Cohen & Steers Real Estate Opportunities and 
+2026-03-09 06:40:47,350 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:47,350 | INFO |   RMI      [active                ] CIK=1746967 | RiverNorth Opportunistic Municipal Income Fun
+2026-03-09 06:40:47,876 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:47,876 | INFO |   RMM      [active                ] CIK=1771226 | RiverNorth Managed Duration Municipal Income 
+2026-03-09 06:40:48,404 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:48,404 | INFO |   RMMZ     [active                ] CIK=1870833 | RiverNorth Managed Duration Municipal Income 
+2026-03-09 06:40:48,920 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:48,921 | INFO |   RMT      [active                ] CIK=912147 | Royce Micro-Cap Trust, Inc. Common Stock
+2026-03-09 06:40:49,459 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:49,460 | INFO |   RNP      [active                ] CIK=1224450 | Cohen & Steers REIT and Preferred and Income 
+2026-03-09 06:40:49,992 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:49,993 | INFO |   RQI      [active                ] CIK=1157842 | Cohen & Steers Quality Income Realty Fund Inc
+2026-03-09 06:40:50,552 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:50,553 | INFO |   RSF      [active                ] CIK=1644771 | RiverNorth Capital and Income Fund Common Sto
+2026-03-09 06:40:51,079 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:51,080 | INFO |   RVT      [active                ] CIK=804116 | Royce Small-Cap Trust, Inc. Common Stock
+2026-03-09 06:40:51,607 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:51,607 | INFO |   SABA     [active                ] CIK=828803 | Saba Capital Income & Opportunities Fund II S
+2026-03-09 06:40:52,221 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:52,221 | INFO |   SBI      [active                ] CIK=882300 | Western Asset Intermediate Muni Fund Inc Comm
+2026-03-09 06:40:52,787 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:52,788 | INFO |   SCD      [active                ] CIK=1270131 | LMP Capital and Income Fund Inc. Common Stock
+2026-03-09 06:40:53,341 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:53,341 | INFO |   SDHY     [active                ] CIK=1812923 | PGIM Short Duration High Yield Opportunities 
+2026-03-09 06:40:53,873 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:53,873 | INFO |   SOR      [active                ] CIK=91847 | Source Capital, Inc. Cmn Shs of BI
+2026-03-09 06:40:54,437 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:54,437 | INFO |   SPE      [active                ] CIK=897802 | Special Opportunities Fund, Inc Common Stock
+2026-03-09 06:40:54,985 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:54,985 | INFO |   SPMC     [active                ] CIK=1930147 | Sound Point Meridian Capital, Inc. Common Sto
+2026-03-09 06:40:55,505 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:55,505 | INFO |   SPXX     [active                ] CIK=1338561 | Nuveen S&P 500 Dynamic Overwrite Fund
+2026-03-09 06:40:56,076 | INFO |     [MERGER] N-14 8C/A filed 2025-12-22: AMENDMENT TO N-14 8C/A
+2026-03-09 06:40:56,076 | INFO |   SRV      [active                ] CIK=1400897 | NXG Cushing Midstream Energy Fund Common Shar
+2026-03-09 06:40:56,638 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:56,639 | INFO |   STEW     [active                ] CIK=102426 | SRH Total Return Fund, Inc. Common Stock
+2026-03-09 06:40:57,203 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:57,204 | INFO |   STK      [active                ] CIK=1471420 | Columbia Seligman Premium Technology Growth F
+2026-03-09 06:40:57,759 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:57,759 | INFO |   SWZ      [active                ] CIK=813623 | Total Return Securities Fund Common Stock
+2026-03-09 06:40:58,352 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:58,352 | INFO |   TBLD     [active                ] CIK=1820378 | Thornburg Income Builder Opportunities Trust 
+2026-03-09 06:40:58,882 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:58,883 | INFO |   TDF      [active                ] CIK=919893 | Templeton Dragon Fund, Inc. Common Stock
+2026-03-09 06:40:59,422 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:59,422 | INFO |   TEI      [active                ] CIK=909112 | Templeton Emerging Markets Income Fund, Inc. 
+2026-03-09 06:40:59,978 | INFO |     No action signals in last 120 days
+2026-03-09 06:40:59,978 | INFO |   THQ      [active                ] CIK=1604522 | abrdn Healthcare Opportunities Fund Shares of
+2026-03-09 06:41:00,537 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:00,538 | INFO |   THW      [active                ] CIK=1635977 | abrdn World Healthcare Fund Shares of Benefic
+2026-03-09 06:41:01,068 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:01,068 | INFO |   TSI      [active                ] CIK=809559 | TCW Strategic Income Fund, Inc. Common Stock
+2026-03-09 06:41:01,611 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:01,611 | INFO |   TWN      [active                ] CIK=804123 | Taiwan Fund, Inc. (The) Common Stock
+2026-03-09 06:41:02,143 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:02,144 | INFO |   TY       [active                ] CIK=99614 | Tri Continental Corporation Common Stock
+2026-03-09 06:41:02,703 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:02,704 | INFO |   TYG      [active                ] CIK=1268533 | Tortoise Energy Infrastructure Corporation Co
+2026-03-09 06:41:03,253 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:03,253 | INFO |   USA      [active                ] CIK=799195 | Liberty All-Star Equity Fund Common Stock
+2026-03-09 06:41:03,797 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:03,797 | INFO |   UTF      [active                ] CIK=1275617 | Cohen & Steers Infrastructure Fund, Inc Commo
+2026-03-09 06:41:04,338 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:04,338 | INFO |   UTG      [active                ] CIK=1263994 | Reaves Utility Income Fund Common Shares of B
+2026-03-09 06:41:04,906 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:04,906 | INFO |   VBF      [active                ] CIK=5094 | Invesco Bond Fund Common Stock
+2026-03-09 06:41:05,487 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:05,488 | INFO |   VCV      [active                ] CIK=895531 | Invesco California Value Municipal Income Tru
+2026-03-09 06:41:06,096 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:06,096 | INFO |   VFL      [active                ] CIK=895574 | abrdn National Municipal Income Fund Common S
+2026-03-09 06:41:06,634 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:06,634 | INFO |   VGI      [active                ] CIK=1528811 | Virtus Global Multi-Sector Income Fund Common
+2026-03-09 06:41:07,155 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:07,155 | INFO |   VGM      [active                ] CIK=880892 | Invesco Trust for Investment Grade Municipals
+2026-03-09 06:41:07,718 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:07,719 | INFO |   VKI      [active                ] CIK=908993 | Invesco Advantage Municipal Income Trust II C
+2026-03-09 06:41:08,273 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:08,274 | INFO |   VKQ      [active                ] CIK=877463 | Invesco Municipal Trust Common Stock
+2026-03-09 06:41:08,824 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:08,825 | INFO |   VLT      [active                ] CIK=846671 | Invesco High Income Trust II
+2026-03-09 06:41:09,391 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:09,392 | INFO |   VMO      [active                ] CIK=884152 | Invesco Municipal Opportunity Trust Common St
+2026-03-09 06:41:09,948 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:09,948 | INFO |   VPV      [active                ] CIK=895528 | Invesco Pennsylvania Value Municipal Income T
+2026-03-09 06:41:10,485 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:10,485 | INFO |   VTN      [active                ] CIK=883265 | Invesco Trust for Investment Grade New York M
+2026-03-09 06:41:11,045 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:11,046 | INFO |   VVR      [active                ] CIK=1059386 | Invesco Senior Income Trust Common Stock (DE)
+2026-03-09 06:41:11,611 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:11,612 | INFO |   WDI      [active                ] CIK=1819559 | Western Asset Diversified Income Fund Common 
+2026-03-09 06:41:12,128 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:12,128 | INFO |   WEA      [active                ] CIK=1163792 | Western Asset Bond Fund Share of Beneficial I
+2026-03-09 06:41:12,680 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:12,681 | INFO |   WIA      [active                ] CIK=1254370 | Western Asset Inflation-Linked Income Fund
+2026-03-09 06:41:13,253 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:13,254 | INFO |   WIW      [active                ] CIK=1267902 | Western Asset Inflation-Linked Opportunities 
+2026-03-09 06:41:13,802 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:13,803 | INFO |   XFLT     [active                ] CIK=1703079 | XAI Octagon Floating Rate & Alternative Incom
+2026-03-09 06:41:14,351 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:14,351 | INFO |   ZTR      [active                ] CIK=836412 | Virtus Total Return Fund Inc.
+2026-03-09 06:41:14,934 | INFO |     No action signals in last 120 days
+2026-03-09 06:41:14,935 | INFO | 
+2026-03-09 06:41:14,935 | INFO | ============================================================
+2026-03-09 06:41:14,936 | INFO | MONITOR COMPLETE
+2026-03-09 06:41:14,936 | INFO |   New pending_merger:    9
+2026-03-09 06:41:14,936 | INFO |   New pending_delisting: 0
+2026-03-09 06:41:14,937 | INFO |   Escalated to merged:   0
+2026-03-09 06:41:14,937 | INFO |   Escalated to inactive: 0
+2026-03-09 06:41:14,938 | INFO |   No action:             355
+2026-03-09 06:41:14,938 | INFO | ============================================================
+2026-03-09 06:41:14,939 | INFO | Dry-run complete -- no changes written.

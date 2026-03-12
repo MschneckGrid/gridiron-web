@@ -1,0 +1,105 @@
+2026-03-08 13:43:23,687 | INFO | === DRY-RUN MODE — no database writes ===
+2026-03-08 13:43:23,688 | INFO | backfill_ciks.py | 2026-03-08 | dry_run=True
+2026-03-08 13:43:24,117 | INFO | Found 47 active tickers with null CIK
+2026-03-08 13:43:24,118 | INFO | [  1/47] GDO      | Western Asset Global Corporate Opportuni
+2026-03-08 13:43:29,360 | INFO | [  2/47] JMM      | Nuveen Multi-Market Income Fund (MA)
+2026-03-08 13:43:31,082 | INFO | [  3/47] GLV      | Clough Global Dividend and Income Fund C
+2026-03-08 13:43:32,368 | INFO | [  4/47] GCV      | Gabelli Convertible and Income Securitie
+2026-03-08 13:43:33,652 | INFO | [  5/47] RCG      | RENN Fund, Inc Common Stock
+2026-03-08 13:43:34,924 | INFO | [  6/47] DMA      | Destra Multi-Alternative Fund Common Sto
+2026-03-08 13:43:36,302 | INFO | [  7/47] NMS      | Nuveen Minnesota Quality Municipal Incom
+2026-03-08 13:43:37,646 | INFO | [  8/47] FCO      | abrdn Global Income Fund, Inc. Common St
+2026-03-08 13:43:39,028 | INFO | [  9/47] GDL      | GDL Fund, The Common Shares of Beneficia
+2026-03-08 13:43:40,408 | INFO | [ 10/47] BHV      | BlackRock Virginia Municipal Bond Trust
+2026-03-08 13:43:41,749 | INFO | [ 11/47] DXYZ     | Destiny Tech100 Inc. Common Stock
+2026-03-08 13:43:43,030 | INFO | [ 12/47] DTF      | DTF Tax-Free Income 2028 Term Fund Inc. 
+2026-03-08 13:43:44,424 | INFO | [ 13/47] CCIF     | Carlyle Credit Income Fund Shares of Ben
+2026-03-08 13:43:45,852 | INFO | [ 14/47] PSLV     | Sprott Physical Silver Trust ETV
+2026-03-08 13:43:48,926 | INFO | [ 15/47] HERZ     | Herzfeld Credit Income Fund, Inc.  - Clo
+2026-03-08 13:43:50,269 | INFO | [ 16/47] RSF      | RiverNorth Capital and Income Fund Commo
+2026-03-08 13:43:51,296 | INFO | [ 17/47] FSSL     | FS Specialty Lending Fund Common Shares 
+2026-03-08 13:43:52,358 | INFO | [ 18/47] SWZ      | Total Return Securities Fund Common Stoc
+2026-03-08 13:43:53,420 | INFO | [ 19/47] NOM      | Nuveen Missouri Quality Municipal Income
+2026-03-08 13:43:54,565 | INFO | [ 20/47] RFM      | RiverNorth Flexible Municipal Income Fun
+2026-03-08 13:43:55,669 | INFO | [ 21/47] MXE      | Mexico Equity and Income Fund, Inc. (The
+2026-03-08 13:43:56,765 | INFO | [ 22/47] RGT      | Royce Global Trust, Inc. Common Stock
+2026-03-08 13:43:57,996 | INFO | [ 23/47] SPPP     | Sprott Physical Platinum and Palladium T
+2026-03-08 13:44:00,803 | INFO | [ 24/47] CMU      | MFS Municipal Income Trust Common Stock
+2026-03-08 13:44:02,827 | INFO | [ 25/47] CIF      | MFS Intermediate High Income Fund Common
+2026-03-08 13:44:09,361 | INFO | [ 26/47] PCM      | PCM Fund, Inc. Common Stock
+2026-03-08 13:44:10,805 | INFO | [ 27/47] OXLC     | Oxford Lane Capital Corp. - Closed End F
+2026-03-08 13:44:12,133 | INFO | [ 28/47] FMY      | First Trust Mortgage Income Fund Common 
+2026-03-08 13:44:13,365 | INFO | [ 29/47] GRF      | Eagle Capital Growth Fund, Inc. Common S
+2026-03-08 13:44:14,702 | INFO | [ 30/47] FMN      | Federated Hermes Premier Municipal Incom
+2026-03-08 13:44:16,119 | INFO | [ 31/47] PDCC     | Pearl Diver Credit Company Inc. Common S
+2026-03-08 13:44:17,340 | INFO | [ 32/47] CFND     | C1 Fund Inc. Common Stock
+2026-03-08 13:44:18,585 | INFO | [ 33/47] PHYS     | Sprott Physical Gold Trust ETV
+2026-03-08 13:44:19,840 | INFO | [ 34/47] VLT      | Invesco High Income Trust II
+2026-03-08 13:44:21,712 | INFO | [ 35/47] EEA      | The European Equity Fund, Inc. Common St
+2026-03-08 13:44:23,288 | INFO | [ 36/47] CXH      | MFS Investment Grade Municipal Trust Com
+2026-03-08 13:44:27,130 | INFO | [ 37/47] IGI      | Western Asset Investment Grade Opportuni
+2026-03-08 13:44:28,756 | INFO | [ 38/47] FXBY     | FOXBY CORP
+2026-03-08 13:44:31,457 | INFO | [ 39/47] PGZ      | Principal Real Estate Income Fund Common
+2026-03-08 13:44:33,037 | INFO | [ 40/47] CEF      | Sprott Physical Gold and Silver Trust Un
+2026-03-08 13:44:34,321 | INFO | [ 41/47] CEV      | Eaton Vance California Municipal Income 
+2026-03-08 13:44:35,581 | INFO | [ 42/47] VGI      | Virtus Global Multi-Sector Income Fund C
+2026-03-08 13:44:36,854 | INFO | [ 43/47] MGF      | MFS Government Markets Income Trust Comm
+2026-03-08 13:44:38,329 | INFO | [ 44/47] EVF      | Eaton Vance Senior Income Trust Common S
+2026-03-08 13:44:39,632 | INFO | [ 45/47] EARN     | Ellington Credit Company Common Shares o
+2026-03-08 13:44:43,391 | INFO | [ 46/47] RMI      | RiverNorth Opportunistic Municipal Incom
+2026-03-08 13:44:45,619 | INFO | [ 47/47] IAE      | Voya Asia Pacific High Dividend Equity I
+2026-03-08 13:44:46,638 | INFO | 
+============================================================
+2026-03-08 13:44:46,639 | INFO | BACKFILL COMPLETE
+2026-03-08 13:44:46,639 | INFO |   Confirmed (CIK resolved): 3
+2026-03-08 13:44:46,639 | INFO |   Ambiguous (manual review): 41
+2026-03-08 13:44:46,639 | INFO |   Not found (manual lookup): 3
+2026-03-08 13:44:46,639 | INFO | ============================================================
+2026-03-08 13:44:46,639 | INFO | 
+AMBIGUOUS — review manually:
+2026-03-08 13:44:46,639 | INFO |   GDO     : ['?', '?', '?']
+2026-03-08 13:44:46,639 | INFO |   JMM     : ['?', '?', '?']
+2026-03-08 13:44:46,639 | INFO |   GLV     : ['?', '?', '?']
+2026-03-08 13:44:46,639 | INFO |   GCV     : ['?', '?', '?']
+2026-03-08 13:44:46,639 | INFO |   RCG     : ['?', '?', '?']
+2026-03-08 13:44:46,639 | INFO |   DMA     : ['?', '?', '?']
+2026-03-08 13:44:46,639 | INFO |   NMS     : ['?', '?', '?']
+2026-03-08 13:44:46,640 | INFO |   FCO     : ['?', '?', '?']
+2026-03-08 13:44:46,640 | INFO |   GDL     : ['?', '?', '?']
+2026-03-08 13:44:46,640 | INFO |   BHV     : ['?', '?', '?']
+2026-03-08 13:44:46,640 | INFO |   DXYZ    : ['?', '?', '?']
+2026-03-08 13:44:46,640 | INFO |   DTF     : ['?', '?', '?']
+2026-03-08 13:44:46,640 | INFO |   CCIF    : ['?', '?', '?']
+2026-03-08 13:44:46,640 | INFO |   RSF     : ['?', '?', '?']
+2026-03-08 13:44:46,640 | INFO |   SWZ     : ['?', '?', '?']
+2026-03-08 13:44:46,640 | INFO |   NOM     : ['?', '?', '?']
+2026-03-08 13:44:46,641 | INFO |   RFM     : ['?', '?', '?']
+2026-03-08 13:44:46,641 | INFO |   MXE     : ['?', '?', '?']
+2026-03-08 13:44:46,641 | INFO |   RGT     : ['?', '?', '?']
+2026-03-08 13:44:46,641 | INFO |   CMU     : ['?', '?', '?']
+2026-03-08 13:44:46,641 | INFO |   CIF     : ['?', '?', '?']
+2026-03-08 13:44:46,642 | INFO |   PCM     : ['?', '?', '?']
+2026-03-08 13:44:46,642 | INFO |   OXLC    : ['?', '?', '?']
+2026-03-08 13:44:46,642 | INFO |   FMY     : ['?', '?', '?']
+2026-03-08 13:44:46,642 | INFO |   GRF     : ['?', '?', '?']
+2026-03-08 13:44:46,642 | INFO |   FMN     : ['?', '?', '?']
+2026-03-08 13:44:46,643 | INFO |   PDCC    : ['?', '?', '?']
+2026-03-08 13:44:46,643 | INFO |   CFND    : ['?', '?', '?']
+2026-03-08 13:44:46,643 | INFO |   VLT     : ['?', '?', '?']
+2026-03-08 13:44:46,643 | INFO |   EEA     : ['?', '?', '?']
+2026-03-08 13:44:46,643 | INFO |   IGI     : ['?', '?', '?']
+2026-03-08 13:44:46,643 | INFO |   FXBY    : ['?', '?', '?']
+2026-03-08 13:44:46,643 | INFO |   PGZ     : ['?', '?', '?']
+2026-03-08 13:44:46,643 | INFO |   CEF     : ['?', '?', '?']
+2026-03-08 13:44:46,643 | INFO |   CEV     : ['?', '?']
+2026-03-08 13:44:46,644 | INFO |   VGI     : ['?', '?', '?']
+2026-03-08 13:44:46,644 | INFO |   MGF     : ['?', '?', '?']
+2026-03-08 13:44:46,644 | INFO |   EVF     : ['?', '?', '?']
+2026-03-08 13:44:46,644 | INFO |   EARN    : ['?', '?', '?']
+2026-03-08 13:44:46,644 | INFO |   RMI     : ['?', '?', '?']
+2026-03-08 13:44:46,644 | INFO |   IAE     : ['?', '?', '?']
+2026-03-08 13:44:46,644 | INFO | 
+NOT FOUND — search EDGAR manually:
+2026-03-08 13:44:46,644 | INFO |   PSLV, SPPP, CXH
+2026-03-08 13:44:46,646 | INFO | 
+Dry-run complete — no changes written.

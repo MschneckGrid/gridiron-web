@@ -1,0 +1,5 @@
+@echo off
+set "SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56aW52eHRpY2d5am9ia3F4eGhsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODk1NTA5MiwiZXhwIjoyMDg0NTMxMDkyfQ.IEgJeC2WcBq1kY7h25cuQLl1J3qs8HsZetErt3ADKC8"
+cd /d "C:\Users\Mike\OneDrive - Gridiron Partners\Gridiron Partners - Shared Documents\Reporting\News"
+"C:\Users\Mike\AppData\Local\Python\pythoncore-3.14-64\python.exe" "C:\Users\Mike\OneDrive - Gridiron Partners\Gridiron Partners - Shared Documents\Reporting\News\edgar_fund_info_v4.py" --skip-existing >> "C:\Users\Mike\OneDrive - Gridiron Partners\Gridiron Partners - Shared Documents\Reporting\News\edgar_monthly.log" 2>&1
+echo Edgar N-2 monthly run completed: %date% %time% >> "C:\Users\Mike\OneDrive - Gridiron Partners\Gridiron Partners - Shared Documents\Reporting\News\edgar_monthly.log"

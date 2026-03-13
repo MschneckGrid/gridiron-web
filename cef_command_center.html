@@ -3122,6 +3122,8 @@ function getDateNDaysAgo(n) {
 
 // ==================== DETAIL VIEW ====================
 let detailChart = null;
+let discChart2 = null;
+let detailPeriod = '3Y';  // default period
 let detailDiscChart = null;
 
 function closeDetail() {
@@ -3170,10 +3172,14 @@ async function openDetail(ticker) {
   console.log('Final name:', refData.name);
   content.innerHTML = buildDetailHTML(ticker, d, refData, history, fundChars, ftStats);
 
-  // Render charts
+  // Store globals for period button re-renders
+  window._detailHistory = history;
+  window._detailInception = refData.inception || null;
+  detailPeriod = '3Y';  // reset to default on each open
+
+  // Render charts via unified renderer (respects detailPeriod)
   if (history.length > 0) {
-    renderPriceNavChart(history, ticker);
-    renderDiscountChart(history, ticker);
+    renderDetailCharts(ticker, history, window._detailInception);
   }
 }
 
@@ -3352,6 +3358,117 @@ function zScoreCard(label, val) {
   return `<div class="detail-zcard" style="background:${bg}"><div class="detail-zcard-label">${label}</div><div class="detail-zcard-value" style="color:${color}">${val.toFixed(2)}</div></div>`;
 }
 
+
+function filterDetailHistory(history, period, inceptionDate) {
+  if (!history || !history.length) return history;
+  const now = new Date(history[history.length - 1].date);
+  let cutoff;
+  if (period === 'INCEP') {
+    cutoff = inceptionDate ? new Date(inceptionDate) : new Date(history[0].date);
+  } else {
+    const yrs = parseInt(period);
+    cutoff = new Date(now);
+    cutoff.setFullYear(cutoff.getFullYear() - yrs);
+  }
+  return history.filter(h => new Date(h.date) >= cutoff);
+}
+
+function setDetailRange(period, ticker, history, inceptionDate) {
+  detailPeriod = period;
+  // update button styles
+  document.querySelectorAll('.detail-range-btn').forEach(b => {
+    b.style.background = b.dataset.period === period ? 'var(--gold)' : 'var(--hover)';
+    b.style.color = b.dataset.period === period ? '#fff' : 'var(--text1)';
+    b.style.borderColor = b.dataset.period === period ? 'var(--gold)' : 'var(--bdr)';
+    b.style.fontWeight = b.dataset.period === period ? '700' : '500';
+  });
+  // re-render both charts
+  renderDetailCharts(ticker, history, inceptionDate);
+}
+
+function renderDetailCharts(ticker, history, inceptionDate) {
+  const filtered = filterDetailHistory(history, detailPeriod, inceptionDate);
+
+  // Price vs NAV chart
+  if (detailChart) { detailChart.destroy(); detailChart = null; }
+  const ctx = document.getElementById('priceNavChart');
+  if (ctx && filtered.length > 0) {
+    detailChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: filtered.map(h => h.date),
+        datasets: [
+          { label: 'Price', data: filtered.map(h => h.price), borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.05)', fill: false, pointRadius: 0, borderWidth: 2, tension: 0.1 },
+          { label: 'NAV',   data: filtered.map(h => h.nav),   borderColor: '#16a34a', backgroundColor: 'rgba(22,163,74,0.05)',  fill: false, pointRadius: 0, borderWidth: 2, tension: 0.1 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'top', labels: { usePointStyle: true, font: { size: 10 } } },
+          tooltip: { callbacks: { label: i => `${i.dataset.label}: $${i.raw?.toFixed(2) ?? '—'}` } }
+        },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8, font: { size: 9, family: "'JetBrains Mono'" } }, grid: { color: 'rgba(128,128,128,0.08)' } },
+          y: { ticks: { callback: v => '$' + v.toFixed(2), font: { size: 9, family: "'JetBrains Mono'" } }, grid: { color: 'rgba(128,128,128,0.08)' } }
+        }
+      }
+    });
+  }
+
+  // Discount history chart
+  if (discChart2) { discChart2.destroy(); discChart2 = null; }
+  const ctx2 = document.getElementById('discountChart');
+  if (ctx2 && filtered.length > 0) {
+    const discFiltered = filtered.filter(h => h.discount != null);
+    const vals = discFiltered.map(h => h.discount * 100);
+    const avg  = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+    discChart2 = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: discFiltered.map(h => h.date),
+        datasets: [
+          {
+            label: 'Discount %',
+            data: vals,
+            segment: {
+              borderColor: ctx => (ctx.p0.parsed.y < 0 && ctx.p1.parsed.y < 0) ? '#b91c1c' :
+                                  (ctx.p0.parsed.y >= 0 && ctx.p1.parsed.y >= 0) ? '#15803d' : '#6366f1'
+            },
+            backgroundColor: 'rgba(99,102,241,0.04)',
+            fill: true,
+            pointRadius: 0,
+            borderWidth: 1.5,
+            tension: 0.1
+          },
+          {
+            label: `Avg ${avg.toFixed(1)}%`,
+            data: discFiltered.map(() => avg),
+            borderColor: 'rgba(100,100,100,0.4)',
+            borderDash: [4, 3],
+            pointRadius: 0,
+            borderWidth: 1,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'top', labels: { usePointStyle: true, font: { size: 10 } } },
+          tooltip: { callbacks: { label: i => `${i.dataset.label}: ${i.raw?.toFixed(2) ?? '—'}%` } }
+        },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8, font: { size: 9, family: "'JetBrains Mono'" } }, grid: { color: 'rgba(128,128,128,0.08)' } },
+          y: { ticks: { callback: v => v.toFixed(1) + '%', font: { size: 9, family: "'JetBrains Mono'" } }, grid: { color: 'rgba(128,128,128,0.08)' } }
+        }
+      }
+    });
+  }
+}
+
 function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
   const name = ref.name || ticker;
   const pct = v => v != null ? (v * 100).toFixed(2) + '%' : '—';
@@ -3384,7 +3501,7 @@ function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
       <div class="detail-sub" style="margin-top:4px;font-size:10px;color:rgba(148,163,184,0.6)">📊 ${dataInfo}</div>
     </div>
 
-    <div class="detail-grid">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0">
       <div class="detail-card"><div class="detail-card-label">Price</div><div class="detail-card-value">${dol(d.price)}</div></div>
       <div class="detail-card"><div class="detail-card-label">NAV</div><div class="detail-card-value">${dol(d.nav)}</div></div>
       <div class="detail-card"><div class="detail-card-label">Discount</div><div class="detail-card-value ${discClass}">${pct(d.discount_pct)}</div></div>
@@ -3392,6 +3509,7 @@ function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
       <div class="detail-card"><div class="detail-card-label">AUM</div><div class="detail-card-value">${fmtAUM(d.aum)}</div></div>
       <div class="detail-card"><div class="detail-card-label">YTD Return</div><div class="detail-card-value ${d.ytd_return!=null?(d.ytd_return<0?'neg':'pos'):''}">${d.ytd_return != null ? (d.ytd_return * 100).toFixed(2) + '%' : '—'}</div></div>
       <div class="detail-card"><div class="detail-card-label">Expense Ratio</div><div class="detail-card-value">${ref.expense_ratio != null ? (parseFloat(ref.expense_ratio) * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Volume</div><div class="detail-card-value">${d.volume != null ? Number(d.volume).toLocaleString() : '—'}</div></div>
     </div>
 
     ${fc && (fc.effective_duration != null || fc.avg_maturity != null || fc.distribution_yield != null || fc.leverage_pct != null || fc.usd_exposure_pct != null) ? `
@@ -3418,8 +3536,8 @@ function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
     </div>
 
     ${stats && (stats.sharpe1y != null || stats.ret1y != null) ? `
-    <div class="detail-section">Risk & Performance (vs AGG)</div>
-    <div class="detail-grid">
+    <div class="detail-section">Risk Metrics (1Y vs AGG)</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0">
       <div class="detail-card"><div class="detail-card-label">1Y Return</div><div class="detail-card-value ${stats.ret1y!=null?(stats.ret1y<0?'neg':'pos'):''}">${stats.ret1y != null ? (stats.ret1y * 100).toFixed(2) + '%' : '—'}</div></div>
       <div class="detail-card"><div class="detail-card-label">3Y Ann Return</div><div class="detail-card-value ${stats.ret3y!=null?(stats.ret3y<0?'neg':'pos'):''}">${stats.ret3y != null ? (stats.ret3y * 100).toFixed(2) + '%' : '—'}</div></div>
       <div class="detail-card"><div class="detail-card-label">Sharpe (1Y)</div><div class="detail-card-value">${stats.sharpe1y != null ? stats.sharpe1y.toFixed(2) : '—'}</div></div>
@@ -3428,8 +3546,10 @@ function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
       <div class="detail-card"><div class="detail-card-label">Alpha (1Y)</div><div class="detail-card-value ${stats.alpha1y!=null?(stats.alpha1y<0?'neg':'pos'):''}">${stats.alpha1y != null ? (stats.alpha1y * 100).toFixed(2) + '%' : '—'}</div></div>
       <div class="detail-card"><div class="detail-card-label">Correlation</div><div class="detail-card-value">${stats.correlation1y != null ? stats.correlation1y.toFixed(2) : '—'}</div></div>
       <div class="detail-card"><div class="detail-card-label">Vol (Ann)</div><div class="detail-card-value">${stats.sdAnn1y != null ? (stats.sdAnn1y * 100).toFixed(1) + '%' : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Max Draw (1Y)</div><div class="detail-card-value neg">${stats.maxdraw1y != null ? (stats.maxdraw1y * 100).toFixed(2) + '%' : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Max Draw (3Y)</div><div class="detail-card-value neg">${stats.maxdraw3y != null ? (stats.maxdraw3y * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Max Draw (1Y)</div><div class="detail-card-value neg">${stats.maxdraw1y != null ? (-Math.abs(stats.maxdraw1y) * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Max Draw (3Y)</div><div class="detail-card-value neg">${stats.maxdraw3y != null ? (-Math.abs(stats.maxdraw3y) * 100).toFixed(2) + '%' : '—'}</div></div>
+      <div class="detail-card" style="opacity:0"></div>
+      <div class="detail-card" style="opacity:0"></div>
     </div>
     ` : ''}
 
@@ -3490,7 +3610,14 @@ function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
       <div class="detail-card"><div class="detail-card-label">Current</div><div class="detail-card-value ${discClass}">${pct(d.discount_pct)}</div></div>
     </div>
 
-    <div class="detail-section">Price vs NAV</div>
+    <div class="detail-section" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Price vs NAV</span>
+      <div style="display:flex;gap:4px">
+        ${['1Y','3Y','5Y','7Y','INCEP'].map(p => `<button class="detail-range-btn" data-period="${p}"
+          onclick="setDetailRange('${p}','${ticker}',_detailHistory,_detailInception)"
+          style="padding:3px 10px;font-size:10px;font-weight:${p==='3Y'?'700':'500'};font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:4px;border:1px solid ${p==='3Y'?'var(--gold)':'var(--bdr)'};background:${p==='3Y'?'var(--gold)':'var(--hover)'};color:${p==='3Y'?'#fff':'var(--text1)'};transition:all .15s">${p}</button>`).join('')}
+      </div>
+    </div>
     <div class="chart-container"><canvas id="priceNavChart"></canvas></div>
 
     <div class="detail-section">Discount History</div>
@@ -3506,131 +3633,7 @@ function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
   `;
 }
 
-function renderPriceNavChart(history, ticker) {
-  const ctx = document.getElementById('priceNavChart');
-  if (!ctx) return;
-  const hasBoth = history.some(h => h.nav != null);
-  const labels = history.map(h => h.date);
-  const datasets = [{
-    label: 'Price',
-    data: history.map(h => h.price),
-    borderColor: '#2563eb',
-    backgroundColor: 'rgba(37,99,235,0.08)',
-    fill: false,
-    pointRadius: 0,
-    borderWidth: 2,
-    tension: 0.1
-  }];
-  if (hasBoth) {
-    datasets.push({
-      label: 'NAV',
-      data: history.map(h => h.nav),
-      borderColor: '#16a34a',
-      backgroundColor: 'rgba(22,163,74,0.08)',
-      fill: false,
-      pointRadius: 0,
-      borderWidth: 2,
-      tension: 0.1
-    });
-  }
-  detailChart = new Chart(ctx, {
-    type: 'line',
-    data: { labels, datasets },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { position: 'top', labels: { usePointStyle: true, font: { size: 11, family: "'DM Sans'" } } },
-        tooltip: {
-          callbacks: {
-            title: items => items[0]?.label || '',
-            label: item => item.dataset.label + ': $' + (item.raw?.toFixed(2) ?? '—')
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { maxTicksLimit: 12, font: { size: 9, family: "'JetBrains Mono'" } },
-          grid: { color: 'rgba(128,128,128,0.08)' }
-        },
-        y: {
-          ticks: { callback: v => '$' + v.toFixed(2), font: { size: 10, family: "'JetBrains Mono'" } },
-          grid: { color: 'rgba(128,128,128,0.08)' }
-        }
-      }
-    }
-  });
-}
 
-function renderDiscountChart(history, ticker) {
-  const ctx = document.getElementById('discountChart');
-  if (!ctx) return;
-  const discData = history.filter(h => h.discount != null);
-  if (discData.length === 0) return;
-  const labels = discData.map(h => h.date);
-  const values = discData.map(h => h.discount * 100);
-
-  // Compute average for reference line
-  const avg = values.reduce((s,v) => s + v, 0) / values.length;
-
-  detailDiscChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Discount %',
-          data: values,
-          borderColor: values.map(v => v < 0 ? '#b91c1c' : '#16a34a'),
-          segment: { borderColor: ctx2 => (ctx2.p0.parsed.y < 0 && ctx2.p1.parsed.y < 0) ? '#b91c1c' : (ctx2.p0.parsed.y >= 0 && ctx2.p1.parsed.y >= 0) ? '#16a34a' : '#888',  },
-          backgroundColor: 'rgba(37,99,235,0.05)',
-          fill: true,
-          pointRadius: 0,
-          borderWidth: 1.5,
-          tension: 0.1
-        },
-        {
-          label: 'Average (' + avg.toFixed(2) + '%)',
-          data: Array(labels.length).fill(avg),
-          borderColor: 'rgba(128,128,128,0.5)',
-          borderDash: [5, 3],
-          pointRadius: 0,
-          borderWidth: 1,
-          fill: false
-        },
-        {
-          label: 'Par (0%)',
-          data: Array(labels.length).fill(0),
-          borderColor: 'rgba(128,128,128,0.3)',
-          borderDash: [2, 2],
-          pointRadius: 0,
-          borderWidth: 1,
-          fill: false
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { position: 'top', labels: { usePointStyle: true, font: { size: 11, family: "'DM Sans'" } } },
-        tooltip: { callbacks: { label: item => item.dataset.label + ': ' + item.raw?.toFixed(2) + '%' } }
-      },
-      scales: {
-        x: {
-          ticks: { maxTicksLimit: 12, font: { size: 9, family: "'JetBrains Mono'" } },
-          grid: { color: 'rgba(128,128,128,0.08)' }
-        },
-        y: {
-          ticks: { callback: v => v.toFixed(1) + '%', font: { size: 10, family: "'JetBrains Mono'" } },
-          grid: { color: 'rgba(128,128,128,0.08)' }
-        }
-      }
-    }
-  });
-}
 
 // Keyboard handler for detail modal
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });

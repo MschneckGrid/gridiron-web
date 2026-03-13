@@ -1137,6 +1137,13 @@ thead th.f-hdr { background:#fdf8ec; border-bottom-color:#92700a; }
 <div class="col-legend" id="colLegend" style="display:none"></div>
 <script>
 // ===== MASTER TAB SWITCHING =====
+function fmtEngineDate(iso){
+  if(!iso) return '';
+  try {
+    const d = new Date(iso);
+    return 'Engine: '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+  } catch(e){ return iso; }
+}
 function switchMasterTab(tab, el) {
   document.querySelectorAll('.master-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
@@ -2301,7 +2308,7 @@ async function loadDashboard() {
     } else {
       document.getElementById('ftConfigBar').classList.remove('hidden');
       document.getElementById('lastUpdated').textContent = `Data as of: ${maxDate}  ·  ${allData.length} funds  ·  Add FastTrack key for YTD data`;
-      document.getElementById('masterStatus').textContent = 'Dashboard: ' + allData.length + ' funds · as of ' + maxDate + (typeof DATA !== 'undefined' && DATA ? ' · Engine ✓' : ' · Load engine JSON →') + ' · BDC tab →';
+      document.getElementById('masterStatus').textContent = 'Dashboard: ' + allData.length + ' funds · as of ' + maxDate + (typeof DATA !== 'undefined' && DATA ? ' · Engine ✓' : ' · Load engine JSON →');
     }
 
   } catch(err) {
@@ -2808,7 +2815,17 @@ async function refreshFromFastTrack() {
       status.textContent = `Wrote ${upserted}/${rows.length} to Supabase...`;
     }
     
-    // 6. Update adj_price for recent dates
+    // 6. Refresh materialized view so dashboard sees fresh prices immediately
+    status.textContent = 'Refreshing price view...';
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/rpc/refresh_cef_latest`, {
+        method: 'POST',
+        headers: { ...hdrs(), 'Content-Type': 'application/json' },
+        body: '{}'
+      });
+    } catch(e) { console.warn('Mat view refresh error:', e); }
+
+    // 7. Update adj_price for recent dates
     status.textContent = 'Updating adjusted prices...';
     try {
       const adjR = await fetch(`${FT_BASE}/data`, {
@@ -3849,7 +3866,7 @@ function renderModelTable(){if(!MODEL)return;const p=getParams();const SIG_ORD={
 const aggD=MODEL.coreDollar*p.aggSplit;const bndD=MODEL.coreDollar*p.bndSplit;document.getElementById('modelFoot').innerHTML='<tr style="font-weight:700;background:rgba(92,141,201,0.06)"><td>AGG</td><td><span style="font-size:10px;color:var(--blue)">CORE</span></td><td></td><td style="text-align:right">'+(MODEL.corePct*p.aggSplit*100).toFixed(2)+'%</td><td style="text-align:right">$'+fmt$(aggD)+'</td><td colspan="5"></td></tr><tr style="font-weight:700;background:rgba(92,141,201,0.06)"><td>BND</td><td><span style="font-size:10px;color:var(--blue)">CORE</span></td><td></td><td style="text-align:right">'+(MODEL.corePct*p.bndSplit*100).toFixed(2)+'%</td><td style="text-align:right">$'+fmt$(bndD)+'</td><td colspan="5"></td></tr><tr style="font-weight:700;background:rgba(0,0,0,0.03)"><td>CASH</td><td></td><td></td><td style="text-align:right">'+(MODEL.cashPct*100).toFixed(2)+'%</td><td style="text-align:right">$'+fmt$(MODEL.cashDollar)+'</td><td colspan="5"></td></tr>';
 
 renderLiquidity();renderADVOverrides();
-document.getElementById('masterStatus').textContent='Dashboard ✓ · Engine: '+DATA.total_funds_analyzed+' funds · '+(DATA.all_signals.filter(s=>s.blended_score>=70).length)+' high-conviction · '+DATA.generated_at+' · BDC tab →';}
+document.getElementById('masterStatus').textContent='Dashboard ✓ · Engine: '+DATA.total_funds_analyzed+' funds · '+(DATA.all_signals.filter(s=>s.blended_score>=70).length)+' high-conviction · '+fmtEngineDate(DATA.generated_at);}
 
 // ═══ LIQUIDITY TAB ═══
 let LIQ_DATA=[];

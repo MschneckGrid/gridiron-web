@@ -3272,9 +3272,22 @@ async function fetchFTStats(ticker, bench) {
     const data = await r.json();
     if (data.results && data.results[0] && !data.results[0].error) {
       const item = data.results[0];
-      console.log('FT stats for', ticker, ':', JSON.stringify(item).substring(0, 600));
+      // Expand log to diagnose maxdraw path
+      console.log('FT stats for', ticker, ':', JSON.stringify(item).substring(0, 2000));
       const p1y = item.periods?.['1y'] || {};
       const p3y = item.periods?.['3y'] || {};
+      // maxdraw: try multiple known FT response paths
+      const md1y = p1y.maxdraw?.value
+                ?? p1y.risk?.downside?.max_drawdown
+                ?? p1y.risk?.drawdown?.max_drawdown
+                ?? p1y.statistics?.max_drawdown
+                ?? null;
+      const md3y = p3y.maxdraw?.value
+                ?? p3y.risk?.downside?.max_drawdown
+                ?? p3y.risk?.drawdown?.max_drawdown
+                ?? p3y.statistics?.max_drawdown
+                ?? null;
+      console.log('maxdraw raw — 1y:', md1y, '3y:', md3y, '| p1y keys:', Object.keys(p1y));
       return {
         ret1y: p1y.returns?.total,
         ret3y: p3y.returns?.annualized_market,
@@ -3284,8 +3297,8 @@ async function fetchFTStats(ticker, bench) {
         alpha1y: p1y.risk?.market_risk?.alpha,
         correlation1y: p1y.risk?.market_risk?.correlation,
         sdAnn1y: p1y.risk?.volatility?.sd_annualized,
-        maxdraw1y: p1y.maxdraw?.value,
-        maxdraw3y: p3y.maxdraw?.value,
+        maxdraw1y: typeof md1y === 'number' ? md1y : null,
+        maxdraw3y: typeof md3y === 'number' ? md3y : null,
         sortino1y: p1y.risk?.risk_adjusted_performance?.sortino_ratio,
         ulcer1y: p1y.risk?.volatility?.ulcer_index,
         pricing: item.shared_data?.pricing || {},

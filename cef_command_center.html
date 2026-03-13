@@ -4837,7 +4837,7 @@ async function loadEIDashboard(cls) {
   const badgeId = lc + 'CountBadge';
   try {
     document.getElementById(ovId).innerHTML = '<div class="spinner"></div><div class="loading-text">LOADING ' + cls + ' DATA...</div>';
-    const rows = await sf('ei_dashboard_latest?asset_class=eq.' + cls + '&select=*');
+    const rows = await sf('equity_income_latest_with_zscores?asset_class=eq.' + cls + '&select=*');
     const arr = rows.map(r => ({
       ticker: r.ticker, fund_name: r.fund_name || r.ticker,
       sector: r.sector || '—', sub_sector: r.sub_sector || '—',

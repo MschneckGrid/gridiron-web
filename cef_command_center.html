@@ -3167,9 +3167,16 @@ async function openDetail(ticker) {
   history = history.filter(h => h.price != null && h.nav != null);
   console.log('Detail history for', ticker, ':', history.length, 'clean rows from Supabase');
 
+  // Compute maxdraw from price history BEFORE rendering (FT API returns it inconsistently)
+  const md1y = calcMaxDrawdown(history, 1);
+  const md3y = calcMaxDrawdown(history, 3);
+  if (md1y !== null) ftStats.maxdraw1y = md1y;
+  if (md3y !== null) ftStats.maxdraw3y = md3y;
+
   // Build the detail content - reference has no name, get it from /data response
   if (!refData.name) refData.name = ftName;
   console.log('Final name:', refData.name);
+  console.log('maxdraw computed — 1y:', md1y, '3y:', md3y);
   content.innerHTML = buildDetailHTML(ticker, d, refData, history, fundChars, ftStats);
 
   // Store globals for period button re-renders
@@ -3482,6 +3489,24 @@ function renderDetailCharts(ticker, history, inceptionDate) {
   }
 }
 
+
+function calcMaxDrawdown(history, years) {
+  // Filter to period
+  if (!history || history.length === 0) return null;
+  const cutoff = new Date(history[history.length - 1].date);
+  cutoff.setFullYear(cutoff.getFullYear() - years);
+  const slice = history.filter(h => h.price != null && new Date(h.date) >= cutoff);
+  if (slice.length < 5) return null;
+  let peak = slice[0].price;
+  let maxDD = 0;
+  for (const h of slice) {
+    if (h.price > peak) peak = h.price;
+    const dd = (h.price - peak) / peak;
+    if (dd < maxDD) maxDD = dd;
+  }
+  return maxDD; // negative number, e.g. -0.183
+}
+
 function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
   const name = ref.name || ticker;
   const pct = v => v != null ? (v * 100).toFixed(2) + '%' : '—';
@@ -3548,7 +3573,7 @@ function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
       ${zScoreCard('10 Yr', d.z10y)}
     </div>
 
-    ${stats && (stats.sharpe1y != null || stats.ret1y != null) ? `
+    ${stats ? `
     <div class="detail-section">Risk Metrics (1Y vs AGG)</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0">
       <div class="detail-card"><div class="detail-card-label">1Y Return</div><div class="detail-card-value ${stats.ret1y!=null?(stats.ret1y<0?'neg':'pos'):''}">${stats.ret1y != null ? (stats.ret1y * 100).toFixed(2) + '%' : '—'}</div></div>

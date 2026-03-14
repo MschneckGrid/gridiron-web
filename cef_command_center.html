@@ -1414,7 +1414,7 @@ const SECTORS = {
   BME:'Healthcare',BMEZ:'Healthcare',GRX:'Healthcare',HQH:'Healthcare',HQL:'Healthcare',THQ:'Healthcare',
   THW:'Healthcare',
   BGH:'Low Duration',BLW:'Low Duration',ERC:'Low Duration',EVG:'Low Duration',EVV:'Low Duration',FTF:'Low Duration',
-  BKT:'MBB',DMO:'MBB',EARN:'MBB',JLS:'MBB',RA:'MBB',RCS:'MBB',
+  BKT:'MBB',DMO:'MBB',JLS:'MBB',RA:'MBB',RCS:'MBB',
   EMO:'MLPs',KYN:'MLPs',NML:'MLPs',SRV:'MLPs',TYG:'MLPs',
   AFB:'Municipal',BBN:'Municipal',BMN:'Municipal',BTT:'Municipal',
   CXE:'Municipal',DMB:'Municipal',DSM:'Municipal',EIM:'Municipal',EOT:'Municipal',ETX:'Municipal',
@@ -1463,7 +1463,7 @@ const BENCHMARKS = {
   DBL:'BBG-Z',DFP:'SP-PS',DHF:'BBG-Z',DHY:'BBG-Z',DIAX:'SP-DA',DLY:'BBG-Z',DMB:'BBM-U',DMO:'BBG-S',
   DNP:'BBG-',DPG:'SS-U',DSL:'BBG-Z',DSM:'BBM-U',DSU:'BBG-Z',EAD:'BBG-Z',ECAT:'SP-DA',ECC:'BBG-Z',
   ECF:'SP-DA',EDD:'BEM-A',EDF:'BBG-',EFR:'SP-LL',EFT:'SP-LL',EHI:'BEM-A',EIC:'BBG-',EIM:'BBM-U',
-  EMD:'BEM-A',EMF:'M-DEA',EMO:'AMLP',EOD:'SP-DA',EOI:'SP-DA',EOS:'SP-DA',EOT:'BBM-U',EARN:'BBG-S',ERC:'BBG-',
+  EMD:'BEM-A',EMF:'M-DEA',EMO:'AMLP',EOD:'SP-DA',EOI:'SP-DA',EOS:'SP-DA',EOT:'BBM-U',ERC:'BBG-',
   ERH:'BBG-Z',ETB:'SP-DA',ETG:'DJ-DS',ETJ:'SP-DA',ETO:'SP-DA',ETV:'SP-DA',ETW:'SP-DA',ETX:'BBM-U',
   ETY:'SP-DA',EVG:'BBG-',EVN:'BBM-U',EVT:'DJ-DS',EVV:'BBG-',EXG:'SP-DA',FAX:'BEM-A',FCT:'SP-LL',
   FFA:'SP-DA',FFC:'SP-PS',FINS:'BBG-',FLC:'SP-DA',FOF:'SP-DA',FPF:'SP-PS',FRA:'SP-LL',FSCO:'BBG-Z',
@@ -1500,7 +1500,7 @@ const FI_TICKERS = new Set([
   'ACP','ACV','AFB','ARDC','AVK','AWF','BBN','BGB','BGH','BGT','BGX','BHK',
   'BIT','BKT','BLW','BMN','BRW','BSL','BTT','BTZ','BWG','CCD',
   'CHI','CHY','CIK','CXE','DBL','DFP','DHF','DHY','DLY','DMB','DMO','DNP',
-  'DSL','DSM','DSU','EAD','EARN','ECC','EDD','EDF','EFR','EFT','EHI','EIC','EIM',
+  'DSL','DSM','DSU','EAD','ECC','EDD','EDF','EFR','EFT','EHI','EIC','EIM',
   'EMD','EOT','ERC','ERH','ETX','EVG','EVN','EVV','FAX','FCT','FFC','FINS',
   'FPF','FRA','FSCO','FTF','FTHY','GBAB','GHY','GOF','HFRO','HIO','HIX','HPF',
   'HPI','HPS','HYI','HYT','IIM','IQI','ISD','JFR','JGH','JHS','JLS','JPC',
@@ -1605,7 +1605,6 @@ const DEFAULT_BUYSELL = {
   DMO:{buy:-0.075,sell:-0.045},
   DNP:{buy:-0.05,sell:-0.02},
   DSM:{buy:-0.065,sell:-0.035},
-  EARN:{buy:-0.08,sell:-0.05},
   ECAT:{buy:-0.12,sell:-0.095},
   ECC:{buy:-0.08,sell:-0.05},
   ECF:{buy:-0.13,sell:-0.105},
@@ -1750,7 +1749,7 @@ const DEFAULT_BUYSELL = {
   WEA:{buy:-0.08,sell:-0.05},
   WIA:{buy:-0.08,sell:-0.05},
   WIW:{buy:-0.09,sell:-0.06},
-  XFLT:{buy:-0.075,sell:-0.045},
+  XFLT:{buy:-0.075,sell:-0.045}
 };
 
 // ==================== AUM DATA (CEFConnect, Feb 2026) ====================
@@ -1770,7 +1769,7 @@ const AUM_DATA = {
   'DNP':3852e6,'KTF':362e6,'DSL':1326e6,'DLY':727e6,'DBL':296e6,'DPG':522e6,'ETX':205e6,
   'ECC':604e6,'EIC':274e6,'EOI':845e6,'EOS':1163e6,'EFT':302e6,'EVV':1160e6,'EIM':513e6,'EVN':439e6,
   'EOT':272e6,'ETJ':594e6,'EFR':327e6,'EVG':149e6,'ETG':1779e6,'EVT':1970e6,'ETO':496e6,'ETB':455e6,
-  'ETV':1724e6,'ETY':2392e6,'EXG':2965e6,'ETW':1031e6,'EARN':198e6,'ECF':167e6,'FTHY':518e6,'FSCO':1178e6,
+  'ETV':1724e6,'ETY':2392e6,'EXG':2965e6,'ETW':1031e6,'ECF':167e6,'FTHY':518e6,'FSCO':1178e6,
   'FFA':443e6,'FPF':1154e6,'FCT':258e6,'DFP':448e6,'FFC':810e6,'FLC':188e6,'PFD':154e6,
   'PFO':127e6,'FTF':251e6,'FT':207e6,'GGN':891e6,'GNT':139e6,'GDV':2589e6,'GAB':1957e6,'GGZ':129e6,
   'GLU':126e6,'GRX':151e6,'GGT':154e6,'GUT':540e6,'GAM':1433e6,'GUG':537e6,'GOF':2527e6,'GBAB':424e6,
@@ -1860,7 +1859,7 @@ const NEW_TICKERS = new Set([
   'ACP','AEF','AGD','AIO','ARDC','ASA','ASG','ASGI','BANX','BCAT','BCV','BGX',
   'BME','BMEZ','BMN','BPRE','BRW','BSL','BSTZ','BTX','BWG','BXSY',
   'CAF','CEE','CET','CGO','CIK','CLM','CPZ','CRF','CXE','DFP','DHF','DHY',
-  'DMB','DMO','DNP','ECAT','ECC','EARN','ECF','EDF','EIC','EMF','ERH','ETB','ETO',
+  'DMB','DMO','DNP','ECAT','ECC','ECF','EDF','EIC','EMF','ERH','ETB','ETO',
   'ETX','FCT','FINS','FLC','FOF','FSCO','FT','FTHY','FUND','GF','GGT','GGZ',
   'GLQ','GLU','GNT','GRX','GUG','GUT','HEQ','HFRO','HGLB','HPF','HPI','HPS',
   'IAF','IDE','IFN','IGA','IHD','IIF','IQI','JCE','JFR','JGH','JHI','JHS',
@@ -3727,7 +3726,7 @@ loadFontSize();
 let oppTypeFilter='ALL';
 let DATA=null,MODEL=null,BLOTTER=null,engSortCol='blended_score',engSortDir='desc',selectedTicker=null,acFilter='ALL',acLookup={};
 let advOverrides={},liveADV={};
-const DEAD_TICKERS=new Set(['DXYZ','MAV','MHI','MFL','KMF','CEM','CTR','FEN','FEI','FPL','FMO','PMF','JPS','BFK','MQT','BKN','BTA','FSSL','MVF','MVT','MYD']);
+const DEAD_TICKERS=new Set(['DXYZ','MAV','MHI','MFL','KMF','CEM','CTR','FEN','FEI','FPL','FMO','PMF','JPS','BFK','MQT','BKN','BTA','FSSL','MVF','MVT','MYD','EARN']);
 const SIG_COLORS={STRONG_BUY:'#00a844',BUY:'#2e7d32',HOLD:'#8a9bb5',WAIT:'#e65100',SELL:'#d32f2f',STRONG_SELL:'#b71c1c'};
 const ALERT_COLORS={STRONG_BUY:'#00a844',BUY:'#2e7d32',EXTREME_DISCOUNT:'#6a1b9a',PEER_EXTREME:'#1565c0',VOLUME_SPIKE:'#00838f',REGIME_WARNING:'#e65100',SELL:'#d32f2f',STRONG_SELL:'#b71c1c'};
 const ALL_TABS=['opp','signals','alerts','model','blotter','liquidity'];
@@ -3935,7 +3934,7 @@ if(!trades.length)html='<div style="text-align:center;padding:50px;color:var(--t
 document.getElementById('blotterContent').innerHTML=html;}
 
 // ═══ EXPORTS ═══
-function exportCSV(){if(!MODEL)return;let csv='Ticker,Signal,Score,Weight%,Dollar,Discount%,Z-Score,PeerVal,LiqDays,Sector\n';MODEL.positions.forEach(p=>{csv+=p.ticker+','+p.signal+','+p.score+','+p.pctOfPort.toFixed(3)+','+p.dollar.toFixed(0)+','+(p.discount||'')+','+(p.zscore||'')+','+(p.peer||'')+','+p.liqDays.toFixed(1)+','+p.sector+'\n';});const pp=getParams();csv+='AGG,CORE,,'+((MODEL.corePct*pp.aggSplit)*100).toFixed(3)+','+(MODEL.coreDollar*pp.aggSplit).toFixed(0)+'\n';csv+='BND,CORE,,'+((MODEL.corePct*pp.bndSplit)*100).toFixed(3)+','+(MODEL.coreDollar*pp.bndSplit).toFixed(0)+'\n';csv+='CASH,,,'+((MODEL.cashPct)*100).toFixed(3)+','+MODEL.cashDollar.toFixed(0)+'\n';const b=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='cef_model_GTFI_'+new Date().toISOString().split('T')[0]+'.csv';a.click();}
+function exportCSV(){if(!MODEL)return;let csv='Ticker,Signal,Score,Weight%,Dollar,Discount%,Z-Score,PeerVal,LiqDays,Sector\n';MODEL.positions.forEach(p=>{csv+=p.ticker+','+p.signal+','+p.score+','+p.pctOfPort.toFixed(3)+','+p.dollar.toFixed(0)+','+(p.discount||'')+','+(p.zscore||'')+','+(p.peer||'')+','+p.liqDays.toFixed(1)+','+p.sector+'\n';});const pp=getParams();csv+='AGG,CORE,'+((MODEL.corePct*pp.aggSplit)*100).toFixed(3)+','+(MODEL.coreDollar*pp.aggSplit).toFixed(0)+'\n';csv+='BND,CORE,'+((MODEL.corePct*pp.bndSplit)*100).toFixed(3)+','+(MODEL.coreDollar*pp.bndSplit).toFixed(0)+'\n';csv+='CASH,,'+((MODEL.cashPct)*100).toFixed(3)+','+MODEL.cashDollar.toFixed(0)+'\n';const b=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='cef_model_GTFI_'+new Date().toISOString().split('T')[0]+'.csv';a.click();}
 
 function exportBlotterCSV(){if(!BLOTTER||!BLOTTER.length)return;let csv='Ticker,Action,State,TodayDollar,CurrentPct,TargetPct,Progress,Reason\n';BLOTTER.forEach(t=>{csv+=t.ticker+','+t.action+','+t.state+','+t.todayDollar.toFixed(0)+','+t.curPct+','+t.tgtPct+','+(t.progress*100).toFixed(0)+'%,"'+t.reason+'"\n';});const b=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='cef_daily_blotter_'+new Date().toISOString().split('T')[0]+'.csv';a.click();}
 
@@ -3998,7 +3997,7 @@ const COL_LEGENDS = {
       { color:'#e65100', label:'WAIT', detail:'Score ≥ 65 but momentum NOT confirmed' },
       { color:'#8a9bb5', label:'HOLD', detail:'Score 40–65 or mixed signals' },
       { color:'#d32f2f', label:'SELL', detail:'Score < 40' },
-      { color:'#b71c1c', label:'STRONG SELL', detail:'Score < 25 + negative momentum' },
+      { color:'#b71c1c', label:'STRONG SELL', detail:'Score < 25 + negative momentum' }
     ]
   },
   score: {
@@ -4009,7 +4008,7 @@ const COL_LEGENDS = {
       { color:'#00a844', label:'70–100', detail:'Strong opportunity zone' },
       { color:'#2e7d32', label:'55–69', detail:'Moderate opportunity' },
       { color:'#8a9bb5', label:'40–54', detail:'Neutral / hold territory' },
-      { color:'#d32f2f', label:'0–39', detail:'Weak / avoid' },
+      { color:'#d32f2f', label:'0–39', detail:'Weak / avoid' }
     ]
   },
   blended: {
@@ -4020,7 +4019,7 @@ const COL_LEGENDS = {
       { color:'#00a844', label:'70–100', detail:'High conviction — top allocation weight' },
       { color:'#2e7d32', label:'55–69', detail:'Moderate conviction' },
       { color:'#8a9bb5', label:'40–54', detail:'Low conviction' },
-      { color:'#d32f2f', label:'0–39', detail:'No allocation' },
+      { color:'#d32f2f', label:'0–39', detail:'No allocation' }
     ]
   },
   fv_score: {
@@ -4032,7 +4031,7 @@ const COL_LEGENDS = {
       { color:'#2e7d32', label:'50–79', detail:'Between buy and sell, closer to buy' },
       { color:'#f9a825', label:'20–49', detail:'Between buy and sell, closer to sell' },
       { color:'#d32f2f', label:'0', detail:'At or above sell level' },
-      { color:'#8a9bb5', label:'—', detail:'No buy level set on Dashboard' },
+      { color:'#8a9bb5', label:'—', detail:'No buy level set on Dashboard' }
     ]
   },
   discount: {
@@ -4043,7 +4042,7 @@ const COL_LEGENDS = {
       { color:'#6a1b9a', label:'< -8%', detail:'Deep discount territory' },
       { color:'#1565c0', label:'-4% to -8%', detail:'Moderate discount' },
       { color:'#8a9bb5', label:'-1% to -4%', detail:'Narrow discount' },
-      { color:'#e65100', label:'> 0%', detail:'Trading at premium' },
+      { color:'#e65100', label:'> 0%', detail:'Trading at premium' }
     ]
   },
   zscore: {
@@ -4055,7 +4054,7 @@ const COL_LEGENDS = {
       { color:'#2e7d32', label:'-1.0 to -2.0', detail:'Wider than usual — potential opportunity' },
       { color:'#8a9bb5', label:'-1.0 to +1.0', detail:'Normal range' },
       { color:'#e65100', label:'+1.0 to +2.0', detail:'Narrower than usual — caution' },
-      { color:'#d32f2f', label:'> +2.0', detail:'Extremely narrow — potential sell signal' },
+      { color:'#d32f2f', label:'> +2.0', detail:'Extremely narrow — potential sell signal' }
     ]
   },
   peer: {
@@ -4067,7 +4066,7 @@ const COL_LEGENDS = {
       { color:'#2e7d32', label:'60–80', detail:'Cheaper than average' },
       { color:'#8a9bb5', label:'40–60', detail:'Mid-pack' },
       { color:'#e65100', label:'20–40', detail:'More expensive than average' },
-      { color:'#d32f2f', label:'0–20', detail:'Among most expensive in sector' },
+      { color:'#d32f2f', label:'0–20', detail:'Among most expensive in sector' }
     ]
   },
   momentum: {
@@ -4078,7 +4077,7 @@ const COL_LEGENDS = {
       { color:'#00a844', label:'70–100', detail:'Strong positive momentum' },
       { color:'#2e7d32', label:'50–69', detail:'Moderate positive' },
       { color:'#8a9bb5', label:'30–49', detail:'Neutral / flat' },
-      { color:'#d32f2f', label:'0–29', detail:'Negative momentum' },
+      { color:'#d32f2f', label:'0–29', detail:'Negative momentum' }
     ]
   },
   confirm: {
@@ -4087,7 +4086,7 @@ const COL_LEGENDS = {
     desc: 'Whether the momentum signal has been validated by sustained trend + volume. This gates BUY vs WAIT — the engine won\'t call BUY without confirmation.',
     scale: [
       { color:'#00a844', label:'✓', detail:'Momentum confirmed — eligible for BUY signal' },
-      { color:'#e65100', label:'⏳', detail:'Pending — score qualifies but momentum not yet confirmed → WAIT' },
+      { color:'#e65100', label:'⏳', detail:'Pending — score qualifies but momentum not yet confirmed → WAIT' }
     ]
   },
   regime: {
@@ -4096,7 +4095,7 @@ const COL_LEGENDS = {
     desc: 'Detects structural changes in the fund\'s discount behavior (e.g., new normal after distribution cut, strategy change). When flagged, the engine applies a penalty to Score.',
     scale: [
       { color:'#e65100', label:'⚠', detail:'Regime shift detected — historical patterns may be unreliable' },
-      { color:'#8a9bb5', label:'—', detail:'No regime shift — normal discount behavior' },
+      { color:'#8a9bb5', label:'—', detail:'No regime shift — normal discount behavior' }
     ]
   },
   sector: {
@@ -4112,7 +4111,7 @@ const COL_LEGENDS = {
       { color:'#00a844', label:'> 2.0', detail:'Heavy volume — significant activity' },
       { color:'#2e7d32', label:'1.5–2.0', detail:'Above average' },
       { color:'#8a9bb5', label:'0.7–1.5', detail:'Normal range' },
-      { color:'#e65100', label:'< 0.7', detail:'Light volume — low liquidity' },
+      { color:'#e65100', label:'< 0.7', detail:'Light volume — low liquidity' }
     ]
   },
   price: {
@@ -4298,7 +4297,7 @@ async function loadBDCDashboard() {
           signal: row.signal, signal_date: row.signal_date,
           composite_score: row.composite_score, adjusted_score: row.adjusted_score,
           confidence: row.confidence, layer_scores: row.layer_scores,
-          veto_triggers: vetoes, risk_penalties: row.risk_penalties,
+          veto_triggers: vetoes, risk_penalties: row.risk_penalties
         };
       }
 
@@ -4334,7 +4333,7 @@ async function loadBDCDashboard() {
         non_accrual_pct: row.non_accrual_pct != null ? parseFloat(row.non_accrual_pct) : null,
         pik_pct: row.pik_pct != null ? parseFloat(row.pik_pct) : null,
         sector_count: row.sector_count != null ? parseInt(row.sector_count) : null,
-        seniority_source: row.seniority_source || null,
+        seniority_source: row.seniority_source || null
       });
     }
 
@@ -4633,7 +4632,7 @@ updateWeights();
         alerts: rows.filter(s => s.final_signal === 'STRONG_BUY' || s.final_signal === 'BUY' || s.final_signal === 'WAIT')
           .map(s => ({ ticker: s.ticker, alert_type: 'BUY_SIGNAL', message: s.final_signal.replace(/_/g,' ') + ' — score ' + s.regime_adjusted_score, composite_score: s.regime_adjusted_score, discount_pct: s.discount_pct }))
           .concat(rows.filter(s => s.final_signal === 'SELL' || s.final_signal === 'STRONG_SELL')
-            .map(s => ({ ticker: s.ticker, alert_type: 'SELL_SIGNAL', message: s.final_signal.replace(/_/g,' ') + ' — score ' + s.regime_adjusted_score, composite_score: s.regime_adjusted_score, discount_pct: s.discount_pct }))),
+            .map(s => ({ ticker: s.ticker, alert_type: 'SELL_SIGNAL', message: s.final_signal.replace(/_/g,' ') + ' — score ' + s.regime_adjusted_score, composite_score: s.regime_adjusted_score, discount_pct: s.discount_pct })))
       };
       DATA = filterDead(d);
       initDash();
@@ -4687,7 +4686,7 @@ const NEWS_TYPE_COLORS = {
   EARNINGS:        { color: '#37474f', label: 'EARNINGS' },
   SEC_FILING:      { color: '#455a64', label: 'SEC FILING' },
   IPO_OFFERING:    { color: '#0d47a1', label: 'IPO/OFFERING' },
-  OTHER:           { color: '#8a9bb5', label: 'OTHER' },
+  OTHER:           { color: '#8a9bb5', label: 'OTHER' }
 };
 
 var NEWS_FUND_NAMES = {};
@@ -4815,7 +4814,7 @@ async function toggleNewsReview(id) {
   var newVal = !item.reviewed;
   try {
     await fetch(SUPABASE_URL + '/rest/v1/cef_news_alerts?id=eq.' + id, {
-      method: 'PATCH', headers: hdrs(), body: JSON.stringify({ reviewed: newVal }),
+      method: 'PATCH', headers: hdrs(), body: JSON.stringify({ reviewed: newVal })
     });
     item.reviewed = newVal;
     renderNews();
@@ -4828,7 +4827,7 @@ async function toggleNewsDismiss(id) {
   var newVal = !item.dismissed;
   try {
     await fetch(SUPABASE_URL + '/rest/v1/cef_news_alerts?id=eq.' + id, {
-      method: 'PATCH', headers: hdrs(), body: JSON.stringify({ dismissed: newVal }),
+      method: 'PATCH', headers: hdrs(), body: JSON.stringify({ dismissed: newVal })
     });
     item.dismissed = newVal;
     renderNewsStats();
@@ -4876,7 +4875,7 @@ async function loadEIDashboard(cls) {
       rsi_14: r.rsi_14 != null ? parseFloat(r.rsi_14) : null,
       volume_ratio: r.volume_ratio != null ? parseFloat(r.volume_ratio) : null,
       volume: r.volume != null ? parseFloat(r.volume) : null,
-      trade_date: r.trade_date || null,
+      trade_date: r.trade_date || null
     }));
     if (lc === 'mlp') { mlpAllData = arr; mlpLoaded = true; }
     else { reitAllData = arr; reitLoaded = true; }

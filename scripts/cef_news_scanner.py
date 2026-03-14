@@ -1,27 +1,33 @@
 #!/usr/bin/env python3
 """
-CEF News Scanner — Daily Material Event Monitor (v2 — CIK-based)
-================================================================
-Scans SEC EDGAR filings and Finnhub news for every CEF/BDC in the universe.
+CEF News Scanner — Daily Material Event Monitor
+=================================================
+Scans SEC EDGAR filings and Finnhub news for every CEF in the universe.
 Classifies events, scores materiality, writes to Supabase `cef_news_alerts`.
 
-v2 CHANGE: EDGAR now uses CIK-based submissions API instead of full-text
-search. This eliminates false matches where "FT" matched TARGET CORP, etc.
-Requires CIK values in cef_tickers/bdc_tickers — run populate_ciks.py first.
-
 Sources:
-  1. SEC EDGAR Submissions API — by CIK, guaranteed correct company
+  1. SEC EDGAR Full-Text Search (EFTS) — 8-K, N-14, DEF 14A, SC 13D/G, Form 4
   2. Finnhub Company News API (free tier: 60 calls/min)
 
 Usage:
-  python cef_news_scanner.py                    # Full scan, all tickers
-  python cef_news_scanner.py --ticker UTF       # Single ticker
-  python cef_news_scanner.py --days 7           # Custom lookback
-  python cef_news_scanner.py --dry-run -v       # Preview with verbose logging
+  # Full scan — all tickers
+  python cef_news_scanner.py
+
+  # Single ticker
+  python cef_news_scanner.py --ticker UTF
+
+  # Custom lookback (default: 2 days)
+  python cef_news_scanner.py --days 7
+
+  # Dry run — print results, don't write to Supabase
+  python cef_news_scanner.py --dry-run
+
+  # Verbose logging
+  python cef_news_scanner.py -v
 
 Environment Variables (or .env file):
   SUPABASE_URL          — Your Supabase project URL
-  SUPABASE_SERVICE_KEY  — Service role key for inserts
+  SUPABASE_SERVICE_KEY  — Service role key (not anon!) for inserts
   FINNHUB_API_KEY       — Free API key from finnhub.io
 """
 from __future__ import annotations
@@ -41,6 +47,8 @@ import requests
 # ---------------------------------------------------------------------------
 #  Configuration
 # ---------------------------------------------------------------------------
+
+# Load .env if present
 def load_dotenv(path: str = ".env"):
     if os.path.isfile(path):
         with open(path) as f:
@@ -56,227 +64,263 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://nzinvxticgyjobkqxxhl.supa
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 FINNHUB_KEY  = os.environ.get("FINNHUB_API_KEY", "")
 
-# EDGAR rate limit: 10 req/sec with proper User-Agent
+EDGAR_SEARCH_URL = "https://efts.sec.gov/LATEST/search-index"
+EDGAR_FILINGS_URL = "https://efts.sec.gov/LATEST/search-index"
+EDGAR_FULL_TEXT   = "https://efts.sec.gov/LATEST/search-index"
+
+# EDGAR prefers this header — SEC requires identifying info
 EDGAR_HEADERS = {
-    "User-Agent": "Gridiron Partners mike@gridironpartners.com",
+    "User-Agent": "GridironPartners/1.0 (mike@gridironpartners.com)",
     "Accept": "application/json",
 }
-EDGAR_DELAY = 0.15  # seconds between EDGAR requests
 
-# Finnhub rate limit: 60 calls/min
-FINNHUB_DELAY = 1.1
+FINNHUB_BASE = "https://finnhub.io/api/v1"
 
-# 8-K Item descriptions for human-readable summaries
-ITEM_8K_MAP = {
-    "1.01": "Entry into a Material Agreement",
-    "1.02": "Termination of a Material Agreement",
-    "1.03": "Bankruptcy or Receivership",
-    "2.01": "Completion of Acquisition or Disposition",
-    "2.02": "Results of Operations and Financial Condition",
-    "2.03": "Creation of Direct Financial Obligation",
-    "2.04": "Triggering Events — Obligation Acceleration",
-    "2.05": "Costs for Exit or Disposal Activities",
-    "2.06": "Material Impairments",
-    "3.01": "Notice of Delisting or Failure to Meet Listing Standards",
-    "3.02": "Unregistered Sales of Equity Securities",
-    "3.03": "Material Modification to Rights of Security Holders",
-    "4.01": "Change in Registrant's Certifying Accountant",
-    "4.02": "Non-Reliance on Previously Issued Financial Statements",
-    "5.01": "Changes in Control of Registrant",
-    "5.02": "Departure/Election of Directors or Officers",
-    "5.03": "Amendments to Articles or Bylaws",
-    "5.05": "Amendments to Code of Ethics",
-    "5.07": "Submission of Matters to Shareholder Vote",
-    "7.01": "Regulation FD Disclosure",
-    "8.01": "Other Events",
-    "9.01": "Financial Statements and Exhibits",
-}
+# Rate limiting
+EDGAR_DELAY  = 0.12   # SEC asks for max 10 req/sec
+FINNHUB_DELAY = 1.05  # Free tier: 60/min → ~1 req/sec
+
+# ---------------------------------------------------------------------------
+#  CEF Ticker Universe
+# ---------------------------------------------------------------------------
+
+CEF_TICKERS = [
+    "ASA","ADX","PEO","AVK","AWF","AFB","NFJ","EOD","EAD","ERC","ERH","FINS",
+    "ARDC","BANX","DHF","DMB","DSM","LEO","BCV","MCI","BGH","MPV","BXSY","BMN",
+    "BCAT","BHK","HYT","BTZ","DSU","ECAT","BGR","BDJ","BOE","BGY","CII","FRA",
+    "BME","BMEZ","BKT","BKN","BLW","BTA","BIT","MUC","MUJ","MIY","MYN","MPA",
+    "MYI","MUA","BTT","MHD","MVF","MVT","MYD","MQY","MQT","BCX","BSTZ","BST",
+    "BBN","BFK","BTX","BUI","BGT","BGX","BSL","BGB","BPRE","BWG","RA","IGR",
+    "CHY","CHI","CCD","CHW","CGO","CPZ","CSQ","CET","EMO","GLQ","GLO","FOF",
+    "UTF","LDP","RQI","RNP","RLTY","PSF","PTA","RFI","STK","CLM","CRF","CIK",
+    "DHY","DNP","KTF","DSL","DLY","DBL","DPG","ETX","ECC","EIC","EOI","EOS",
+    "EFT","EVV","EIM","EVN","EOT","ETJ","EFR","EVG","ETG","EVT","ETO","ETB",
+    "ETV","ETY","EXG","ETW","EARN","ECF","FTHY","FSCO","FSSL","FFA","FPF","FCT",
+    "DFP","FFC","FLC","PFD","PFO","FTF","FT","GGN","GNT","GDV","GAB","GGM",
+    "GGZ","GRX","GIM","GHI","GOF","GGT","GUT","GLU","HFRO","HIO","HQH","HQL",
+    "HTD","HPF","HPI","HIX","HIE","HYB","ISD","IFN","IGD","IGA","IHTA","IHD",
+    "IIM","JPC","JPI","JPT","JQC","JRS","JRI","JFR","JHI","JHY","JLS","JBBB",
+    "JHB","JGH","HYI","JCE","JOF","KIO","KYN","KSM","KREF","KMF","NMZ","NZF",
+    "NAD","NUV","NVG","NUW","JDD","JMM","NID","NXJ","NRK","NAC","NEV","NHA",
+    "NKX","NMI","NIM","NUO","NPN","NQP","NXP","NXC","NXR","NSL","NMS","NOM",
+    "NOCT","NTG","NML","OPP","OIA","OFS","OXLC","OCCI","PHK","PTY","PCM","PDI",
+    "PDO","PKO","PFL","PCN","PNF","PMM","PCK","PMX","PNI","PCI","PGP","PHT",
+    "PGZ","PHD","PAXS","PCQ","PML","PMF","PTN","PZC","PPT","RIV","RGT","RMT",
+    "RMI","RCS","RSF","RMPL","SA","SCD","DIAX","STEW","TBLD","TDF","TSI","TWN",
+    "VBF","VCV","VFL","VGM","VKI","VKQ","VPV","VTN","WDI","WEA","WIA","WIW",
+    "XFLT",
+]
+
+# CIK lookup for SEC EDGAR — fund name → CIK mapping
+# These are the SEC Central Index Keys for the fund entities.
+# This is populated on first run or can be pre-loaded.
+CIK_CACHE: Dict[str, str] = {}
 
 
 # ---------------------------------------------------------------------------
 #  Event Classification
 # ---------------------------------------------------------------------------
-def classify_event(headline: str, summary: str, form_type: str, items: str = "") -> Tuple[str, int]:
-    """Classify a news item and assign materiality score (0-100)."""
-    text = f"{headline} {summary} {form_type} {items}".upper()
 
-    # Check form type first
-    if form_type in ("N-14",):
-        return "MERGER", 90
-    if form_type in ("SC 13D", "SC 13D/A"):
-        return "ACTIVIST", 85
-    if form_type in ("SC 13G", "SC 13G/A"):
-        return "ACTIVIST", 60
-    if form_type == "4":
-        return "SEC_FILING", 40
-    if form_type in ("DEF 14A", "DEFA14A"):
-        # Proxy — check for merger language
-        if any(w in text for w in ["MERGER", "REORGANIZ", "LIQUIDAT", "TERMINAT"]):
-            return "MERGER", 85
-        return "SEC_FILING", 50
+EVENT_TYPES = {
+    "MERGER":           {"keywords": ["merger", "merging", "combine", "consolidat", "reorganiz", "convert"],
+                         "base_materiality": 90},
+    "MGMT_CHANGE":      {"keywords": ["management change", "new manager", "advisor change", "portfolio manager",
+                                       "officer appoint", "officer resign", "ceo change", "cio change"],
+                         "base_materiality": 80},
+    "DISTRIBUTION":     {"keywords": ["distribution", "dividend", "special distribution", "distribution change",
+                                       "distribution cut", "distribution increase", "return of capital"],
+                         "base_materiality": 75},
+    "TENDER_OFFER":     {"keywords": ["tender offer", "share repurchase program", "buyback program"],
+                         "base_materiality": 85},
+    "RIGHTS_OFFERING":  {"keywords": ["rights offering", "transferable rights", "subscription rights"],
+                         "base_materiality": 80},
+    "ACTIVIST":         {"keywords": ["activist", "dissident", "proxy contest", "proxy fight", "board seat",
+                                       "schedule 13d", "sc 13d", "beneficial owner"],
+                         "base_materiality": 85},
+    "TERMINATION":      {"keywords": ["termination", "liquidat", "wind down", "dissolution", "term fund",
+                                       "maturity date"],
+                         "base_materiality": 90},
+    "BUYBACK":          {"keywords": ["share repurchase", "buyback", "open market purchase"],
+                         "base_materiality": 70},
+    "LEVERAGE":         {"keywords": ["credit facility", "leverage ratio", "borrowing", "preferred shares",
+                                       "auction rate", "debt issuance"],
+                         "base_materiality": 65},
+    "REGULATORY":       {"keywords": ["sec action", "enforcement", "compliance", "regulatory", "exemptive order"],
+                         "base_materiality": 75},
+    "EARNINGS":         {"keywords": ["earnings", "financial results", "annual report", "semi-annual",
+                                       "shareholder report"],
+                         "base_materiality": 55},
+    "IPO_OFFERING":     {"keywords": ["initial public offering", "ipo", "secondary offering", "shelf registration",
+                                       "s-1", "n-2 filing"],
+                         "base_materiality": 70},
+}
 
-    # Keyword-based classification
-    if any(w in text for w in ["MERGER", "REORGANIZ", "ACQUI", "N-14"]):
-        return "MERGER", 90
-    if any(w in text for w in ["LIQUIDAT", "TERMINAT", "WIND DOWN", "DISSOLV"]):
-        return "TERMINATION", 88
-    if any(w in text for w in ["TENDER OFFER", "TENDER"]):
-        return "TENDER_OFFER", 82
-    if any(w in text for w in ["RIGHTS OFFER"]):
-        return "RIGHTS_OFFERING", 75
-    if any(w in text for w in ["ACTIVIST", "13D"]):
-        return "ACTIVIST", 85
-    if any(w in text for w in ["DISTRIBUT", "DIVIDEND", "SPECIAL DISTRIBUTION"]):
-        return "DISTRIBUTION", 70
-    if any(w in text for w in ["MANAGEMENT CHANGE", "OFFICER", "DIRECTOR", "PORTFOLIO MANAGER",
-                                "5.02", "DEPART", "APPOINT", "RESIGN"]):
-        return "MGMT_CHANGE", 78
-    if any(w in text for w in ["LEVERAGE", "CREDIT FACILITY", "BORROWING", "2.03"]):
-        return "LEVERAGE", 55
-    if any(w in text for w in ["BUYBACK", "REPURCHASE PROGRAM"]):
-        return "BUYBACK", 65
-    if any(w in text for w in ["REGULATORY", "SEC ORDER", "ENFORCEMENT"]):
-        return "REGULATORY", 80
-    if any(w in text for w in ["IPO", "INITIAL PUBLIC", "NEW FUND"]):
-        return "IPO_OFFERING", 60
-    if form_type in ("N-CSR", "N-CSRS"):
-        return "EARNINGS", 35
-    if any(w in text for w in ["EARNING", "FINANCIAL RESULTS", "2.02", "ANNUAL REPORT",
-                                "SEMI-ANNUAL"]):
-        return "EARNINGS", 40
+# SEC filing type → event type hints
+FILING_TYPE_MAP = {
+    "8-K":      None,          # Could be anything — classify by content
+    "N-14":     "MERGER",
+    "DEF 14A":  None,          # Proxy — check for activist/governance
+    "DEFA14A":  None,
+    "SC 13D":   "ACTIVIST",
+    "SC 13D/A": "ACTIVIST",
+    "SC 13G":   None,          # Passive > 5% holder — lower priority
+    "SC 13G/A": None,
+    "4":        None,          # Insider trades — classify separately
+    "3":        None,
+    "N-CSR":    "EARNINGS",
+    "N-CSRS":   "EARNINGS",
+    "497":      None,          # Prospectus supplement
+}
 
-    return "OTHER", 30
+
+def classify_event(headline: str, summary: str = "", filing_type: str = "") -> Tuple[str, int]:
+    """
+    Classify a news item into an event type and return (event_type, materiality_score).
+    Checks filing type hints first, then keyword matching on headline + summary.
+    """
+    text = f"{headline} {summary}".lower()
+
+    # Filing type override
+    if filing_type and filing_type in FILING_TYPE_MAP:
+        forced_type = FILING_TYPE_MAP[filing_type]
+        if forced_type:
+            return forced_type, EVENT_TYPES[forced_type]["base_materiality"]
+
+    # Keyword matching — first match wins (ordered by specificity)
+    for event_type, config in EVENT_TYPES.items():
+        for kw in config["keywords"]:
+            if kw in text:
+                # Adjust materiality based on confidence signals
+                mat = config["base_materiality"]
+                # Boost if headline (not just summary) contains keyword
+                if kw in headline.lower():
+                    mat = min(100, mat + 5)
+                return event_type, mat
+
+    # No match — generic
+    return "OTHER", 40
 
 
 # ---------------------------------------------------------------------------
-#  EDGAR Scanner (CIK-based — v2)
+#  SEC EDGAR Scanner
 # ---------------------------------------------------------------------------
+
 class EDGARScanner:
-    """
-    Fetch filings from SEC EDGAR using the Submissions API (CIK-based).
-    
-    v2: Uses https://data.sec.gov/submissions/CIK{padded}.json
-    This returns ONLY filings for the specific company — no false matches.
-    Requires CIK values populated in cef_tickers/bdc_tickers.
-    """
+    """Fetch recent SEC filings for CEF tickers via EDGAR Full-Text Search."""
 
     # Filing types to monitor
-    FILING_TYPES = {"8-K", "N-14", "DEF 14A", "DEFA14A", "SC 13D", "SC 13D/A",
-                    "SC 13G", "SC 13G/A", "4", "N-CSR", "N-CSRS"}
+    FILING_TYPES = ["8-K", "N-14", "DEF 14A", "DEFA14A", "SC 13D", "SC 13D/A",
+                    "SC 13G", "4", "N-CSR", "N-CSRS"]
 
-    def __init__(self, cik_map: Dict[str, int], lookback_days: int = 2):
-        self.cik_map = cik_map
+    def __init__(self, lookback_days: int = 2):
         self.lookback_days = lookback_days
         self.session = requests.Session()
         self.session.headers.update(EDGAR_HEADERS)
-        self._company_name_cache: Dict[str, str] = {}
 
     def search_ticker(self, ticker: str) -> List[Dict[str, Any]]:
-        """Fetch recent filings for a ticker using its CIK."""
-        cik = self.cik_map.get(ticker)
-        if not cik:
-            logging.warning(f"  No CIK for {ticker} — skipping EDGAR scan")
-            return []
+        """
+        Search EDGAR for recent filings mentioning this ticker.
+        Returns list of parsed filing records.
+        """
+        end_date = date.today()
+        start_date = end_date - timedelta(days=self.lookback_days)
 
-        cutoff = date.today() - timedelta(days=self.lookback_days)
         results = []
 
-        try:
-            # Fetch company submissions JSON
-            padded_cik = str(cik).zfill(10)
-            url = f"https://data.sec.gov/submissions/CIK{padded_cik}.json"
-            resp = self.session.get(url, timeout=15)
-            time.sleep(EDGAR_DELAY)
+        # Search for the ticker in filing full-text
+        # EDGAR EFTS accepts queries like: q="UTF" forms=8-K
+        for filing_type in self.FILING_TYPES:
+            try:
+                params = {
+                    "q": f'"{ticker}"',
+                    "forms": filing_type,
+                    "dateRange": "custom",
+                    "startdt": start_date.isoformat(),
+                    "enddt": end_date.isoformat(),
+                    "from": 0,
+                    "size": 10,
+                }
 
-            if resp.status_code != 200:
-                logging.warning(f"  EDGAR submissions API {resp.status_code} for {ticker} (CIK {cik})")
-                return []
-
-            data = resp.json()
-            company_name = data.get("name", ticker)
-            self._company_name_cache[ticker] = company_name
-
-            # Parse recent filings
-            recent = data.get("filings", {}).get("recent", {})
-            if not recent:
-                return []
-
-            forms = recent.get("form", [])
-            dates = recent.get("filingDate", [])
-            accessions = recent.get("accessionNumber", [])
-            primary_docs = recent.get("primaryDocument", [])
-            primary_descs = recent.get("primaryDocDescription", [])
-            items_list = recent.get("items", [])
-
-            for i in range(len(forms)):
-                form = forms[i] if i < len(forms) else ""
-                filing_date_str = dates[i] if i < len(dates) else ""
-                accession = accessions[i] if i < len(accessions) else ""
-                primary_doc = primary_docs[i] if i < len(primary_docs) else ""
-                primary_desc = primary_descs[i] if i < len(primary_descs) else ""
-                items = items_list[i] if i < len(items_list) else ""
-
-                # Filter by form type
-                if form not in self.FILING_TYPES:
-                    continue
-
-                # Filter by date
-                try:
-                    filing_date = datetime.strptime(filing_date_str, "%Y-%m-%d").date()
-                except (ValueError, TypeError):
-                    continue
-
-                if filing_date < cutoff:
-                    continue
-
-                # Build the filing record
-                record = self._build_record(
-                    ticker=ticker,
-                    company_name=company_name,
-                    form_type=form,
-                    filing_date=filing_date,
-                    accession=accession,
-                    cik=cik,
-                    primary_doc=primary_doc,
-                    primary_desc=primary_desc,
-                    items=items,
+                resp = self.session.get(
+                    "https://efts.sec.gov/LATEST/search-index",
+                    params=params,
+                    timeout=15,
                 )
-                if record:
-                    results.append(record)
 
-        except Exception as e:
-            logging.warning(f"  EDGAR error for {ticker}: {e}")
+                if resp.status_code == 200:
+                    data = resp.json()
+                    hits = data.get("hits", {}).get("hits", [])
+                    for hit in hits:
+                        src = hit.get("_source", {})
+                        filing = self._parse_filing(src, ticker, filing_type)
+                        if filing:
+                            results.append(filing)
+
+                time.sleep(EDGAR_DELAY)
+
+            except Exception as e:
+                logging.warning(f"EDGAR search error for {ticker}/{filing_type}: {e}")
+                time.sleep(EDGAR_DELAY)
 
         return results
 
-    def _build_record(self, ticker: str, company_name: str, form_type: str,
-                      filing_date: date, accession: str, cik: int,
-                      primary_doc: str, primary_desc: str, items: str) -> Optional[Dict]:
-        """Build a standardized alert record from an EDGAR filing."""
+    def _parse_filing(self, src: Dict, ticker: str, filing_type: str) -> Optional[Dict]:
+        """Parse an EDGAR search hit into a standardized alert record."""
+        file_date = src.get("file_date", "")
+        form_type = src.get("form_type", filing_type)
+        company_raw = src.get("display_names", [""])[0] if src.get("display_names") else ""
+        file_num = src.get("file_num", [""])[0] if isinstance(src.get("file_num"), list) else ""
 
-        # Clean company name
-        clean_name = re.sub(r'\s*/\w+/?$', '', company_name).strip()
-        clean_name = re.sub(r'\s+', ' ', clean_name).title()
+        # Clean company name — strip CIK, parenthetical codes, extra whitespace
+        company = re.sub(r'\s*\(CIK\s*\d+\)', '', company_raw).strip()
+        company = re.sub(r'\s*\(.*?\)\s*$', '', company).strip()
+        if not company:
+            company = ticker
 
-        # Build headline based on form type
-        headline = self._build_headline(clean_name, ticker, form_type, items, primary_desc)
+        # Extract summary from filing description if available
+        raw_summary = src.get("display_description", "") or ""
+        if isinstance(raw_summary, list):
+            raw_summary = raw_summary[0] if raw_summary else ""
 
-        # Build summary
-        summary = self._build_summary(form_type, items, primary_desc, clean_name)
-
-        # Build filing URL — points to actual filing index page
-        acc_clean = accession.replace("-", "")
-        if primary_doc:
-            source_url = f"https://www.sec.gov/Archives/edgar/data/{cik}/{acc_clean}/{primary_doc}"
+        # Build URL to filing
+        accession = src.get("accession_no", "")
+        entity_id = src.get("entity_id", "")
+        if accession:
+            acc_clean = accession.replace("-", "")
+            source_url = f"https://www.sec.gov/Archives/edgar/data/{entity_id}/{acc_clean}/{accession}-index.htm"
         else:
-            source_url = f"https://www.sec.gov/Archives/edgar/data/{cik}/{acc_clean}/{accession}-index.htm"
+            source_url = f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company={ticker}&type={filing_type}"
 
-        # Classify
-        event_type, materiality = classify_event(headline, summary, form_type, items)
+        # For key filing types, fetch actual filing content for real summaries
+        filing_text = ""
+        fetch_types = {"8-K", "N-14", "SC 13D", "SC 13D/A", "DEF 14A", "DEFA14A", "4"}
+        if form_type.upper().strip() in fetch_types and accession and entity_id:
+            filing_text = self._fetch_filing_content(entity_id, accession)
+
+        # Classify using all available text
+        classify_text = f"{form_type} {company} {raw_summary} {filing_text[:500]}"
+        event_type, materiality = classify_event(classify_text, raw_summary, form_type)
+
+        # Generate headline and summary — use real filing text if we have it
+        headline, summary = self._humanize_filing(
+            form_type, company, ticker, event_type, raw_summary, filing_text
+        )
+
+        # Re-classify with the better headline/summary for more accurate event type
+        if filing_text:
+            event_type2, materiality2 = classify_event(headline, summary)
+            if materiality2 > materiality:
+                event_type, materiality = event_type2, materiality2
+
+        # Parse date
+        try:
+            event_date = datetime.strptime(file_date, "%Y-%m-%d").date() if file_date else date.today()
+        except ValueError:
+            event_date = date.today()
 
         return {
             "ticker": ticker,
-            "event_date": filing_date.isoformat(),
+            "event_date": event_date.isoformat(),
             "event_type": event_type,
             "headline": headline[:500],
             "summary": summary[:1000] if summary else None,
@@ -286,113 +330,351 @@ class EDGARScanner:
             "materiality": materiality,
         }
 
-    def _build_headline(self, company: str, ticker: str, form: str,
-                        items: str, desc: str) -> str:
-        """Generate a human-readable headline."""
-        if form == "8-K":
-            # Parse items for specifics
-            item_labels = []
-            for item_code in (items or "").split(","):
-                item_code = item_code.strip()
-                if item_code in ITEM_8K_MAP:
-                    item_labels.append(ITEM_8K_MAP[item_code])
-            if item_labels:
-                return f"{company} ({ticker}): {'; '.join(item_labels[:3])}"
-            return f"{company} ({ticker}) filed a material event report (8-K)"
+    def _fetch_filing_content(self, entity_id: str, accession: str) -> str:
+        """
+        Fetch the actual filing document from EDGAR and extract readable text.
+        Returns the first ~2000 chars of meaningful content.
+        """
+        acc_clean = accession.replace("-", "")
+        index_url = f"https://www.sec.gov/Archives/edgar/data/{entity_id}/{acc_clean}/{accession}-index.htm"
 
-        if form == "N-14":
-            return f"{company} ({ticker}) filed merger/reorganization registration"
+        try:
+            # Step 1: Fetch the filing index page
+            resp = self.session.get(index_url, timeout=15)
+            time.sleep(EDGAR_DELAY)
+            if resp.status_code != 200:
+                return ""
 
-        if form in ("DEF 14A", "DEFA14A"):
-            return f"{company} ({ticker}) filed proxy statement — shareholder vote upcoming"
+            index_html = resp.text
 
-        if form in ("SC 13D", "SC 13D/A"):
-            return f"Activist position disclosed in {company} ({ticker})"
+            # Step 2: Find the primary document link (usually .htm or .txt)
+            # Look for the main filing document in the index table
+            doc_url = None
 
-        if form in ("SC 13G", "SC 13G/A"):
-            return f"Institutional ownership filing for {company} ({ticker})"
+            # Pattern: look for rows with the filing type document
+            # EDGAR index pages list documents in a table with the filing as first row
+            htm_links = re.findall(
+                r'href="([^"]+\.htm[l]?)"', index_html, re.IGNORECASE
+            )
+            txt_links = re.findall(
+                r'href="([^"]+\.txt)"', index_html, re.IGNORECASE
+            )
 
-        if form == "4":
-            return f"Insider transaction reported for {company} ({ticker})"
+            # Filter out index pages and R-files (XBRL renderings)
+            for link in htm_links:
+                lower = link.lower()
+                if '-index' in lower or '/R' in link or 'FilingSummary' in link:
+                    continue
+                doc_url = link
+                break
 
-        if form == "N-CSR":
-            return f"{company} ({ticker}) published annual shareholder report"
+            if not doc_url and txt_links:
+                for link in txt_links:
+                    if '-index' not in link.lower():
+                        doc_url = link
+                        break
 
-        if form == "N-CSRS":
-            return f"{company} ({ticker}) published semi-annual shareholder report"
+            if not doc_url:
+                return ""
 
-        return f"{company} ({ticker}) filed {form}"
+            # Make absolute URL
+            if not doc_url.startswith('http'):
+                base = f"https://www.sec.gov/Archives/edgar/data/{entity_id}/{acc_clean}/"
+                doc_url = base + doc_url.lstrip('/')
 
-    def _build_summary(self, form: str, items: str, desc: str, company: str) -> str:
-        """Generate a plain-English summary explaining what this filing means."""
-        if form == "8-K":
-            parts = []
-            for item_code in (items or "").split(","):
-                item_code = item_code.strip()
-                if item_code == "2.02":
-                    parts.append("The fund reported financial results. Review for changes in NAV, income, or distribution coverage.")
-                elif item_code == "5.02":
-                    parts.append("An officer or director departed or was appointed. Check for portfolio manager changes that could affect fund strategy.")
-                elif item_code == "8.01":
-                    parts.append("Other material event disclosed. Review the filing for distribution announcements, NAV updates, or operational changes.")
-                elif item_code == "7.01":
-                    parts.append("Regulation FD disclosure — material non-public information being made public.")
-                elif item_code == "2.03":
-                    parts.append("New or modified credit facility/borrowing arrangement. Review for changes in leverage terms.")
-                elif item_code == "3.03":
-                    parts.append("Material modification to security holders' rights. Could affect preferred shares, distribution terms, or voting rights.")
-                elif item_code == "1.01":
-                    parts.append("New material agreement entered. Review for advisory changes, sub-advisory arrangements, or merger agreements.")
-                elif item_code == "1.02":
-                    parts.append("Material agreement terminated. Could signal advisory changes or strategic shift.")
-                elif item_code in ITEM_8K_MAP:
-                    parts.append(f"{ITEM_8K_MAP[item_code]}.")
-            if parts:
-                return " ".join(parts[:3])
-            return "Material event report (8-K). Review the filing for details that may affect the fund's operations, distributions, or NAV."
+            # Step 3: Fetch the actual document
+            resp2 = self.session.get(doc_url, timeout=20)
+            time.sleep(EDGAR_DELAY)
+            if resp2.status_code != 200:
+                return ""
 
-        if form == "N-14":
-            return (f"Merger/reorganization filing — {company} may be merging with another fund, "
-                    "converting its structure, or reorganizing. This typically causes discounts to "
-                    "narrow as the fund approaches NAV for the transaction. Review for exchange "
-                    "ratios, timeline, and conditions.")
+            raw_html = resp2.text
 
-        if form in ("DEF 14A", "DEFA14A"):
-            return ("Proxy statement filed ahead of a shareholder vote. May include board elections, "
-                    "fee structure changes, advisory agreement renewals, or merger approvals. "
-                    "Check for any proposals that could materially affect fund operations.")
+            # Step 4: Strip HTML tags and extract readable text
+            text = self._html_to_text(raw_html)
 
-        if form in ("SC 13D", "SC 13D/A"):
-            return ("Activist investor has disclosed a significant position (>5%) with intent to "
-                    "influence management. Watch for proposals to narrow the discount, change "
-                    "the advisor, convert to open-end, or liquidate. Often bullish for discount narrowing.")
+            return text[:3000]  # Cap at 3000 chars for processing
 
-        if form in ("SC 13G", "SC 13G/A"):
-            return ("Institutional investor disclosed a significant passive position (>5%). "
-                    "Unlike a 13D, this is a passive filing — no activist intent. "
-                    "Still noteworthy for understanding ownership concentration.")
+        except Exception as e:
+            logging.debug(f"Filing content fetch error: {e}")
+            return ""
 
-        if form == "4":
-            return ("Insider (officer, director, or 10%+ owner) reported a buy or sell transaction. "
-                    "Insider buying can signal confidence; selling may be routine diversification. "
-                    "Review the filing for transaction size and context.")
+    @staticmethod
+    def _html_to_text(html: str) -> str:
+        """Strip HTML tags and clean up whitespace. Returns plain text."""
+        # Remove script/style blocks
+        text = re.sub(r'<(script|style)[^>]*>.*?</\1>', '', html, flags=re.DOTALL | re.IGNORECASE)
+        # Remove HTML tags
+        text = re.sub(r'<[^>]+>', ' ', text)
+        # Decode common entities
+        text = text.replace('&nbsp;', ' ').replace('&amp;', '&').replace('&lt;', '<')
+        text = text.replace('&gt;', '>').replace('&quot;', '"').replace('&#8217;', "'")
+        text = text.replace('&#8220;', '"').replace('&#8221;', '"')
+        # Collapse whitespace
+        text = re.sub(r'\s+', ' ', text).strip()
+        return text
 
-        if form == "N-CSR":
-            return ("Annual shareholder report — contains complete financial statements, "
-                    "portfolio holdings, investment commentary, and distribution details. "
-                    "Key document for fundamental analysis.")
+    def _humanize_filing(self, form_type: str, company: str, ticker: str,
+                         event_type: str, raw_desc: str, filing_text: str = "") -> Tuple[str, str]:
+        """
+        Convert SEC filing metadata + actual content into human-readable headline + summary.
+        Returns (headline, summary).
+        """
+        ft = form_type.upper().strip()
 
-        if form == "N-CSRS":
-            return ("Semi-annual shareholder report — contains interim financial statements "
-                    "and portfolio holdings update. Review for changes in positioning, "
-                    "distribution sustainability, and manager commentary.")
+        # --- 8-K: Extract the actual Item reported ---
+        if ft == "8-K" and filing_text:
+            item_summary = self._extract_8k_items(filing_text, company, ticker)
+            if item_summary:
+                return item_summary
 
-        return f"{form} filing. Review for potential impact on fund operations or valuation."
+        # --- Form 4: Extract insider trade details ---
+        if ft == "4" and filing_text:
+            insider_summary = self._extract_form4(filing_text, ticker)
+            if insider_summary:
+                return insider_summary
+
+        # --- SC 13D: Extract holder and position ---
+        if ft in ("SC 13D", "SC 13D/A") and filing_text:
+            activist_summary = self._extract_13d(filing_text, ticker)
+            if activist_summary:
+                return activist_summary
+
+        # --- N-14: Extract merger details ---
+        if ft == "N-14" and filing_text:
+            merger_summary = self._extract_n14(filing_text, company, ticker)
+            if merger_summary:
+                return merger_summary
+
+        # Fallback to template-based summaries
+        FILING_HEADLINES = {
+            "8-K": f"{company} filed a material event report",
+            "N-14": f"{company} filed a merger or reorganization registration",
+            "DEF 14A": f"{company} filed a proxy statement — shareholder vote upcoming",
+            "DEFA14A": f"{company} filed additional proxy solicitation materials",
+            "SC 13D": f"An activist investor disclosed a significant position in {ticker}",
+            "SC 13D/A": f"An activist investor amended their position disclosure for {ticker}",
+            "SC 13G": f"A large holder filed a passive ownership stake in {ticker}",
+            "SC 13G/A": f"A large holder amended their passive ownership disclosure for {ticker}",
+            "4": f"An insider bought or sold shares of {ticker}",
+            "3": f"A new insider filed an initial ownership report for {ticker}",
+            "N-CSR": f"{company} published its annual shareholder report",
+            "N-CSRS": f"{company} published its semi-annual shareholder report",
+            "497": f"{company} filed a prospectus supplement",
+        }
+
+        FILING_SUMMARIES = {
+            "8-K": "Material event report (8-K) — could include distribution changes, "
+                   "management changes, credit facility amendments, or other significant events.",
+            "N-14": "Merger/reorganization filing (N-14) — this fund may be merging with another fund, "
+                    "converting its structure, or reorganizing. Discounts typically narrow toward NAV.",
+            "DEF 14A": "Proxy statement filed ahead of a shareholder vote. May include board elections, "
+                       "fee structure changes, or advisory agreement renewals.",
+            "DEFA14A": "Additional proxy materials filed — may indicate a contested proxy or "
+                       "supplemental information for an upcoming shareholder vote.",
+            "SC 13D": "An investor has taken a position of 5%+ and filed an activist disclosure. "
+                      "This often signals pressure to narrow the discount or initiate buybacks.",
+            "SC 13D/A": "Amendment to an activist investor's position disclosure. Check for changes in "
+                        "ownership percentage or stated intentions.",
+            "SC 13G": "A large institutional holder disclosed passive ownership of 5%+. Informational only.",
+            "SC 13G/A": "Amendment to a passive large holder's ownership disclosure.",
+            "4": "Insider transaction report — a fund officer, director, or affiliated person "
+                 "bought or sold shares.",
+            "3": "Initial statement of beneficial ownership by a new insider.",
+            "N-CSR": "Annual shareholder report — contains full holdings, financials, and management discussion.",
+            "N-CSRS": "Semi-annual shareholder report — interim financials and portfolio holdings.",
+            "497": "Prospectus supplement — may relate to a new offering or updates to fund terms.",
+        }
+
+        headline = FILING_HEADLINES.get(ft, f"{company} filed a {ft} with the SEC")
+        base_summary = FILING_SUMMARIES.get(ft, f"SEC filing type: {ft}. Review for details.")
+
+        # Append raw EDGAR description if useful
+        if raw_desc and len(raw_desc) > 20:
+            summary = f"{base_summary} Filing description: {raw_desc.strip()}"
+        else:
+            summary = base_summary
+
+        return headline, summary
+
+    @staticmethod
+    def _extract_8k_items(text: str, company: str, ticker: str) -> Optional[Tuple[str, str]]:
+        """Extract 8-K item numbers and generate specific headline/summary."""
+
+        # 8-K Item number descriptions
+        ITEM_MAP = {
+            "1.01": ("Material Agreement", "entered into a material definitive agreement"),
+            "1.02": ("Agreement Termination", "terminated a material definitive agreement"),
+            "2.02": ("Financial Results", "reported financial results"),
+            "2.04": ("Triggering Event", "reported a triggering event related to obligations"),
+            "3.02": ("Delisting", "received a delisting or compliance notice"),
+            "5.01": ("Corporate Changes", "announced changes to its corporate structure"),
+            "5.02": ("Officer Change", "announced a departure or appointment of an officer/director"),
+            "5.03": ("Articles Amendment", "amended its articles of incorporation or bylaws"),
+            "7.01": ("Regulation FD", "made a Regulation FD disclosure"),
+            "8.01": ("Other Events", "announced a material event"),
+            "9.01": ("Financial Exhibits", "filed financial statements and exhibits"),
+        }
+
+        # Find item numbers in the text
+        items_found = []
+        for item_num, (short, _) in ITEM_MAP.items():
+            pattern = rf'Item\s+{re.escape(item_num)}'
+            if re.search(pattern, text, re.IGNORECASE):
+                items_found.append(item_num)
+
+        if not items_found:
+            return None
+
+        primary_item = items_found[0]
+        short_name, verb = ITEM_MAP.get(primary_item, ("Event", "filed a report"))
+
+        # Try to extract specific details from text near the item
+        detail = ""
+        text_lower = text.lower()
+
+        # Look for distribution/dividend amounts
+        dist_match = re.search(
+            r'\$\s*([\d.]+)\s*per\s*(common\s+)?share', text, re.IGNORECASE
+        )
+        if dist_match:
+            amount = dist_match.group(1)
+            detail = f" Distribution of ${amount} per share declared."
+
+        # Look for distribution changes
+        if any(w in text_lower for w in ['increase', 'raise', 'higher distribution']):
+            detail += " Distribution increase announced."
+        elif any(w in text_lower for w in ['decrease', 'reduce', 'cut', 'lower distribution']):
+            detail += " Distribution decrease announced."
+
+        # Look for management changes
+        if primary_item == "5.02":
+            name_match = re.search(
+                r'(?:Mr\.|Ms\.|Mrs\.)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)', text
+            )
+            if name_match:
+                detail = f" Involving {name_match.group(0).strip()}."
+            if 'resign' in text_lower or 'depart' in text_lower:
+                detail += " Officer departure."
+            elif 'appoint' in text_lower or 'elect' in text_lower:
+                detail += " New appointment."
+
+        # Look for merger/reorg language in 8-K
+        if any(w in text_lower for w in ['merger', 'reorganiz', 'consolidat']):
+            detail += " Merger or reorganization related."
+
+        # Look for rights offering
+        if 'rights offering' in text_lower or 'subscription right' in text_lower:
+            detail += " Rights offering announced."
+
+        # Look for tender offer
+        if 'tender offer' in text_lower:
+            detail += " Tender offer announced."
+
+        # Look for record/payable dates
+        record_match = re.search(
+            r'record\s+date[:\s]+([A-Za-z]+\s+\d{1,2},?\s+\d{4})', text, re.IGNORECASE
+        )
+        pay_match = re.search(
+            r'payable?\s+date[:\s]+([A-Za-z]+\s+\d{1,2},?\s+\d{4})', text, re.IGNORECASE
+        )
+        if record_match:
+            detail += f" Record date: {record_match.group(1)}."
+        if pay_match:
+            detail += f" Payable: {pay_match.group(1)}."
+
+        items_str = ", ".join(f"Item {i}" for i in items_found)
+        headline = f"{company}: {short_name} (8-K {items_str})"
+        summary = f"{company} {verb}.{detail}".strip()
+
+        return headline, summary
+
+    @staticmethod
+    def _extract_form4(text: str, ticker: str) -> Optional[Tuple[str, str]]:
+        """Extract insider trading details from Form 4 text."""
+        text_lower = text.lower()
+
+        # Try to find the reporting person's name
+        name = "An insider"
+        name_match = re.search(
+            r'reporting\s+person[:\s]+([A-Z][A-Za-z\s,.-]+?)(?:\s{2,}|\n|$)', text
+        )
+        if not name_match:
+            name_match = re.search(
+                r'name of reporting person\s*[:\s]+([A-Z][A-Za-z\s,.-]+?)(?:\s{2,}|\n|$)', text
+            )
+        if name_match:
+            name = name_match.group(1).strip()[:60]
+
+        # Determine buy vs sell
+        action = "transacted in"
+        if 'acqui' in text_lower or 'purchase' in text_lower or re.search(r'\bA\b.*\bcodes?\b', text):
+            action = "acquired shares of"
+        elif 'dispos' in text_lower or 'sale' in text_lower or re.search(r'\bD\b.*\bcodes?\b', text):
+            action = "disposed of shares of"
+
+        # Try to find share count
+        shares_match = re.search(r'([\d,]+)\s*(?:shares?|common)', text, re.IGNORECASE)
+        shares_str = ""
+        if shares_match:
+            shares_str = f" ({shares_match.group(1)} shares)"
+
+        headline = f"{name} {action} {ticker}{shares_str}"
+        summary = f"Insider transaction (Form 4): {name} {action} {ticker}{shares_str}."
+
+        return headline, summary
+
+    @staticmethod
+    def _extract_13d(text: str, ticker: str) -> Optional[Tuple[str, str]]:
+        """Extract activist/large holder details from SC 13D."""
+        # Try to find the filer name
+        filer = "An investor"
+        filer_match = re.search(
+            r'name[s]?\s+of\s+reporting\s+person[s]?[:\s]+([A-Z][A-Za-z\s,&.-]+?)(?:\s{2,}|\n|$)',
+            text, re.IGNORECASE
+        )
+        if filer_match:
+            filer = filer_match.group(1).strip()[:80]
+
+        # Try to find ownership percentage
+        pct = ""
+        pct_match = re.search(r'([\d.]+)\s*%\s*(?:of|percent)', text, re.IGNORECASE)
+        if pct_match:
+            pct = f" ({pct_match.group(1)}% ownership)"
+
+        headline = f"{filer} disclosed activist position in {ticker}{pct}"
+        summary = (f"Activist disclosure (SC 13D): {filer} has filed as a beneficial owner of 5%+ "
+                   f"of {ticker}{pct}. Review for stated intentions regarding fund governance, "
+                   f"discount narrowing, or strategic actions.")
+
+        return headline, summary
+
+    @staticmethod
+    def _extract_n14(text: str, company: str, ticker: str) -> Optional[Tuple[str, str]]:
+        """Extract merger details from N-14 filing."""
+        text_lower = text.lower()
+
+        # Look for acquiring/target fund names
+        target = ""
+        target_match = re.search(
+            r'(?:merg|reorganiz|consolidat)\w*\s+(?:with|into)\s+([A-Z][A-Za-z\s&,-]+?)(?:\.|,|\s{2,})',
+            text, re.IGNORECASE
+        )
+        if target_match:
+            target = f" with {target_match.group(1).strip()[:80]}"
+
+        headline = f"{company} filed merger/reorganization registration{target}"
+        summary = (f"Merger filing (N-14): {company} is pursuing a merger or reorganization{target}. "
+                   f"This typically causes the discount to narrow as the fund approaches NAV "
+                   f"for the transaction. Review the filing for exchange ratios, timeline, and conditions.")
+
+        return headline, summary
 
 
 # ---------------------------------------------------------------------------
 #  Finnhub News Scanner
 # ---------------------------------------------------------------------------
+
 class FinnhubScanner:
     """Fetch company news from Finnhub API."""
 
@@ -403,12 +685,16 @@ class FinnhubScanner:
 
     def search_ticker(self, ticker: str) -> List[Dict[str, Any]]:
         """Fetch recent news articles for a ticker from Finnhub."""
+        if not self.api_key:
+            logging.debug("Finnhub API key not set — skipping Finnhub scan")
+            return []
+
         end_date = date.today()
         start_date = end_date - timedelta(days=self.lookback_days)
 
         try:
             resp = self.session.get(
-                "https://finnhub.io/api/v1/company-news",
+                f"{FINNHUB_BASE}/company-news",
                 params={
                     "symbol": ticker,
                     "from": start_date.isoformat(),
@@ -417,49 +703,56 @@ class FinnhubScanner:
                 },
                 timeout=15,
             )
-            time.sleep(FINNHUB_DELAY)
 
-            if resp.status_code == 429:
-                logging.warning(f"  Finnhub rate limited on {ticker}, sleeping 30s")
-                time.sleep(30)
+            if resp.status_code == 200:
+                articles = resp.json()
+                if isinstance(articles, list):
+                    return [self._parse_article(a, ticker) for a in articles if self._is_relevant(a, ticker)]
                 return []
-
-            if resp.status_code != 200:
+            elif resp.status_code == 429:
+                logging.warning("Finnhub rate limit hit — sleeping 60s")
+                time.sleep(60)
                 return []
-
-            articles = resp.json()
-            if not isinstance(articles, list):
+            else:
+                logging.warning(f"Finnhub error for {ticker}: HTTP {resp.status_code}")
                 return []
-
-            results = []
-            for art in articles[:5]:  # Max 5 per ticker per source
-                record = self._parse_article(art, ticker)
-                if record:
-                    results.append(record)
-            return results
 
         except Exception as e:
-            logging.warning(f"  Finnhub error for {ticker}: {e}")
+            logging.warning(f"Finnhub error for {ticker}: {e}")
             return []
 
-    def _parse_article(self, art: Dict, ticker: str) -> Optional[Dict]:
-        """Parse a Finnhub article into a standardized alert record."""
-        headline = art.get("headline", "")
-        summary = art.get("summary", "")
-        source = art.get("source", "Finnhub")
-        url = art.get("url", "")
+    def _is_relevant(self, article: Dict, ticker: str) -> bool:
+        """Filter out generic market news — only keep CEF-specific items."""
+        headline = (article.get("headline", "") or "").lower()
+        summary = (article.get("summary", "") or "").lower()
+        text = f"{headline} {summary}"
 
-        if not headline:
-            return None
+        # Must mention the ticker or be clearly about a closed-end fund event
+        ticker_lower = ticker.lower()
+        if ticker_lower in text:
+            return True
+
+        # Check for CEF-relevant keywords
+        cef_keywords = ["closed-end", "closed end", "cef", "distribution", "nav",
+                        "premium", "discount", "tender", "merger", "rights offering"]
+        return any(kw in text for kw in cef_keywords)
+
+    def _parse_article(self, article: Dict, ticker: str) -> Dict[str, Any]:
+        """Parse a Finnhub article into a standardized alert record."""
+        headline = article.get("headline", "No headline")
+        summary = article.get("summary", "")
+        url = article.get("url", "")
+        source = article.get("source", "Finnhub")
 
         # Parse timestamp
-        ts = art.get("datetime", 0)
+        ts = article.get("datetime", 0)
         try:
             event_date = datetime.fromtimestamp(ts).date() if ts else date.today()
-        except (ValueError, OSError):
+        except (OSError, ValueError):
             event_date = date.today()
 
-        event_type, materiality = classify_event(headline, summary, "")
+        # Classify
+        event_type, materiality = classify_event(headline, summary)
 
         return {
             "ticker": ticker,
@@ -477,221 +770,244 @@ class FinnhubScanner:
 # ---------------------------------------------------------------------------
 #  Supabase Writer
 # ---------------------------------------------------------------------------
+
 class SupabaseWriter:
-    """Write alerts to Supabase cef_news_alerts table."""
+    """Write news alerts to Supabase with upsert/dedup."""
 
-    def __init__(self):
-        self.headers = {
-            "apikey": SUPABASE_KEY,
-            "Authorization": f"Bearer {SUPABASE_KEY}",
+    def __init__(self, url: str, key: str):
+        self.url = url.rstrip("/")
+        self.key = key
+        self.session = requests.Session()
+        self.session.headers.update({
+            "apikey": key,
+            "Authorization": f"Bearer {key}",
             "Content-Type": "application/json",
-            "Prefer": "return=minimal,resolution=ignore-duplicates",
-        }
+            "Prefer": "resolution=merge-duplicates",  # Upsert on unique constraint
+        })
 
-    def write_alerts(self, alerts: List[Dict]) -> int:
-        """Upsert alerts to Supabase. Returns count written."""
+    def write_alerts(self, alerts: List[Dict[str, Any]]) -> int:
+        """
+        Upsert alerts to cef_news_alerts table.
+        Returns count of rows written.
+        """
         if not alerts:
             return 0
 
-        # Batch in groups of 50
+        # Batch in groups of 100
         written = 0
-        for i in range(0, len(alerts), 50):
-            batch = alerts[i:i + 50]
+        for i in range(0, len(alerts), 100):
+            batch = alerts[i:i+100]
             try:
-                resp = requests.post(
-                    f"{SUPABASE_URL}/rest/v1/cef_news_alerts",
-                    headers=self.headers,
+                resp = self.session.post(
+                    f"{self.url}/rest/v1/cef_news_alerts",
                     json=batch,
-                    timeout=30,
                 )
                 if resp.status_code in (200, 201):
                     written += len(batch)
                 elif resp.status_code == 409:
-                    # Duplicate — try one by one
-                    for alert in batch:
-                        try:
-                            r = requests.post(
-                                f"{SUPABASE_URL}/rest/v1/cef_news_alerts",
-                                headers=self.headers,
-                                json=alert,
-                                timeout=10,
-                            )
-                            if r.status_code in (200, 201):
-                                written += 1
-                        except Exception:
-                            pass
+                    # Duplicate — already exists, skip
+                    logging.debug(f"Duplicates in batch {i//100 + 1}, attempting individual inserts")
+                    written += self._write_individual(batch)
                 else:
-                    logging.warning(f"  Supabase write error {resp.status_code}: {resp.text[:200]}")
+                    logging.error(f"Supabase write error: {resp.status_code} — {resp.text[:200]}")
             except Exception as e:
-                logging.warning(f"  Supabase write error: {e}")
+                logging.error(f"Supabase write exception: {e}")
 
         return written
 
-    def fetch_tickers_with_cik(self) -> Dict[str, int]:
-        """Fetch ticker -> CIK mapping from both cef_tickers and bdc_tickers."""
-        cik_map = {}
-        for table in ("cef_tickers", "bdc_tickers"):
+    def _write_individual(self, alerts: List[Dict]) -> int:
+        """Fall back to individual inserts for dedup conflict resolution."""
+        written = 0
+        for alert in alerts:
             try:
-                resp = requests.get(
-                    f"{SUPABASE_URL}/rest/v1/{table}?select=ticker,cik&cik=not.is.null",
-                    headers={
-                        "apikey": SUPABASE_KEY,
-                        "Authorization": f"Bearer {SUPABASE_KEY}",
-                    },
-                    timeout=15,
+                resp = self.session.post(
+                    f"{self.url}/rest/v1/cef_news_alerts",
+                    json=alert,
                 )
-                if resp.status_code == 200:
-                    for row in resp.json():
-                        cik_map[row["ticker"]] = row["cik"]
+                if resp.status_code in (200, 201):
+                    written += 1
+            except Exception:
+                pass
+        return written
+
+
+# ---------------------------------------------------------------------------
+#  Main Scanner Orchestrator
+# ---------------------------------------------------------------------------
+
+class CEFNewsScanner:
+    """Orchestrates the full scan across all tickers and sources."""
+
+    def __init__(self, lookback_days: int = 2, dry_run: bool = False):
+        self.lookback_days = lookback_days
+        self.dry_run = dry_run
+
+        self.edgar = EDGARScanner(lookback_days=lookback_days)
+        self.finnhub = FinnhubScanner(api_key=FINNHUB_KEY, lookback_days=lookback_days)
+        self.writer = SupabaseWriter(SUPABASE_URL, SUPABASE_KEY) if not dry_run else None
+
+    def scan_ticker(self, ticker: str) -> List[Dict[str, Any]]:
+        """Scan a single ticker across all sources. Returns list of alerts."""
+        alerts = []
+
+        # 1. SEC EDGAR
+        logging.info(f"  EDGAR scan: {ticker}")
+        edgar_hits = self.edgar.search_ticker(ticker)
+        alerts.extend(edgar_hits)
+
+        # 2. Finnhub
+        if FINNHUB_KEY:
+            logging.info(f"  Finnhub scan: {ticker}")
+            finnhub_hits = self.finnhub.search_ticker(ticker)
+            alerts.extend(finnhub_hits)
+            time.sleep(FINNHUB_DELAY)
+
+        # Deduplicate by (ticker, event_date, source_url)
+        seen = set()
+        unique = []
+        for a in alerts:
+            key = (a["ticker"], a["event_date"], a.get("source_url", ""))
+            if key not in seen:
+                seen.add(key)
+                unique.append(a)
+
+        return unique
+
+    def scan_all(self, tickers: List[str] = None) -> Dict[str, Any]:
+        """
+        Scan all tickers (or a subset). Returns summary stats.
+        """
+        tickers = tickers or CEF_TICKERS
+        total_alerts = []
+        ticker_counts = {}
+
+        logging.info(f"Starting CEF News Scan — {len(tickers)} tickers, "
+                     f"{self.lookback_days}-day lookback")
+        logging.info(f"Sources: SEC EDGAR" + (f" + Finnhub" if FINNHUB_KEY else " (Finnhub disabled — no API key)"))
+        logging.info("=" * 60)
+
+        for i, ticker in enumerate(tickers, 1):
+            logging.info(f"[{i}/{len(tickers)}] Scanning {ticker}...")
+            try:
+                alerts = self.scan_ticker(ticker)
+                if alerts:
+                    total_alerts.extend(alerts)
+                    ticker_counts[ticker] = len(alerts)
+                    for a in alerts:
+                        logging.info(f"    → {a['event_type']:16s} | {a['headline'][:60]}")
             except Exception as e:
-                logging.warning(f"  Could not fetch CIKs from {table}: {e}")
-        return cik_map
+                logging.error(f"  Error scanning {ticker}: {e}")
 
-    def fetch_all_tickers(self) -> List[str]:
-        """Fetch all tickers from cef_tickers."""
-        try:
-            resp = requests.get(
-                f"{SUPABASE_URL}/rest/v1/cef_tickers?select=ticker&order=ticker",
-                headers={
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": f"Bearer {SUPABASE_KEY}",
-                },
-                timeout=15,
-            )
-            if resp.status_code == 200:
-                return [r["ticker"] for r in resp.json()]
-        except Exception as e:
-            logging.warning(f"  Could not fetch tickers: {e}")
-        return []
+        # Write to Supabase
+        written = 0
+        if total_alerts and not self.dry_run:
+            logging.info(f"\nWriting {len(total_alerts)} alerts to Supabase...")
+            written = self.writer.write_alerts(total_alerts)
+            logging.info(f"Successfully wrote {written} alerts")
+        elif self.dry_run:
+            logging.info(f"\n[DRY RUN] Would write {len(total_alerts)} alerts")
+            written = len(total_alerts)
+
+        # Summary
+        summary = {
+            "scan_date": date.today().isoformat(),
+            "tickers_scanned": len(tickers),
+            "total_alerts": len(total_alerts),
+            "alerts_written": written,
+            "tickers_with_news": len(ticker_counts),
+            "by_type": {},
+            "high_priority": [],
+        }
+
+        for a in total_alerts:
+            t = a["event_type"]
+            summary["by_type"][t] = summary["by_type"].get(t, 0) + 1
+            if a["materiality"] >= 70:
+                summary["high_priority"].append(
+                    f"{a['ticker']}: {a['event_type']} — {a['headline'][:80]}"
+                )
+
+        return summary
 
 
 # ---------------------------------------------------------------------------
-#  Main
+#  CLI
 # ---------------------------------------------------------------------------
+
 def main():
-    parser = argparse.ArgumentParser(description="CEF News Scanner v2 (CIK-based)")
-    parser.add_argument("--ticker", help="Scan a single ticker")
-    parser.add_argument("--days", type=int, default=2, help="Lookback days (default: 2)")
-    parser.add_argument("--dry-run", action="store_true", help="Print results, don't write")
-    parser.add_argument("-v", "--verbose", action="store_true", help="Verbose logging")
+    parser = argparse.ArgumentParser(
+        description="CEF News Scanner — Daily Material Event Monitor",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python cef_news_scanner.py                   # Full scan, all tickers
+  python cef_news_scanner.py --ticker UTF      # Single ticker
+  python cef_news_scanner.py --days 7          # 7-day lookback
+  python cef_news_scanner.py --dry-run -v      # Verbose dry run
+
+Environment:
+  SUPABASE_URL, SUPABASE_SERVICE_KEY, FINNHUB_API_KEY
+        """,
+    )
+    parser.add_argument("--ticker", "-t", help="Scan a single ticker")
+    parser.add_argument("--days", "-d", type=int, default=2, help="Lookback days (default: 2)")
+    parser.add_argument("--dry-run", action="store_true", help="Don't write to Supabase")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose logging")
+    parser.add_argument("--output", "-o", help="Save results to JSON file")
+
     args = parser.parse_args()
 
+    # Logging
+    level = logging.DEBUG if args.verbose else logging.INFO
     logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.INFO,
+        level=level,
         format="%(asctime)s [%(levelname)s] %(message)s",
         datefmt="%H:%M:%S",
     )
 
-    if not SUPABASE_KEY:
-        logging.error("SUPABASE_SERVICE_KEY not set. Set in .env or environment.")
+    # Validate config
+    if not args.dry_run and not SUPABASE_KEY:
+        logging.error("SUPABASE_SERVICE_KEY not set. Use --dry-run or set the env var.")
         sys.exit(1)
 
-    # Initialize
-    writer = SupabaseWriter()
-
-    # Fetch CIK map from Supabase
-    logging.info("Loading CIK map from Supabase...")
-    cik_map = writer.fetch_tickers_with_cik()
-    logging.info(f"  {len(cik_map)} tickers have CIK values")
-
-    if not cik_map:
-        logging.error("No CIK values found! Run populate_ciks.py first.")
-        sys.exit(1)
-
-    # Determine tickers to scan
-    if args.ticker:
-        tickers = [args.ticker.upper()]
-    else:
-        tickers = writer.fetch_all_tickers()
-
-    # Check Finnhub
-    use_finnhub = bool(FINNHUB_KEY)
-    if not use_finnhub:
+    if not FINNHUB_KEY:
         logging.warning("FINNHUB_API_KEY not set — only SEC EDGAR will be scanned.")
 
-    sources = "SEC EDGAR" + (" + Finnhub" if use_finnhub else " (Finnhub disabled — no API key)")
-    logging.info(f"Starting CEF News Scan — {len(tickers)} tickers, {args.days}-day lookback")
-    logging.info(f"Sources: {sources}")
-    logging.info("=" * 60)
+    # Run scanner
+    scanner = CEFNewsScanner(lookback_days=args.days, dry_run=args.dry_run)
 
-    # Initialize scanners
-    edgar = EDGARScanner(cik_map=cik_map, lookback_days=args.days)
-    finnhub = FinnhubScanner(api_key=FINNHUB_KEY, lookback_days=args.days) if use_finnhub else None
+    tickers = [args.ticker.upper()] if args.ticker else None
+    summary = scanner.scan_all(tickers)
 
-    all_alerts = []
-    tickers_with_news = set()
-    type_counts: Dict[str, int] = {}
-    skipped_no_cik = 0
-
-    for idx, ticker in enumerate(tickers, 1):
-        logging.info(f"[{idx}/{len(tickers)}] Scanning {ticker}...")
-
-        alerts = []
-
-        # EDGAR scan (CIK-based)
-        if ticker in cik_map:
-            logging.info(f"  EDGAR scan: {ticker} (CIK {cik_map[ticker]})")
-            edgar_alerts = edgar.search_ticker(ticker)
-            alerts.extend(edgar_alerts)
-            if edgar_alerts:
-                logging.info(f"    → {len(edgar_alerts)} EDGAR filings found")
-        else:
-            skipped_no_cik += 1
-            logging.debug(f"  Skipping EDGAR for {ticker} — no CIK")
-
-        # Finnhub scan
-        if finnhub:
-            logging.info(f"  Finnhub scan: {ticker}")
-            fh_alerts = finnhub.search_ticker(ticker)
-            alerts.extend(fh_alerts)
-            if fh_alerts:
-                logging.info(f"    → {len(fh_alerts)} Finnhub articles found")
-
-        if alerts:
-            tickers_with_news.add(ticker)
-            for a in alerts:
-                t = a.get("event_type", "OTHER")
-                type_counts[t] = type_counts.get(t, 0) + 1
-                if a.get("materiality", 0) >= 70:
-                    logging.info(f"    → {ticker}: {t} — {a['headline'][:80]}")
-
-        all_alerts.extend(alerts)
-
-    # Write or dry-run
-    written = 0
-    if all_alerts:
-        if args.dry_run:
-            print(f"\n[DRY RUN] Would write {len(all_alerts)} alerts")
-            for a in all_alerts[:20]:
-                prio = "HIGH" if a.get("materiality", 0) >= 70 else "med" if a.get("materiality", 0) >= 50 else "low"
-                print(f"  [{prio:4}] {a['ticker']:6} {a['event_type']:16} {a['headline'][:70]}")
-            if len(all_alerts) > 20:
-                print(f"  ... and {len(all_alerts) - 20} more")
-        else:
-            written = writer.write_alerts(all_alerts)
-
-    # Summary
+    # Print summary
     print("\n" + "=" * 60)
     print("CEF NEWS SCAN — SUMMARY")
     print("=" * 60)
-    print(f"  Date:              {date.today()}")
-    print(f"  Tickers scanned:   {len(tickers)}")
-    print(f"  Tickers w/ CIK:    {len(tickers) - skipped_no_cik}")
-    print(f"  Skipped (no CIK):  {skipped_no_cik}")
-    print(f"  Total alerts:      {len(all_alerts)}")
-    print(f"  Alerts written:    {written}")
-    print(f"  Tickers with news: {len(tickers_with_news)}")
-    if type_counts:
+    print(f"  Date:              {summary['scan_date']}")
+    print(f"  Tickers scanned:   {summary['tickers_scanned']}")
+    print(f"  Total alerts:      {summary['total_alerts']}")
+    print(f"  Alerts written:    {summary['alerts_written']}")
+    print(f"  Tickers with news: {summary['tickers_with_news']}")
+    print()
+
+    if summary["by_type"]:
         print("  By Event Type:")
-        for t, c in sorted(type_counts.items(), key=lambda x: -x[1]):
-            print(f"    {t:20} {c}")
-    high_prio = [a for a in all_alerts if a.get("materiality", 0) >= 70]
-    if high_prio:
-        print(f"  ⚠ HIGH PRIORITY (materiality ≥ 70):")
-        for a in high_prio[:15]:
-            print(f"    • {a['ticker']}: {a['event_type']} — {a['headline'][:70]}")
-        if len(high_prio) > 15:
-            print(f"    ... and {len(high_prio) - 15} more")
+        for etype, count in sorted(summary["by_type"].items(), key=lambda x: -x[1]):
+            print(f"    {etype:20s}  {count}")
+        print()
+
+    if summary["high_priority"]:
+        print("  ⚠ HIGH PRIORITY (materiality ≥ 70):")
+        for item in summary["high_priority"][:20]:
+            print(f"    • {item}")
+        print()
+
+    # Optional JSON output
+    if args.output:
+        with open(args.output, "w") as f:
+            json.dump(summary, f, indent=2)
+        print(f"  Summary saved to: {args.output}")
+
     print("=" * 60)
 
 

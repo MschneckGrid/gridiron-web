@@ -760,6 +760,13 @@ thead th.f-hdr { background:#fdf8ec; border-bottom-color:#92700a; }
 
     <!-- Controls -->
     <div class="news-controls">
+      <select id="newsAssetClassFilter" onchange="renderNews()">
+        <option value="ALL">All Asset Classes</option>
+        <option value="CEF">CEF</option>
+        <option value="BDC">BDC</option>
+        <option value="MLP">MLP</option>
+        <option value="REIT">REIT</option>
+      </select>
       <select id="newsTypeFilter" onchange="renderNews()">
         <option value="ALL">All Event Types</option>
         <option value="MERGER">Merger / Reorganization</option>
@@ -4731,18 +4738,22 @@ function renderNewsStats() {
   const high = active.filter(n => n.materiality >= 70).length;
   const tickers = new Set(active.map(n => n.ticker)).size;
   const reviewed = active.filter(n => n.reviewed).length;
+  const acCounts = {};
+  for (const n of active) { for (const ac of (n.asset_classes || [])) { acCounts[ac] = (acCounts[ac] || 0) + 1; } }
 
   el.innerHTML =
     '<div class="news-stat"><div class="ns-val">' + active.length + '</div><div class="ns-label">Total Alerts</div></div>' +
     '<div class="news-stat"><div class="ns-val" style="color:#d32f2f">' + high + '</div><div class="ns-label">High Priority</div></div>' +
     '<div class="news-stat"><div class="ns-val">' + tickers + '</div><div class="ns-label">Tickers</div></div>' +
-    '<div class="news-stat"><div class="ns-val">' + reviewed + '/' + active.length + '</div><div class="ns-label">Reviewed</div></div>';
+    '<div class="news-stat"><div class="ns-val">' + reviewed + '/' + active.length + '</div><div class="ns-label">Reviewed</div></div>' +
+    ['CEF','BDC','MLP','REIT'].map(function(ac) { return '<div class="news-stat"><div class="ns-val">' + (acCounts[ac] || 0) + '</div><div class="ns-label">' + ac + '</div></div>'; }).join('');
 }
 
 function renderNews() {
   const el = document.getElementById('newsList');
   if (!NEWS_DATA.length) { el.innerHTML = '<div class="news-empty">No news alerts found for this period.</div>'; return; }
 
+  const acF = document.getElementById('newsAssetClassFilter').value;
   const typeF = document.getElementById('newsTypeFilter').value;
   const prioF = document.getElementById('newsPriorityFilter').value;
   const srcF = document.getElementById('newsSourceFilter').value;
@@ -4751,6 +4762,7 @@ function renderNews() {
 
   let filtered = NEWS_DATA.filter(n => {
     if (!showDismissed && n.dismissed) return false;
+    if (acF !== 'ALL' && !(n.asset_classes || []).includes(acF)) return false;
     if (typeF !== 'ALL' && n.event_type !== typeF) return false;
     if (prioF === 'HIGH' && (n.materiality || 0) < 70) return false;
     if (prioF === 'MED' && ((n.materiality || 0) < 50 || (n.materiality || 0) >= 70)) return false;

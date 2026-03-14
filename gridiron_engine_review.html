@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gridiron Partners — Signal Engine Parameter Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #1a1c22;
+  --ink2: #3d4152;
+  --ink3: #6b7080;
+  --ink4: #9ba0b0;
+  --rule: #e4e6ed;
+  --rule2: #eef0f5;
+  --bg: #ffffff;
+  --bg2: #f7f8fb;
+  --bg3: #f0f2f8;
+  --gold: #9a7b3c;
+  --gold-light: #c4a05a;
+  --gold-bg: #fdf8ef;
+  --gold-border: #e8d5a8;
+  --green: #2a7a50;
+  --green-bg: #edf7f2;
+  --green-border: #a8d8bc;
+  --red: #c0392b;
+  --red-bg: #fdf2f1;
+  --red-border: #f0b8b3;
+  --blue: #2563a8;
+  --blue-bg: #eff5fc;
+  --blue-border: #b3cfec;
+  --amber: #9a6200;
+  --amber-bg: #fef9ec;
+  --r: 4px;
+  --r2: 8px;
+}
+
+body {
+  background: var(--bg2);
+  color: var(--ink);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--ink);
+  padding: 0;
+}
+.header-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 40px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+.brand-div {
+  width: 1px;
+  height: 14px;
+  background: #444;
+  align-self: center;
+}
+.brand-doc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #888;
+  text-transform: uppercase;
+}
+.header-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #666;
+  letter-spacing: 0.08em;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+.hero-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 52px 40px 44px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+  align-items: start;
+}
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.hero-body {
+  color: var(--ink2);
+  font-size: 15px;
+  line-height: 1.75;
+  max-width: 580px;
+}
+.hero-card {
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--r2);
+  padding: 22px 24px;
+}
+.hero-card-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero-card p {
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+.hero-card p:last-child { margin-bottom: 0; }
+
+/* ── LAYOUT ── */
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+}
+
+/* ── SECTION LABELS ── */
+.section-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: var(--ink4);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.section-divider {
+  height: 1px;
+  background: var(--rule);
+  margin: 48px 0;
+}
+
+/* ── ARCHITECTURE GRID ── */
+.arch-cols {
+  display: grid;
+  grid-template-columns: 190px 1fr 200px;
+  gap: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--r2);
+  overflow: hidden;
+  background: var(--bg);
+  margin-bottom: 32px;
+}
+.arch-col-head {
+  background: var(--bg3);
+  border-bottom: 1px solid var(--rule);
+  padding: 10px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--ink3);
+  text-transform: uppercase;
+}
+.arch-col-head.center { text-align: center; }
+.arch-col-head.right { text-align: right; }
+.arch-sources {
+  border-right: 1px solid var(--rule);
+  padding: 16px;
+}
+.arch-pipeline {
+  border-right: 1px solid var(--rule);
+  padding: 16px;
+}
+.arch-outputs { padding: 16px; }
+
+.source-chip {
+  background: var(--bg2);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+.source-chip:last-child { margin-bottom: 0; }
+.source-freq {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: var(--ink4);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.source-name { font-size: 12px; font-weight: 600; color: var(--ink); }
+.source-desc { font-size: 11px; color: var(--ink3); margin-top: 1px; }
+
+.layer-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule2);
+}
+.layer-row:last-child { border-bottom: none; padding-bottom: 0; }
+.layer-num-badge {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+}
+.ln-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+.ln-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.ln-gold { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-border); }
+.ln-purple { background: #f3eefb; color: #6d3faa; border: 1px solid #cdb8ec; }
+.ln-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.ln-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid #f0d898; }
+.ln-ink { background: var(--bg3); color: var(--ink2); border: 1px solid var(--rule); }
+.layer-row-body { flex: 1; }
+.layer-row-name { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.layer-row-desc { font-size: 11px; color: var(--ink3); line-height: 1.5; }
+.layer-row-weight {
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink4);
+  padding-top: 6px;
+}
+
+.sig-out {
+  padding: 8px 10px;
+  border-radius: var(--r);
+  margin-bottom: 6px;
+  border-left: 3px solid transparent;
+}
+.sig-out:last-child { margin-bottom: 0; }
+.sig-name-out {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin-bottom: 1px;
+}
+.sig-desc-out { font-size: 11px; color: var(--ink3); }
+.sigo-sbuy { background: #edf7f2; border-left-color: var(--green); }
+.sigo-sbuy .sig-name-out { color: var(--green); }
+.sigo-buy { background: #f3faf6; border-left-color: #5ab882; }
+.sigo-buy .sig-name-out { color: #3a9463; }
+.sigo-wait { background: var(--blue-bg); border-left-color: var(--blue); }
+.sigo-wait .sig-name-out { color: var(--blue); }
+.sigo-hold { background: var(--bg3); border-left-color: var(--ink4); }
+.sigo-hold .sig-name-out { color: var(--ink3); }
+.sigo-sell { background: #fdf6f5; border-left-color: #e07060; }
+.sigo-sell .sig-name-out { color: #c0392b; }
+.sigo-ssell { background: var(--red-bg); border-left-color: var(--red); }
+.sigo-ssell .sig-name-out { color: var(--red); }
+
+/* ── PRINCIPLES ── */
+.principles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.principle-card {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: var(--r2);
+  padding: 18px 20px;
+}
+.principle-icon { font-size: 20px; margin-bottom: 8px; }
+.principle-head { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+.principle-body { font-size: 12px; color: var(--ink3); line-height: 1.6; }
+
+/* ── PROGRESS ── */
+.progress-strip {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: var(--r2);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.progress-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink3);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.progress-track {
+  flex: 1;
+  height: 5px;
+  background: var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.progress-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 500;
+  min-width: 34px;
+  text-align: right;
+}
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  border-bottom: 2px solid var(--rule);
+  margin-bottom: 0;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 10px 24px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+.tab-ticker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  background: var(--bg3);
+  color: var(--ink4);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+.tab-btn.active .tab-ticker { background: var(--gold-bg); color: var(--gold); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── ASSET PANEL ── */
+.asset-header {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-top: none;
+  border-radius: 0 0 var(--r2) var(--r2);
+  padding: 24px 28px 22px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.asset-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.asset-sub { font-size: 12px; color: var(--ink3); }
+.asset-count {
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+}
+.asset-count-num { font-size: 26px; font-weight: 500; color: var(--ink); display: block; }
+.asset-count-lbl { font-size: 9px; letter-spacing: 0.14em; color: var(--ink4); text-transform: uppercase; }
+
+/* ── LAYER ACCORDION ── */
+.layer-block {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: var(--r2);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.layer-trigger {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.layer-trigger:hover { background: var(--bg2); }
+.layer-trigger.open { border-bottom: 1px solid var(--rule); }
+.layer-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  padding: 3px 9px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.lb-l1 { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+.lb-l2 { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.lb-l3 { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-border); }
+.lb-l4 { background: #f3eefb; color: #6d3faa; border: 1px solid #cdb8ec; }
+.lb-l5 { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.lb-sig { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+.layer-trigger-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  flex: 1;
+  text-align: left;
+}
+.layer-trigger-meta {
+  font-size: 11px;
+  color: var(--ink4);
+  font-style: italic;
+}
+.layer-chevron {
+  color: var(--ink4);
+  font-size: 11px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.layer-trigger.open .layer-chevron { transform: rotate(180deg); }
+
+.layer-body {
+  display: none;
+  padding: 22px 20px;
+  background: var(--bg);
+}
+.layer-body.open { display: block; }
+
+.layer-context-box {
+  background: var(--bg2);
+  border-left: 3px solid var(--rule);
+  padding: 11px 14px;
+  border-radius: 0 var(--r) var(--r) 0;
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+/* ── QUESTIONS ── */
+.q-block { margin-bottom: 20px; }
+.q-block:last-child { margin-bottom: 0; }
+.q-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+.q-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  flex-shrink: 0;
+  padding-top: 2px;
+  min-width: 26px;
+}
+.q-hint {
+  font-size: 11px;
+  color: var(--ink3);
+  margin-bottom: 10px;
+  margin-left: 35px;
+  line-height: 1.55;
+}
+
+/* Radio chips */
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-left: 35px;
+}
+.chip-label { cursor: pointer; }
+.chip-label input[type="radio"] { display: none; }
+.chip {
+  display: inline-block;
+  padding: 5px 13px;
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink3);
+  background: var(--bg2);
+  transition: all 0.12s;
+  user-select: none;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--gold-border); color: var(--gold); }
+.chip-label input:checked + .chip {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* Text inputs */
+textarea, input[type="number"] {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  color: var(--ink);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+textarea:focus, input[type="number"]:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(154,123,60,0.08); }
+textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
+textarea, input[type="number"] { margin-left: 35px; width: calc(100% - 35px); }
+
+/* Threshold row */
+.thresh-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-left: 35px;
+  width: calc(100% - 35px);
+}
+.thresh-item label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--ink4);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 5px;
+}
+.thresh-item input[type="number"] {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Veto table */
+.veto-table { margin-left: 35px; width: calc(100% - 35px); }
+.veto-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule2);
+}
+.veto-row:last-child { border-bottom: none; }
+.veto-lbl { font-size: 12px; color: var(--ink2); font-weight: 500; }
+.veto-chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.veto-chip-group .chip-group { margin-left: 0; }
+
+/* Signal thresholds */
+.sig-thresh-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-left: 35px;
+  width: calc(100% - 35px);
+}
+.sig-thresh-card {
+  background: var(--bg2);
+  border: 1px solid var(--rule);
+  border-radius: var(--r2);
+  padding: 12px;
+  text-align: center;
+}
+.sig-thresh-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.stc-sbuy .sig-thresh-name { color: var(--green); }
+.stc-buy .sig-thresh-name { color: #3a9463; }
+.stc-hold .sig-thresh-name { color: var(--ink3); }
+.stc-sell .sig-thresh-name { color: #c05040; }
+.stc-ssell .sig-thresh-name { color: var(--red); }
+.sig-thresh-card input[type="number"] {
+  margin-left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 6px 4px;
+}
+.sig-thresh-card .sub { font-size: 9px; color: var(--ink4); margin-top: 4px; }
+
+/* Q divider */
+.q-divider { height: 1px; background: var(--rule2); margin: 16px 0; }
+
+/* ── EXPORT STRIP ── */
+.export-strip {
+  background: var(--ink);
+  border-radius: var(--r2);
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 40px;
+}
+.export-strip p { color: #aaa; font-size: 13px; line-height: 1.65; max-width: 560px; }
+.export-strip p strong { color: #fff; }
+.btn-export {
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: var(--r);
+  padding: 12px 28px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.btn-export:hover { background: var(--gold-light); }
+
+/* ── MODAL ── */
+.modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+.modal-bg.open { display: flex; }
+.modal-box {
+  background: var(--bg);
+  border-radius: var(--r2);
+  width: 680px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+.modal-head {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-head h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--ink3);
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-body {
+  padding: 20px 22px;
+  overflow-y: auto;
+  flex: 1;
+  background: var(--bg2);
+}
+.modal-body pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink2);
+  white-space: pre-wrap;
+  word-break: break-all;
+  line-height: 1.65;
+}
+.modal-foot {
+  padding: 14px 22px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  gap: 10px;
+}
+.btn-copy {
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  border-radius: var(--r);
+  padding: 9px 22px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-copy:hover { background: var(--gold-light); }
+.btn-cancel {
+  background: var(--bg2);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  padding: 9px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink3);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.btn-cancel:hover { border-color: var(--ink3); }
+
+/* Fade-in */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page > * { animation: fadeUp 0.35s ease both; }
+.page > *:nth-child(1) { animation-delay: 0.05s; }
+.page > *:nth-child(2) { animation-delay: 0.1s; }
+.page > *:nth-child(3) { animation-delay: 0.15s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="brand-name">Gridiron Partners</span>
+      <span class="brand-div"></span>
+      <span class="brand-doc">Signal Engine · Parameter Review</span>
+    </div>
+    <div class="header-meta">CONFIDENTIAL — DAVID REVIEW · v1.0 · MARCH 2026</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Architecture Review</div>
+      <h1 class="hero-title">Parameter Framework<br>for the Unified Signal Engine</h1>
+      <p class="hero-body">This document walks through the architecture of the Gridiron Signal Engine and asks you to define the investment parameters for each asset class — CEFs, BDCs, MLPs, and REITs. Your answers determine exactly how the engine scores securities and generates buy, hold, and sell signals. Fill in your responses, then export at the bottom.</p>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-label">Before You Begin</div>
+      <p>Answer each question based on how you actually invest — not how you think a model should work. The engine encodes your judgment, not a generic framework.</p>
+      <p>Questions marked with a number (1.1, 2.3, etc.) map directly to parameters in the engine configuration file.</p>
+      <p>Free-text boxes at the bottom of each section capture anything the structured questions miss.</p>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- SECTION 01: ARCHITECTURE -->
+  <div class="section-eyebrow">01 — How the Engine Works</div>
+  <div class="section-title">Seven-Layer Evaluation Pipeline</div>
+
+  <div class="principles-grid">
+    <div class="principle-card">
+      <div class="principle-icon">📐</div>
+      <div class="principle-head">Composite Score 0–100</div>
+      <div class="principle-body">Each layer produces a sub-score. Weighted layer scores combine into a final composite. The signal — STRONG BUY through STRONG SELL — maps from where that composite lands.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">🧩</div>
+      <div class="principle-head">Asset-Class Profiles</div>
+      <div class="principle-body">Layer 1 (market price analysis) is shared across all asset classes. Layers 2–6 are pluggable profiles — CEF, BDC, REIT, and MLP each have different fundamentals that matter.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">🛑</div>
+      <div class="principle-head">Layer 5 Has Veto Power</div>
+      <div class="principle-body">A security can score perfectly on Layers 1–4 and still receive HOLD or AVOID if the risk layer identifies structural problems. Cheap and broken is still broken.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">⚡</div>
+      <div class="principle-head">Momentum Confirmation Gate</div>
+      <div class="principle-body">A wide discount without positive price momentum is a value trap, not an opportunity. BUY signals require momentum confirmation. Wide discount + falling price = WAIT, not BUY.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">🔄</div>
+      <div class="principle-head">Self-Calibrating Over Time</div>
+      <div class="principle-body">Every signal is timestamped and tracked. Forward returns at 30/60/90/180 days feed back into accuracy analysis. Parameters can be recalibrated quarterly based on what the engine gets right and wrong.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">🔒</div>
+      <div class="principle-head">Six-Month Paper Gate</div>
+      <div class="principle-body">No signal reaches live deployment or paid IronSignal subscribers until it has been paper-traded for six months with tracked outcomes. David approves all parameter changes before they go live.</div>
+    </div>
+  </div>
+
+  <div class="arch-cols">
+    <div>
+      <div class="arch-col-head">Data Inputs</div>
+      <div class="arch-sources">
+        <div class="source-chip">
+          <div class="source-freq">Daily</div>
+          <div class="source-name">FastTrack API</div>
+          <div class="source-desc">Price, NAV, volume, yield, distributions</div>
+        </div>
+        <div class="source-chip">
+          <div class="source-freq">Quarterly</div>
+          <div class="source-name">SEC XBRL / EDGAR</div>
+          <div class="source-desc">10-K, 10-Q, N-PORT — fundamentals &amp; holdings</div>
+        </div>
+        <div class="source-chip">
+          <div class="source-freq">Real-time</div>
+          <div class="source-name">8-K / RSS Alerts</div>
+          <div class="source-desc">Material events, distribution changes</div>
+        </div>
+        <div class="source-chip">
+          <div class="source-freq">Live DB</div>
+          <div class="source-name">Supabase</div>
+          <div class="source-desc">366 CEFs · 49 BDCs · expanding REIT/MLP</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="arch-col-head center">Evaluation Pipeline</div>
+      <div class="arch-pipeline">
+        <div class="layer-row">
+          <div class="layer-num-badge ln-blue">L1</div>
+          <div class="layer-row-body">
+            <div class="layer-row-name">Quantitative Market Analysis</div>
+            <div class="layer-row-desc">Discount/premium, 1yr/3yr Z-score, momentum, volume confirmation, RSI, yield spread vs peers, volatility. Identical math for all asset classes — only peer groups differ.</div>
+          </div>
+          <div class="layer-row-weight">Shared Core</div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-badge ln-green">L2</div>
+          <div class="layer-row-body">
+            <div class="layer-row-name">Fundamental Financial Health</div>
+            <div class="layer-row-desc">Distribution coverage, leverage, NAV trend, income quality. Metrics differ: NII for BDCs, UNII for CEFs, FFO for REITs, DCF for MLPs.</div>
+          </div>
+          <div class="layer-row-weight">Asset Profile</div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-badge ln-gold">L3</div>
+          <div class="layer-row-body">
+            <div class="layer-row-name">Management &amp; Governance</div>
+            <div class="layer-row-desc">Fee structure, alignment with investors, track record, insider activity, conflicts of interest.</div>
+          </div>
+          <div class="layer-row-weight">Asset Profile</div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-badge ln-purple">L4</div>
+          <div class="layer-row-body">
+            <div class="layer-row-name">Portfolio / Credit Quality</div>
+            <div class="layer-row-desc">Underlying portfolio composition, credit quality, concentration risk, sector exposure, non-accruals (BDCs), duration (CEFs/REITs).</div>
+          </div>
+          <div class="layer-row-weight">Asset Profile</div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-badge ln-red">L5</div>
+          <div class="layer-row-body">
+            <div class="layer-row-name">Risk Scoring &amp; Veto Triggers ← OVERRIDE</div>
+            <div class="layer-row-desc">Hard-stop conditions that override all other scores regardless of composite. Leverage breach, distribution cut, NAV spiral, structural problems.</div>
+          </div>
+          <div class="layer-row-weight">Veto Power</div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-badge ln-amber">L6</div>
+          <div class="layer-row-body">
+            <div class="layer-row-name">News &amp; Sentiment</div>
+            <div class="layer-row-desc">EDGAR 8-K events, earnings tone, insider transactions, sector flows. Adjusts composite score ±10%.</div>
+          </div>
+          <div class="layer-row-weight">Modifier</div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num-badge ln-ink">L7</div>
+          <div class="layer-row-body">
+            <div class="layer-row-name">Conviction Output</div>
+            <div class="layer-row-desc">Bull case, bear case, key assumptions, what would make the signal wrong. Final signal with confidence level HIGH / MEDIUM / LOW.</div>
+          </div>
+          <div class="layer-row-weight">Synthesis</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="arch-col-head right">Signal Output</div>
+      <div class="arch-outputs">
+        <div class="sig-out sigo-sbuy">
+          <div class="sig-name-out">STRONG BUY</div>
+          <div class="sig-desc-out">Score ≥80, momentum confirmed, no vetoes</div>
+        </div>
+        <div class="sig-out sigo-buy">
+          <div class="sig-name-out">BUY</div>
+          <div class="sig-desc-out">Score 65–79, momentum confirmed</div>
+        </div>
+        <div class="sig-out sigo-wait">
+          <div class="sig-name-out">WAIT</div>
+          <div class="sig-desc-out">Score ≥65 but no momentum confirmation yet</div>
+        </div>
+        <div class="sig-out sigo-hold">
+          <div class="sig-name-out">HOLD</div>
+          <div class="sig-desc-out">Score 40–64 or risk flags present</div>
+        </div>
+        <div class="sig-out sigo-sell">
+          <div class="sig-name-out">SELL</div>
+          <div class="sig-desc-out">Score 20–39</div>
+        </div>
+        <div class="sig-out sigo-ssell">
+          <div class="sig-name-out">STRONG SELL</div>
+          <div class="sig-desc-out">Score below 20</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- SECTION 02: QUESTIONNAIRE -->
+  <div class="section-eyebrow">02 — Asset Class Parameters</div>
+  <div class="section-title">David's Investment Framework</div>
+
+  <div class="progress-strip">
+    <div class="progress-lbl">Completion</div>
+    <div class="progress-track"><div class="progress-fill" id="pf" style="width:0%"></div></div>
+    <div class="progress-pct" id="pp">0%</div>
+    <div class="progress-lbl" style="color:var(--ink4);font-size:9px" id="progress-detail">0 of 0 questions answered</div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('cef',this)">Closed-End Funds <span class="tab-ticker">366</span></button>
+    <button class="tab-btn" onclick="switchTab('bdc',this)">Business Development Cos. <span class="tab-ticker">49</span></button>
+    <button class="tab-btn" onclick="switchTab('reit',this)">REITs <span class="tab-ticker">~175</span></button>
+    <button class="tab-btn" onclick="switchTab('mlp',this)">MLPs / Midstream <span class="tab-ticker">~35</span></button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       CEF TAB
+  ════════════════════════════════════════════════ -->
+  <div id="tab-cef" class="tab-panel active">
+    <div class="asset-header">
+      <div>
+        <div class="asset-title">Closed-End Funds</div>
+        <div class="asset-sub">Discount/premium to NAV · Distribution sustainability · Portfolio quality · Leverage under ICA</div>
+      </div>
+      <div class="asset-count"><span class="asset-count-num">366</span><span class="asset-count-lbl">Active Tickers</span></div>
+    </div>
+
+    <!-- L1 -->
+    <div class="layer-block">
+      <button class="layer-trigger open" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l1">L1</span>
+        <span class="layer-trigger-name">Quantitative Market Analysis</span>
+        <span class="layer-trigger-meta">Shared core · suggested ~35% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body open">
+        <div class="layer-context-box">Layer 1 is identical across all asset classes — the discount/NAV math and z-score logic don't change. What you're defining here is how strict the entry threshold is, which lookback windows matter most, and how to group CEF peers for relative comparison.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.1</span>What minimum discount to NAV must a CEF show before the engine considers it BUY-eligible?</div>
+          <div class="q-hint">This is the entry floor. A discount of −8% means the engine won't generate a BUY signal unless the fund trades at least 8% below its NAV, regardless of other factors. Tighter floor = more signals. Wider = fewer, higher-conviction.</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l1_disc" value="-5"><span class="chip">−5% or wider</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_disc" value="-8"><span class="chip">−8% or wider</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_disc" value="-10"><span class="chip">−10% or wider</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_disc" value="-12"><span class="chip">−12% or wider</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_disc" value="-15"><span class="chip">−15% or wider</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_disc" value="none"><span class="chip">No minimum floor — score everything</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.2</span>Which Z-score lookback period carries the most weight in your valuation thinking?</div>
+          <div class="q-hint">1-year Z tells you cheapness vs. recent conditions. 3-year captures a full cycle. 5-year gives maximum context but can anchor to historically abnormal environments (e.g., post-COVID distortions).</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l1_z" value="1yr_primary"><span class="chip">1-Year primary (50%), 3-Year secondary</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_z" value="3yr_primary"><span class="chip">3-Year primary (50%), 1-Year secondary</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_z" value="equal"><span class="chip">Equal weight 1yr / 3yr / 5yr</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_z" value="blend_5030"><span class="chip">Blend: 50% 1yr · 30% 3yr · 20% 5yr</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.3</span>Momentum gate — how strict should this be for CEFs?</div>
+          <div class="q-hint">The current live engine blocks ~87.5% of buy candidates with a strict momentum requirement. Your investment philosophy is value-focused — wide discounts are opportunities. The question is how much you want momentum to gate discount-driven signals.</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l1_mom" value="strict"><span class="chip">Strict — require positive 60-day price momentum</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_mom" value="moderate"><span class="chip">Moderate — flat or improving momentum acceptable</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_mom" value="relaxed"><span class="chip">Relaxed — very wide discounts can bypass momentum gate</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_mom" value="off"><span class="chip">Off — momentum is a scoring factor, not a gate</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.4</span>Peer group structure for relative discount comparison:</div>
+          <div class="q-hint">Comparing a muni CEF's discount to an equity CEF's gives a meaningless signal. Narrower peer groups = more precise comparison, but smaller sample sizes.</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l1_peer" value="broad"><span class="chip">Broad: Equity / Fixed Income / Multi-Asset</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_peer" value="sector"><span class="chip">Sector: Muni / Taxable FI / Equity / Hybrid</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_peer" value="narrow"><span class="chip">Narrow: Muni National / State / IG / HY / Equity Growth / etc.</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.5</span>Seasonal scoring — should the engine adjust CEF scores for known seasonal patterns?</div>
+          <div class="q-hint">Year-end tax loss selling reliably widens CEF discounts in November/December. January effect often narrows them. The existing JS engine uses a 10% seasonal weight.</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l1_seasonal" value="yes_10"><span class="chip">Yes — keep ~10% seasonal weight</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_seasonal" value="yes_5"><span class="chip">Yes — reduce to ~5% weight</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l1_seasonal" value="no"><span class="chip">No — don't score seasonality</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- L2 -->
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l2">L2</span>
+        <span class="layer-trigger-name">Fundamental Financial Health</span>
+        <span class="layer-trigger-meta">CEF Profile · suggested ~20% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">For CEFs, the fundamental questions are: Is the distribution sustainable? How much is return of capital? Does the fund have UNII cushion? What is the effective leverage under the Investment Company Act? What is the expense ratio vs. peers?</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.1</span>UNII (Undistributed Net Investment Income) — how does it factor into your assessment of distribution sustainability?</div>
+          <div class="q-hint">Positive UNII = the fund has earned more than it has distributed — a cushion. Negative UNII = it's paying out more than it earns, a distribution cut risk.</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l2_unii" value="strong_positive"><span class="chip">Strong positive UNII = meaningful score boost</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l2_unii" value="neutral_ok"><span class="chip">Neutral UNII acceptable if ROC is low</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l2_unii" value="any_negative_penalty"><span class="chip">Any negative UNII triggers a score penalty</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.2</span>Return of Capital (ROC) — at what percentage of distribution does ROC become a concern?</div>
+          <div class="q-hint">Some ROC is benign (return of gains). Destructive ROC erodes NAV over time. The question is where your threshold is.</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l2_roc" value="any_penalty"><span class="chip">Any ROC = penalty</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l2_roc" value="gt20"><span class="chip">&gt;20% ROC = penalty</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l2_roc" value="gt50"><span class="chip">&gt;50% ROC = penalty</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l2_roc" value="destructive_only"><span class="chip">Only destructive ROC (NAV erosion trend) = penalty</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.3</span>Effective leverage — at what level does leverage concern you? (CEFs limited to 33% under ICA)</div>
+          <div class="thresh-row">
+            <div class="thresh-item"><label>Mild penalty above</label><input type="number" id="cef_l2_lev_mild" placeholder="e.g. 25" min="0" max="50"> <span style="font-size:10px;color:var(--ink4);display:block;margin-top:2px">% of assets</span></div>
+            <div class="thresh-item"><label>Hard penalty above</label><input type="number" id="cef_l2_lev_hard" placeholder="e.g. 30" min="0" max="50"></div>
+            <div class="thresh-item"><label>Veto / SELL signal above</label><input type="number" id="cef_l2_lev_sell" placeholder="e.g. 33" min="0" max="50"></div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.4</span>Expense ratio vs. peers — does this factor into your CEF decisions?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l2_exp" value="top_quartile"><span class="chip">Top quartile (most expensive) = penalty</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l2_exp" value="above_150bps"><span class="chip">Above 1.5% absolute = penalty</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l2_exp" value="ignore"><span class="chip">Don't score expense ratio separately</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.5</span>Managed distribution plans — does a formal MDP (fixed distribution regardless of earnings) help or hurt your conviction?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l2_mdp" value="positive"><span class="chip">Positive — signals management commitment to distributions</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l2_mdp" value="neutral"><span class="chip">Neutral — irrelevant to scoring</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l2_mdp" value="negative"><span class="chip">Negative — masks earnings weakness</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- L3 -->
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l3">L3</span>
+        <span class="layer-trigger-name">Management &amp; Governance</span>
+        <span class="layer-trigger-meta">CEF Profile · suggested ~5% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">CEF management evaluation is lighter than BDCs — CEF managers don't originate loans, they manage a portfolio. Key considerations: manager tenure, strategy drift, rights offering dilution risk, and activist investor activity.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">3.1</span>Manager tenure and track record — how much does this influence your CEF decisions?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l3_tenure" value="high"><span class="chip">High — penalize funds with new or unproven managers</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l3_tenure" value="moderate"><span class="chip">Moderate — factor it in but not decisive</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l3_tenure" value="low"><span class="chip">Low — the strategy and discount matter more than who runs it</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">3.2</span>Activist pressure (e.g., Saba Capital targeting a CEF for liquidation/conversion) — how should the engine treat this?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l3_activist" value="positive"><span class="chip">Positive — activist pressure closes discounts, creates catalyst</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l3_activist" value="neutral"><span class="chip">Neutral — flag it but don't adjust score</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l3_activist" value="negative"><span class="chip">Negative — increases restructuring and liquidation risk</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">3.3</span>Anything else about CEF management or governance that matters to how you invest?</div>
+          <textarea id="cef_l3_other" placeholder="e.g. shareholder-friendly repurchase programs, board independence, specific manager firms you trust or avoid..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- L4 -->
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l4">L4</span>
+        <span class="layer-trigger-name">Portfolio Quality</span>
+        <span class="layer-trigger-meta">CEF Profile · suggested ~25% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">For CEFs, portfolio quality data comes from N-PORT filings (quarterly). Key metrics for fixed income CEFs: credit quality distribution, effective duration, sector concentration, and liquidity of underlying holdings.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">4.1</span>Credit quality — for fixed income CEFs, at what level of below-investment-grade exposure does scoring start to penalize?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l4_cq" value="ig_only"><span class="chip">Only score IG CEFs — HY is excluded</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l4_cq" value="lt50_ig_penalty"><span class="chip">&lt;50% investment grade = penalty</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l4_cq" value="hy_ok"><span class="chip">HY is fine — score by portfolio quality, not rating</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l4_cq" value="na_equity"><span class="chip">N/A — primarily equity CEFs</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">4.2</span>Duration risk — for fixed income CEFs, at what effective duration does rate sensitivity become a scoring concern?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l4_dur" value="gt5"><span class="chip">&gt;5 years = mild penalty</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l4_dur" value="gt8"><span class="chip">&gt;8 years = mild penalty</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l4_dur" value="gt10"><span class="chip">&gt;10 years = hard penalty</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l4_dur" value="ignore"><span class="chip">Don't score duration — that's a separate macro view</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">4.3</span>Portfolio concentration — at what single-sector weighting does a concentration flag trigger?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="cef_l4_conc" value="gt30"><span class="chip">&gt;30% in one sector</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l4_conc" value="gt40"><span class="chip">&gt;40% in one sector</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l4_conc" value="gt50"><span class="chip">&gt;50% in one sector</span></label>
+            <label class="chip-label"><input type="radio" name="cef_l4_conc" value="ignore"><span class="chip">Don't flag concentration separately</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- L5 -->
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l5">L5</span>
+        <span class="layer-trigger-name">Risk Veto Triggers — CEF Hard Stops</span>
+        <span class="layer-trigger-meta">Veto power — overrides all other layers</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">Hard stops are non-negotiable. If any of these conditions are true, the engine issues HOLD or AVOID regardless of how attractive the discount looks. Hard veto = AVOID. Soft veto = HOLD, blocks BUY only.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">5.1</span>Set the veto level for each trigger:</div>
+          <div class="veto-table">
+            <div class="veto-row">
+              <div class="veto-lbl">Distribution cut (recent)</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="cef_v_distcut" value="hard_3m"><span class="chip">Hard veto within 3 months</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_distcut" value="hard_6m"><span class="chip">Hard veto within 6 months</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_distcut" value="soft"><span class="chip">Soft veto — blocks BUY only</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_distcut" value="none"><span class="chip">Factor into score, not a veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">NAV erosion trend</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="cef_v_nav" value="hard_15"><span class="chip">Hard veto if NAV −15% over 1yr</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_nav" value="hard_20"><span class="chip">Hard veto if NAV −20% over 1yr</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_nav" value="soft"><span class="chip">Soft veto — score penalty only</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_nav" value="none"><span class="chip">Not a veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">Leverage breach (&gt;ICA limit)</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="cef_v_lev" value="hard"><span class="chip">Hard veto always</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_lev" value="soft"><span class="chip">Soft veto — flag and penalize</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">Rights offering (dilution)</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="cef_v_rights" value="hard"><span class="chip">Hard veto while offering is open</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_rights" value="soft"><span class="chip">Soft veto — flag only</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_rights" value="none"><span class="chip">Not a veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">MDP plan exhausted</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="cef_v_mdp" value="hard"><span class="chip">Hard veto</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_mdp" value="soft"><span class="chip">Soft veto</span></label>
+                <label class="chip-label"><input type="radio" name="cef_v_mdp" value="none"><span class="chip">Not a veto</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">5.2</span>Any other hard stops — conditions where the engine must never generate a BUY regardless of discount?</div>
+          <textarea id="cef_l5_other" placeholder="e.g. pending liquidation announced, SEC investigation underway, specific fund families you never buy, pending merger..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal thresholds -->
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-sig">SIG</span>
+        <span class="layer-trigger-name">Signal Score Thresholds — CEF</span>
+        <span class="layer-trigger-meta">Maps composite score to BUY / HOLD / SELL recommendation</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">The composite score runs 0–100. Enter the minimum score required for each signal level. Defaults shown — adjust to match your conviction requirements. A tighter BUY threshold means fewer but higher-quality signals.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">6.1</span>Set minimum composite score for each signal:</div>
+          <div class="sig-thresh-grid">
+            <div class="sig-thresh-card stc-sbuy">
+              <div class="sig-thresh-name">STRONG BUY</div>
+              <input type="number" id="cef_sig_sbuy" placeholder="80" min="60" max="100">
+              <div class="sub">score ≥ this</div>
+            </div>
+            <div class="sig-thresh-card stc-buy">
+              <div class="sig-thresh-name">BUY</div>
+              <input type="number" id="cef_sig_buy" placeholder="65" min="40" max="90">
+              <div class="sub">score ≥ this</div>
+            </div>
+            <div class="sig-thresh-card stc-hold">
+              <div class="sig-thresh-name">HOLD</div>
+              <input type="number" id="cef_sig_hold" placeholder="40" min="20" max="70">
+              <div class="sub">score ≥ this</div>
+            </div>
+            <div class="sig-thresh-card stc-sell">
+              <div class="sig-thresh-name">SELL</div>
+              <input type="number" id="cef_sig_sell" placeholder="20" min="5" max="45">
+              <div class="sub">score ≥ this</div>
+            </div>
+            <div class="sig-thresh-card stc-ssell">
+              <div class="sig-thresh-name">STRONG SELL</div>
+              <input type="number" value="0" readonly>
+              <div class="sub">below SELL</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">6.2</span>CEF investment philosophy — anything the engine should encode that the questions above didn't capture:</div>
+          <textarea id="cef_philosophy" placeholder="e.g. Never buy at a premium. Always require 5yr fund track record. Prefer leveraged muni CEFs in rate-stable environments. Sector weightings. Specific names on permanent avoid list..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       BDC TAB
+  ════════════════════════════════════════════════ -->
+  <div id="tab-bdc" class="tab-panel">
+    <div class="asset-header">
+      <div>
+        <div class="asset-title">Business Development Companies</div>
+        <div class="asset-sub">NII coverage · PIK income · Non-accruals · NAV stability · Leverage under SBCAA (1.0x D/E limit)</div>
+      </div>
+      <div class="asset-count"><span class="asset-count-num">49</span><span class="asset-count-lbl">Active Tickers</span></div>
+    </div>
+
+    <!-- BDC L1 -->
+    <div class="layer-block">
+      <button class="layer-trigger open" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l1">L1</span>
+        <span class="layer-trigger-name">Quantitative Market Analysis</span>
+        <span class="layer-trigger-meta">Shared core · suggested ~25% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body open">
+        <div class="layer-context-box">BDCs trade at a premium or discount to NAV like CEFs, but NAV is restated quarterly at fair value of the loan portfolio — making the discount analysis inherently backward-looking. Many quality BDCs trade at slight premiums. This changes how you set the entry threshold.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.1</span>BDC discount entry threshold — quality BDCs often trade at premiums. At what level does it become an interesting opportunity?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="bdc_l1_disc" value="any_discount"><span class="chip">Any discount (&lt;0% to NAV)</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l1_disc" value="-5"><span class="chip">−5% or wider</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l1_disc" value="-8"><span class="chip">−8% or wider</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l1_disc" value="-10"><span class="chip">−10% or wider</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l1_disc" value="none"><span class="chip">No floor — quality at fair NAV is acceptable</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.2</span>Momentum gate strictness for BDCs:</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="bdc_l1_mom" value="strict"><span class="chip">Strict — require positive 60-day momentum</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l1_mom" value="moderate"><span class="chip">Moderate — flat or improving acceptable</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l1_mom" value="relaxed"><span class="chip">Relaxed — discount-driven BDC signals can bypass</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l1_mom" value="off"><span class="chip">Off — factor not a gate</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.3</span>BDC peer groups for relative discount comparison:</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="bdc_l1_peer" value="all_one"><span class="chip">All BDCs as one peer group</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l1_peer" value="by_strategy"><span class="chip">By strategy: Direct Lending / Diversified / Venture / Specialty</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l1_peer" value="by_size"><span class="chip">By size: large-cap / mid-cap / small-cap</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BDC L2 -->
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l2">L2</span>
+        <span class="layer-trigger-name">Fundamental Financial Health</span>
+        <span class="layer-trigger-meta">BDC Profile · suggested ~25% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">BDC fundamentals hinge on Net Investment Income (NII) covering the distribution, NAV stability quarter-over-quarter, leverage (capped at 1.0x D/E under SBCAA), and PIK income as a share of total income. PIK interest is non-cash — borrower pays in additional debt, not cash — which inflates reported NII.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.1</span>NII coverage ratio — what level signals a healthy, sustainable distribution?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="bdc_l2_nii" value="1.25"><span class="chip">&gt;125% = high score, &lt;100% = hard penalty</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l2_nii" value="1.10"><span class="chip">&gt;110% = healthy, &lt;100% = penalty</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l2_nii" value="1.0"><span class="chip">&gt;100% acceptable — trend matters more than level</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.2</span>PIK income — at what percentage of total NII does PIK exposure become a scoring concern?</div>
+          <div class="q-hint">PIK inflates NII without generating cash. A BDC paying its dividend from 40% PIK income has a much weaker safety cushion than one generating all cash interest.</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="bdc_l2_pik" value="gt10"><span class="chip">&gt;10% PIK = penalty</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l2_pik" value="gt20"><span class="chip">&gt;20% PIK = penalty</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l2_pik" value="gt30"><span class="chip">&gt;30% PIK = hard penalty</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l2_pik" value="ignore"><span class="chip">Don't score separately — it's in the NII coverage</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.3</span>Leverage (Debt/Equity) — at what level does leverage become a scoring concern? BDCs limited to 1.0x under SBCAA.</div>
+          <div class="thresh-row">
+            <div class="thresh-item"><label>Mild penalty above</label><input type="number" id="bdc_l2_lev_mild" placeholder="e.g. 0.75" step="0.05"></div>
+            <div class="thresh-item"><label>Hard penalty above</label><input type="number" id="bdc_l2_lev_hard" placeholder="e.g. 0.90" step="0.05"></div>
+            <div class="thresh-item"><label>Veto above</label><input type="number" id="bdc_l2_lev_veto" placeholder="e.g. 1.0" step="0.05"><span style="font-size:10px;color:var(--ink4);display:block;margin-top:2px">x debt/equity</span></div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.4</span>NAV trend — how many consecutive quarters of NAV decline triggers a penalty?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="bdc_l2_nav" value="1"><span class="chip">1 quarter = soft flag</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l2_nav" value="2"><span class="chip">2 consecutive = scoring penalty</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l2_nav" value="3"><span class="chip">3 consecutive = hard penalty</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BDC L4 -->
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l4">L4</span>
+        <span class="layer-trigger-name">Portfolio Credit Quality</span>
+        <span class="layer-trigger-meta">BDC Profile · suggested ~20% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">BDC portfolio quality comes from Schedule of Investments (SOI) filings. Non-accruals are the key leading indicator of realized losses — when a borrower stops paying, the loan gets marked to near-zero. Seniority structure and single-borrower concentration amplify or limit that risk.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">4.1</span>Non-accrual rate — at what percentage of portfolio fair value does non-accrual exposure trigger each level of response?</div>
+          <div class="thresh-row">
+            <div class="thresh-item"><label>Score penalty above</label><input type="number" id="bdc_l4_na_pen" placeholder="e.g. 3" min="0" max="20"><span style="font-size:10px;color:var(--ink4);display:block;margin-top:2px">% of fair value</span></div>
+            <div class="thresh-item"><label>Hard penalty above</label><input type="number" id="bdc_l4_na_hard" placeholder="e.g. 5" min="0" max="20"></div>
+            <div class="thresh-item"><label>Veto above</label><input type="number" id="bdc_l4_na_veto" placeholder="e.g. 10" min="0" max="30"></div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">4.2</span>Senior secured composition — what minimum percentage of portfolio in first lien / senior secured is required for a full-score portfolio?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="bdc_l4_senior" value="gt70"><span class="chip">&gt;70% senior secured = full score</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l4_senior" value="gt60"><span class="chip">&gt;60% = full score</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l4_senior" value="gt50"><span class="chip">&gt;50% = acceptable</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l4_senior" value="ignore"><span class="chip">Don't require — grade on overall risk/return profile</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">4.3</span>Single-borrower concentration — maximum percentage of fair value in one borrower before flagging?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="bdc_l4_conc" value="gt3"><span class="chip">&gt;3% in one borrower</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l4_conc" value="gt5"><span class="chip">&gt;5% in one borrower</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l4_conc" value="gt10"><span class="chip">&gt;10% in one borrower</span></label>
+            <label class="chip-label"><input type="radio" name="bdc_l4_conc" value="ignore"><span class="chip">Don't flag single-borrower concentration</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BDC L5 -->
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l5">L5</span>
+        <span class="layer-trigger-name">Risk Veto Triggers — BDC Hard Stops</span>
+        <span class="layer-trigger-meta">Veto power — overrides all other layers</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">BDC-specific hard stops. These are conditions where the engine refuses to generate a BUY regardless of discount or score.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">5.1</span>Veto rules for each BDC trigger:</div>
+          <div class="veto-table">
+            <div class="veto-row">
+              <div class="veto-lbl">Distribution cut (recent)</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="bdc_v_distcut" value="hard_3m"><span class="chip">Hard veto within 3 months</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_distcut" value="hard_6m"><span class="chip">Hard veto within 6 months</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_distcut" value="soft"><span class="chip">Soft veto only</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_distcut" value="none"><span class="chip">Factor not veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">Leverage breach (&gt;1.0x D/E)</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="bdc_v_lev" value="hard"><span class="chip">Hard veto always</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_lev" value="soft"><span class="chip">Soft veto — flag and penalize</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">NAV spiral (&gt;15% in 4 quarters)</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="bdc_v_nav" value="hard"><span class="chip">Hard veto</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_nav" value="soft"><span class="chip">Soft veto</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_nav" value="none"><span class="chip">Not a veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">Non-accrual spike (&gt;threshold)</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="bdc_v_na" value="hard"><span class="chip">Hard veto</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_na" value="soft"><span class="chip">Soft veto</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_na" value="none"><span class="chip">Penalty only, not a veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">PIK dependency (&gt;threshold)</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="bdc_v_pik" value="hard"><span class="chip">Hard veto</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_pik" value="soft"><span class="chip">Soft veto</span></label>
+                <label class="chip-label"><input type="radio" name="bdc_v_pik" value="none"><span class="chip">Not a veto</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">5.2</span>Other BDC hard stops or investment philosophy:</div>
+          <textarea id="bdc_l5_other" placeholder="e.g. Never buy externally managed BDCs. Avoid BDCs with &gt;30% equity investments. Require 2yr+ track record. Names on permanent avoid list (e.g. PSEC)..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- BDC Signal thresholds -->
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-sig">SIG</span>
+        <span class="layer-trigger-name">Signal Score Thresholds — BDC</span>
+        <span class="layer-trigger-meta">Maps composite score to BUY / HOLD / SELL recommendation</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">6.1</span>Set minimum composite score for each BDC signal:</div>
+          <div class="sig-thresh-grid">
+            <div class="sig-thresh-card stc-sbuy"><div class="sig-thresh-name">STRONG BUY</div><input type="number" id="bdc_sig_sbuy" placeholder="80"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-buy"><div class="sig-thresh-name">BUY</div><input type="number" id="bdc_sig_buy" placeholder="65"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-hold"><div class="sig-thresh-name">HOLD</div><input type="number" id="bdc_sig_hold" placeholder="40"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-sell"><div class="sig-thresh-name">SELL</div><input type="number" id="bdc_sig_sell" placeholder="20"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-ssell"><div class="sig-thresh-name">STRONG SELL</div><input type="number" value="0" readonly><div class="sub">below SELL</div></div>
+          </div>
+        </div>
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">6.2</span>General BDC investment philosophy:</div>
+          <textarea id="bdc_philosophy" placeholder="e.g. Prefer internally managed. ARCC/MAIN/BXSL as quality benchmarks. Rate sensitivity view on floating rate portfolios. Weighting toward direct lenders vs. diversified. Names on permanent avoid list..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       REIT TAB
+  ════════════════════════════════════════════════ -->
+  <div id="tab-reit" class="tab-panel">
+    <div class="asset-header">
+      <div>
+        <div class="asset-title">Real Estate Investment Trusts</div>
+        <div class="asset-sub">Implied cap rate vs. private market · FFO coverage · Same-store NOI growth · Rate sensitivity</div>
+      </div>
+      <div class="asset-count"><span class="asset-count-num">~175</span><span class="asset-count-lbl">Tickers Planned</span></div>
+    </div>
+
+    <div class="layer-block">
+      <button class="layer-trigger open" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l1">L1</span>
+        <span class="layer-trigger-name">Quantitative Market Analysis — REITs</span>
+        <span class="layer-trigger-meta">Adapted shared core · suggested ~30% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body open">
+        <div class="layer-context-box">REITs don't trade at a NAV discount the way CEFs/BDCs do. The primary cheapness signal is implied cap rate (NOI ÷ enterprise value) vs. private market cap rates by sector. A REIT is cheap when the market prices it at a wider cap rate than private buyers would pay for the same assets. You already have CBRE private market benchmarks in Supabase.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.1</span>Primary cheapness signal for REITs — how should the engine determine if a REIT is undervalued?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="reit_l1_cheap" value="cap_rate_spread"><span class="chip">Implied cap rate spread vs. CBRE private market benchmarks</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_cheap" value="price_ffo"><span class="chip">Price-to-FFO vs. sector historical average</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_cheap" value="price_nav"><span class="chip">Price-to-NAV (appraised asset value)</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_cheap" value="blend"><span class="chip">Blend of all three with equal weight</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.2</span>Cap rate spread — how wide does the implied cap rate spread vs. private market need to be to qualify as cheap?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="reit_l1_spread" value="25bps"><span class="chip">+25bps or more above private market</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_spread" value="50bps"><span class="chip">+50bps or more</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_spread" value="75bps"><span class="chip">+75bps or more</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_spread" value="100bps"><span class="chip">+100bps or more</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.3</span>REIT peer groups — how granular should the peer comparison be?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="reit_l1_peer" value="broad"><span class="chip">Broad: Equity / Mortgage / Hybrid REIT</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_peer" value="sector"><span class="chip">Sector: Industrial / Residential / Retail / Healthcare / Data Center / etc.</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_peer" value="subsector"><span class="chip">Subsector: Strip Mall vs. Mall · Garden Apt vs. High-rise · etc.</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.4</span>Rate sensitivity modifier — should the engine adjust REIT scores based on the interest rate environment?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="reit_l1_rate" value="strong"><span class="chip">Yes — strong modifier (rates falling = score boost; rising = penalty)</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_rate" value="mild"><span class="chip">Yes — mild modifier</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l1_rate" value="no"><span class="chip">No — market price already reflects rate expectations</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.5</span>Which REIT sectors are in scope? This determines which private cap rate benchmarks need to be sourced.</div>
+          <textarea id="reit_sectors" placeholder="e.g. Industrial, Apartments (garden and high-rise), Net Lease, Self Storage, Healthcare (medical office + senior housing), Data Centers — exclude Office, Regional Malls, Lodging..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l2">L2</span>
+        <span class="layer-trigger-name">Fundamental Financial Health — REITs</span>
+        <span class="layer-trigger-meta">REIT Profile · suggested ~25% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">REIT fundamentals center on FFO (Funds From Operations = net income + depreciation) as the true earnings metric. Distribution coverage = FFO ÷ dividend. Same-store NOI growth measures organic portfolio performance independent of acquisitions.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.1</span>FFO payout ratio — what coverage signals a sustainable distribution? (payout = dividend ÷ FFO)</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="reit_l2_ffo" value="lt80"><span class="chip">&lt;80% payout ratio (FFO covers &gt;1.25x)</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l2_ffo" value="lt90"><span class="chip">&lt;90% payout = healthy</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l2_ffo" value="lt100"><span class="chip">&lt;100% payout acceptable</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.2</span>Leverage (Debt/EBITDA) — REITs use significant debt, typically 4–7x. At what level does leverage concern you?</div>
+          <div class="thresh-row">
+            <div class="thresh-item"><label>Mild penalty above</label><input type="number" id="reit_l2_lev_mild" placeholder="e.g. 6" step="0.5"><span style="font-size:10px;color:var(--ink4);display:block;margin-top:2px">x Debt/EBITDA</span></div>
+            <div class="thresh-item"><label>Hard penalty above</label><input type="number" id="reit_l2_lev_hard" placeholder="e.g. 8" step="0.5"></div>
+            <div class="thresh-item"><label>Veto above</label><input type="number" id="reit_l2_lev_veto" placeholder="e.g. 10" step="0.5"></div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.3</span>Same-store NOI growth — what minimum organic growth rate signals a healthy portfolio?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="reit_l2_noi" value="gt3"><span class="chip">&gt;3% SSNOI growth = full score</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l2_noi" value="gt2"><span class="chip">&gt;2% = healthy</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l2_noi" value="positive"><span class="chip">Any positive SSNOI growth = acceptable</span></label>
+            <label class="chip-label"><input type="radio" name="reit_l2_noi" value="ignore"><span class="chip">Don't score separately</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l5">L5</span>
+        <span class="layer-trigger-name">Risk Veto Triggers — REIT Hard Stops</span>
+        <span class="layer-trigger-meta">Veto power — overrides all other layers</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">5.1</span>Veto rules for each REIT trigger:</div>
+          <div class="veto-table">
+            <div class="veto-row">
+              <div class="veto-lbl">Dividend cut</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="reit_v_div" value="hard_3m"><span class="chip">Hard veto within 3 months</span></label>
+                <label class="chip-label"><input type="radio" name="reit_v_div" value="hard_6m"><span class="chip">Hard veto within 6 months</span></label>
+                <label class="chip-label"><input type="radio" name="reit_v_div" value="soft"><span class="chip">Soft veto</span></label>
+                <label class="chip-label"><input type="radio" name="reit_v_div" value="none"><span class="chip">Not a veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">Leverage breach</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="reit_v_lev" value="hard"><span class="chip">Hard veto</span></label>
+                <label class="chip-label"><input type="radio" name="reit_v_lev" value="soft"><span class="chip">Soft veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">Occupancy collapse</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="reit_v_occ" value="hard_80"><span class="chip">Hard veto if &lt;80% occupancy</span></label>
+                <label class="chip-label"><input type="radio" name="reit_v_occ" value="hard_85"><span class="chip">Hard veto if &lt;85%</span></label>
+                <label class="chip-label"><input type="radio" name="reit_v_occ" value="soft"><span class="chip">Soft veto — sector dependent</span></label>
+                <label class="chip-label"><input type="radio" name="reit_v_occ" value="none"><span class="chip">Not a veto</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">5.2</span>REIT sectors you will never own regardless of valuation — and any other hard rules:</div>
+          <textarea id="reit_l5_other" placeholder="e.g. No office REITs. No regional mall REITs. No mortgage REITs (mREITs). Avoid anything with near-term debt maturity walls. Never buy below X% occupancy threshold by sector..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-sig">SIG</span>
+        <span class="layer-trigger-name">Signal Score Thresholds — REIT</span>
+        <span class="layer-trigger-meta">Maps composite score to BUY / HOLD / SELL recommendation</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">6.1</span>Set minimum composite score for each REIT signal:</div>
+          <div class="sig-thresh-grid">
+            <div class="sig-thresh-card stc-sbuy"><div class="sig-thresh-name">STRONG BUY</div><input type="number" id="reit_sig_sbuy" placeholder="80"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-buy"><div class="sig-thresh-name">BUY</div><input type="number" id="reit_sig_buy" placeholder="65"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-hold"><div class="sig-thresh-name">HOLD</div><input type="number" id="reit_sig_hold" placeholder="40"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-sell"><div class="sig-thresh-name">SELL</div><input type="number" id="reit_sig_sell" placeholder="20"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-ssell"><div class="sig-thresh-name">STRONG SELL</div><input type="number" value="0" readonly><div class="sub">below SELL</div></div>
+          </div>
+        </div>
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">6.2</span>General REIT investment philosophy:</div>
+          <textarea id="reit_philosophy" placeholder="e.g. Prefer secular growth sectors (data centers, industrial, self-storage). Rate cycle timing view. Quality benchmark REITs you use as a reference. How you weigh cap rate spread vs. growth rate..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MLP TAB
+  ════════════════════════════════════════════════ -->
+  <div id="tab-mlp" class="tab-panel">
+    <div class="asset-header">
+      <div>
+        <div class="asset-title">MLPs &amp; Midstream</div>
+        <div class="asset-sub">DCF coverage · Distribution growth · Contract quality · Pipeline / midstream fundamentals</div>
+      </div>
+      <div class="asset-count"><span class="asset-count-num">~35</span><span class="asset-count-lbl">Tickers Planned</span></div>
+    </div>
+
+    <div class="layer-block">
+      <button class="layer-trigger open" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l1">L1</span>
+        <span class="layer-trigger-name">Quantitative Market Analysis — MLPs</span>
+        <span class="layer-trigger-meta">Adapted shared core · suggested ~30% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body open">
+        <div class="layer-context-box">MLPs don't trade at a NAV discount. Valuation is driven by distribution yield vs. historical range, EV/EBITDA multiples vs. sector peers, and DCF yield. The primary cheapness signal is yield spread vs. the 10-year Treasury and vs. the MLP peer group median yield.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.1</span>Primary cheapness signal for MLPs:</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="mlp_l1_cheap" value="yield_spread"><span class="chip">Distribution yield spread vs. 10-year Treasury</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l1_cheap" value="ev_ebitda"><span class="chip">EV/EBITDA vs. sector peer median</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l1_cheap" value="dcf_yield"><span class="chip">DCF yield vs. 5-year historical range</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l1_cheap" value="blend"><span class="chip">Blend: yield spread + EV/EBITDA</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.2</span>Yield spread vs. 10-year Treasury — what spread qualifies as cheap for an MLP?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="mlp_l1_spread" value="200bps"><span class="chip">+200bps or more</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l1_spread" value="300bps"><span class="chip">+300bps or more</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l1_spread" value="400bps"><span class="chip">+400bps or more</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l1_spread" value="historical"><span class="chip">Wider than the 5-year average historical spread</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.3</span>Peer groups for MLP relative comparison:</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="mlp_l1_peer" value="all_mlp"><span class="chip">All MLPs as one peer group</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l1_peer" value="subsector"><span class="chip">By subsector: Gathering &amp; Processing / Interstate Pipelines / Storage / Terminals</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l1_peer" value="with_ccorp"><span class="chip">Include midstream C-corps (ET, WMB, KMI) as peers</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">1.4</span>Scope — MLPs only, or all midstream including C-corps that converted from MLP structure?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="mlp_scope" value="mlp_only"><span class="chip">MLPs only (K-1 tax structure)</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_scope" value="all_midstream"><span class="chip">All midstream — MLPs + midstream C-corps (ET, WMB, KMI, OKE)</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_scope" value="tbd"><span class="chip">TBD — decide when building the universe</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l2">L2</span>
+        <span class="layer-trigger-name">Fundamental Financial Health — MLPs</span>
+        <span class="layer-trigger-meta">MLP Profile · suggested ~25% of final score</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="layer-context-box">MLPs use Distributable Cash Flow (DCF) as the earnings metric. Coverage = DCF ÷ distribution paid. Unlike BDCs, most midstream MLPs have fee-based, volume-driven revenue tied to long-term contracts — making DCF more predictable. Leverage is Debt/EBITDA; midstream typically runs 3.5–5.5x.</div>
+
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.1</span>DCF coverage ratio — what coverage level signals a safe, sustainable distribution?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="mlp_l2_dcf" value="gt1.5"><span class="chip">&gt;1.5x coverage = high score</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l2_dcf" value="gt1.3"><span class="chip">&gt;1.3x = healthy, &lt;1.0x = hard penalty</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l2_dcf" value="gt1.1"><span class="chip">&gt;1.1x acceptable — trend matters more</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.2</span>Distribution growth history — do you prefer MLPs that have grown their distribution, or is stability enough?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="mlp_l2_growth" value="prefer_growth"><span class="chip">Prefer growers — score distribution growth history positively</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l2_growth" value="stable_ok"><span class="chip">Stable is fine — don't require growth</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l2_growth" value="ignore"><span class="chip">Irrelevant — coverage ratio is what matters</span></label>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.3</span>Leverage (Debt/EBITDA) thresholds — midstream typically runs 3.5–5.5x:</div>
+          <div class="thresh-row">
+            <div class="thresh-item"><label>Mild penalty above</label><input type="number" id="mlp_l2_lev_mild" placeholder="e.g. 4.5" step="0.25"><span style="font-size:10px;color:var(--ink4);display:block;margin-top:2px">x Debt/EBITDA</span></div>
+            <div class="thresh-item"><label>Hard penalty above</label><input type="number" id="mlp_l2_lev_hard" placeholder="e.g. 5.5" step="0.25"></div>
+            <div class="thresh-item"><label>Veto above</label><input type="number" id="mlp_l2_lev_veto" placeholder="e.g. 7.0" step="0.25"></div>
+          </div>
+        </div>
+
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">2.4</span>Contract quality — what % of revenue under long-term fee-based contracts signals a quality MLP?</div>
+          <div class="chip-group">
+            <label class="chip-label"><input type="radio" name="mlp_l2_contracts" value="gt80"><span class="chip">&gt;80% fee-based revenue = high score</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l2_contracts" value="gt70"><span class="chip">&gt;70% = healthy</span></label>
+            <label class="chip-label"><input type="radio" name="mlp_l2_contracts" value="ignore"><span class="chip">Don't score contract type separately</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-l5">L5</span>
+        <span class="layer-trigger-name">Risk Veto Triggers — MLP Hard Stops</span>
+        <span class="layer-trigger-meta">Veto power — overrides all other layers</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">5.1</span>Veto rules for each MLP trigger:</div>
+          <div class="veto-table">
+            <div class="veto-row">
+              <div class="veto-lbl">Distribution cut</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="mlp_v_distcut" value="hard_3m"><span class="chip">Hard veto within 3 months</span></label>
+                <label class="chip-label"><input type="radio" name="mlp_v_distcut" value="hard_6m"><span class="chip">Hard veto within 6 months</span></label>
+                <label class="chip-label"><input type="radio" name="mlp_v_distcut" value="soft"><span class="chip">Soft veto</span></label>
+                <label class="chip-label"><input type="radio" name="mlp_v_distcut" value="none"><span class="chip">Not a veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">DCF coverage &lt;1.0x</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="mlp_v_dcf" value="hard"><span class="chip">Hard veto</span></label>
+                <label class="chip-label"><input type="radio" name="mlp_v_dcf" value="soft"><span class="chip">Soft veto</span></label>
+                <label class="chip-label"><input type="radio" name="mlp_v_dcf" value="none"><span class="chip">Penalty only</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">Leverage breach</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="mlp_v_lev" value="hard"><span class="chip">Hard veto</span></label>
+                <label class="chip-label"><input type="radio" name="mlp_v_lev" value="soft"><span class="chip">Soft veto</span></label>
+              </div>
+            </div>
+            <div class="veto-row">
+              <div class="veto-lbl">Regulatory / pipeline shutdown risk</div>
+              <div class="chip-group" style="margin-left:0">
+                <label class="chip-label"><input type="radio" name="mlp_v_reg" value="hard"><span class="chip">Hard veto if active shutdown risk</span></label>
+                <label class="chip-label"><input type="radio" name="mlp_v_reg" value="soft"><span class="chip">Soft veto — flag and monitor</span></label>
+                <label class="chip-label"><input type="radio" name="mlp_v_reg" value="none"><span class="chip">Not a veto</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">5.2</span>Other MLP hard stops or general midstream philosophy:</div>
+          <textarea id="mlp_l5_other" placeholder="e.g. No gathering/processing MLPs with commodity price exposure. Only large-cap investment grade issuers. Avoid anything with near-term contract expiration risk. K-1 complexity concerns for certain account types. Never own MLPs with GP/LP structure where GP has IDRs..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer-block">
+      <button class="layer-trigger" onclick="toggleLayer(this)">
+        <span class="layer-badge lb-sig">SIG</span>
+        <span class="layer-trigger-name">Signal Score Thresholds — MLP</span>
+        <span class="layer-trigger-meta">Maps composite score to BUY / HOLD / SELL recommendation</span>
+        <span class="layer-chevron">▼</span>
+      </button>
+      <div class="layer-body">
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">6.1</span>Set minimum composite score for each MLP signal:</div>
+          <div class="sig-thresh-grid">
+            <div class="sig-thresh-card stc-sbuy"><div class="sig-thresh-name">STRONG BUY</div><input type="number" id="mlp_sig_sbuy" placeholder="80"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-buy"><div class="sig-thresh-name">BUY</div><input type="number" id="mlp_sig_buy" placeholder="65"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-hold"><div class="sig-thresh-name">HOLD</div><input type="number" id="mlp_sig_hold" placeholder="40"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-sell"><div class="sig-thresh-name">SELL</div><input type="number" id="mlp_sig_sell" placeholder="20"><div class="sub">score ≥ this</div></div>
+            <div class="sig-thresh-card stc-ssell"><div class="sig-thresh-name">STRONG SELL</div><input type="number" value="0" readonly><div class="sub">below SELL</div></div>
+          </div>
+        </div>
+        <div class="q-divider"></div>
+        <div class="q-block">
+          <div class="q-label"><span class="q-num">6.2</span>General MLP / midstream investment philosophy:</div>
+          <textarea id="mlp_philosophy" placeholder="e.g. Only large-cap investment grade issuers. Prefer interstate natural gas pipelines. Don't buy anything with commodity price exposure. Quality benchmarks: EPD, ET, WMB. How you weigh yield spread vs. DCF coverage..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT -->
+  <div class="export-strip">
+    <p><strong>When David is done, click Export.</strong> This generates a structured JSON file capturing every parameter decision across all four asset classes. Send it to Mike — these values become the exact configuration baked into the signal engine.</p>
+    <button class="btn-export" onclick="exportAnswers()">Export Parameter Config →</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Parameter Configuration Export</h3>
+      <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+      <pre id="export-out"></pre>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-copy" onclick="copyExport()">Copy to Clipboard</button>
+      <button class="btn-cancel" onclick="document.getElementById('modal').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleLayer(trigger) {
+  const body = trigger.nextElementSibling;
+  trigger.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+function updateProgress() {
+  const groups = new Set();
+  const answered = new Set();
+  document.querySelectorAll('input[type="radio"]').forEach(r => {
+    groups.add(r.name);
+    if (r.checked) answered.add(r.name);
+  });
+  const total = groups.size;
+  const done = answered.size;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('pf').style.width = pct + '%';
+  document.getElementById('pp').textContent = pct + '%';
+  document.getElementById('progress-detail').textContent = done + ' of ' + total + ' questions answered';
+}
+
+document.querySelectorAll('input[type="radio"], input[type="number"], textarea').forEach(el => {
+  el.addEventListener('change', updateProgress);
+  el.addEventListener('input', updateProgress);
+});
+updateProgress();
+
+function collectAll() {
+  const out = {};
+  // Radios
+  document.querySelectorAll('input[type="radio"]').forEach(r => {
+    if (!out[r.name]) out[r.name] = null;
+    if (r.checked) out[r.name] = r.value;
+  });
+  // Text fields with ids
+  document.querySelectorAll('input[type="number"][id], textarea[id]').forEach(el => {
+    if (el.value && !el.readOnly) out[el.id] = el.value;
+  });
+  return out;
+}
+
+function groupByAsset(flat) {
+  const assets = { CEF: {}, BDC: {}, REIT: {}, MLP: {} };
+  for (const [k, v] of Object.entries(flat)) {
+    if (k.startsWith('cef_')) assets.CEF[k.slice(4)] = v;
+    else if (k.startsWith('bdc_')) assets.BDC[k.slice(4)] = v;
+    else if (k.startsWith('reit_')) assets.REIT[k.slice(5)] = v;
+    else if (k.startsWith('mlp_')) assets.MLP[k.slice(4)] = v;
+  }
+  return assets;
+}
+
+function exportAnswers() {
+  const flat = collectAll();
+  const config = {
+    version: 'david-review-v1',
+    exported_at: new Date().toISOString(),
+    completion_note: document.getElementById('progress-detail').textContent,
+    asset_classes: groupByAsset(flat)
+  };
+  document.getElementById('export-out').textContent = JSON.stringify(config, null, 2);
+  document.getElementById('modal').classList.add('open');
+}
+
+function copyExport() {
+  const text = document.getElementById('export-out').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+</script>
+</body>
+</html>

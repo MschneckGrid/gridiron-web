@@ -503,7 +503,7 @@ thead th.f-hdr { background:#fdf8ec; border-bottom-color:#92700a; }
     BDC Dashboard <span class="tab-badge tab-badge-iron" id="bdcCountBadge">0</span>
   </button>
   <button class="master-tab mlp-tab" onclick="switchMasterTab('mlp-dashboard',this)">
-    MLPs <span class="tab-badge tab-badge-mlp" id="mlpCountBadge">0</span>
+    Midstream <span class="tab-badge tab-badge-mlp" id="mlpCountBadge">0</span>
   </button>
   <button class="master-tab reit-tab" onclick="switchMasterTab('reit-dashboard',this)">
     REITs <span class="tab-badge tab-badge-reit" id="reitCountBadge">0</span>
@@ -764,7 +764,7 @@ thead th.f-hdr { background:#fdf8ec; border-bottom-color:#92700a; }
         <option value="ALL">All Asset Classes</option>
         <option value="CEF">CEF</option>
         <option value="BDC">BDC</option>
-        <option value="MLP">MLP</option>
+        <option value="MIDSTREAM">Midstream</option>
         <option value="REIT">REIT</option>
       </select>
       <select id="newsTypeFilter" onchange="renderNews()">
@@ -921,12 +921,12 @@ thead th.f-hdr { background:#fdf8ec; border-bottom-color:#92700a; }
   <div style="padding:8px 32px 6px; border-bottom:1px solid var(--bdr); background:var(--card);">
     <div style="display:flex; align-items:baseline; gap:10px;">
       <span style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#2e7d32;">GRIDIRON</span>
-      <span style="font-size:14px; font-weight:600;">MLP Universe</span>
+      <span style="font-size:14px; font-weight:600;">Midstream Universe</span>
     </div>
-    <div style="font-size:11px; color:var(--dim); font-family:'JetBrains Mono',monospace;" id="mlpLastUpdated">Loading MLP data...</div>
+    <div style="font-size:11px; color:var(--dim); font-family:'JetBrains Mono',monospace;" id="mlpLastUpdated">Loading midstream data...</div>
   </div>
   <div class="ei-stats-bar">
-    <div class="stat-item"><span class="stat-label">MLPs</span><span class="stat-value" id="mlpStatFunds">—</span></div>
+    <div class="stat-item"><span class="stat-label">Funds</span><span class="stat-value" id="mlpStatFunds">—</span></div>
     <div class="stat-item"><span class="stat-label">Avg Yield</span><span class="stat-value" id="mlpStatAvgYield">—</span></div>
     <div class="stat-item"><span class="stat-label">Highest</span><span class="stat-value" id="mlpStatHigh" style="color:var(--grn)">—</span></div>
     <div class="stat-item"><span class="stat-label">Lowest</span><span class="stat-value" id="mlpStatLow">—</span></div>
@@ -947,10 +947,10 @@ thead th.f-hdr { background:#fdf8ec; border-bottom-color:#92700a; }
     <button class="filter-btn" data-group="mlp-momo" onclick="setEIFilter('mlp','momo','neg',this)">Neg Momo</button>
     <button class="filter-btn" data-group="mlp-rsi" onclick="setEIFilter('mlp','rsi','oversold',this)">Oversold RSI</button>
     <button class="filter-btn" data-group="mlp-rsi" onclick="setEIFilter('mlp','rsi','overbought',this)">Overbought</button>
-    <input type="text" class="search-input" placeholder="Search MLPs..." oninput="eiFilterSearch('mlp',this.value)" />
+    <input type="text" class="search-input" placeholder="Search midstream..." oninput="eiFilterSearch('mlp',this.value)" />
   </div>
   <div class="table-wrap">
-    <div class="loading-overlay" id="mlpLoadingOverlay"><div class="spinner"></div><div class="loading-text">LOADING MLP DATA...</div></div>
+    <div class="loading-overlay" id="mlpLoadingOverlay"><div class="spinner"></div><div class="loading-text">LOADING MIDSTREAM DATA...</div></div>
     <table id="mlpMainTable" style="display:none;">
       <thead><tr>
         <th class="al" onclick="eiSortBy('mlp','sector')">Sector <span class="sa"></span></th>
@@ -1161,7 +1161,7 @@ function switchMasterTab(tab, el) {
     loadBDCDashboard();
   }
   if (tab === 'mlp-dashboard' && !mlpLoaded && authToken) {
-    loadEIDashboard('MLP');
+    loadEIDashboard('MIDSTREAM');
   }
   if (tab === 'reit-dashboard' && !reitLoaded && authToken) {
     loadEIDashboard('REIT');
@@ -4738,7 +4738,7 @@ function renderNewsStats() {
     '<div class="news-stat"><div class="ns-val" style="color:#d32f2f">' + high + '</div><div class="ns-label">High Priority</div></div>' +
     '<div class="news-stat"><div class="ns-val">' + tickers + '</div><div class="ns-label">Tickers</div></div>' +
     '<div class="news-stat"><div class="ns-val">' + reviewed + '/' + active.length + '</div><div class="ns-label">Reviewed</div></div>' +
-    ['CEF','BDC','MLP','REIT'].map(function(ac) { return '<div class="news-stat"><div class="ns-val">' + (acCounts[ac] || 0) + '</div><div class="ns-label">' + ac + '</div></div>'; }).join('');
+    ['CEF','BDC','MIDSTREAM','REIT'].map(function(ac) { return '<div class="news-stat"><div class="ns-val">' + (acCounts[ac] || 0) + '</div><div class="ns-label">' + (ac === 'MIDSTREAM' ? 'Midstream' : ac) + '</div></div>'; }).join('');
 }
 
 function renderNews() {
@@ -4849,7 +4849,7 @@ switchMasterTab = function(tab, el) {
 
 // ===== EI (MLP/REIT) DASHBOARD =====
 async function loadEIDashboard(cls) {
-  const lc = cls.toLowerCase();
+  const lc = cls === 'MIDSTREAM' ? 'mlp' : cls.toLowerCase();
   if (lc === 'mlp' && mlpLoaded) return;
   if (lc === 'reit' && reitLoaded) return;
   const ovId = lc + 'LoadingOverlay';
@@ -4885,7 +4885,8 @@ async function loadEIDashboard(cls) {
     document.getElementById(tableId).style.display = 'table';
     document.getElementById(badgeId).textContent = arr.filter(d => d.price != null).length;
     const dates = arr.map(d => d.trade_date).filter(Boolean).sort().reverse();
-    document.getElementById(lastId).textContent = `Data as of: ${dates[0] || 'N/A'}  ·  ${arr.length} ${cls}s`;
+    const displayName = cls === 'MIDSTREAM' ? 'Midstream' : cls;
+    document.getElementById(lastId).textContent = `Data as of: ${dates[0] || 'N/A'}  ·  ${arr.length} ${displayName}`;
   } catch(err) {
     document.getElementById(ovId).innerHTML = `<div class="no-data">Error loading ${cls} data: ${err.message}</div>`;
     console.error(cls + ' dashboard error:', err);

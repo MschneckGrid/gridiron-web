@@ -3162,48 +3162,38 @@ async function openDetail(ticker) {
   overlay.classList.add('open');
   content.innerHTML = '<div class="detail-loading">Loading data for ' + ticker + '...</div>';
 
-  // Get existing data from allData
   const d = allData.find(x => x.ticker === ticker) || {};
 
-  // Start parallel fetches — only use Supabase for chart history (clean unadjusted data)
-  // FT historical prices are total-return adjusted and wrong for discount analysis
-  const [histData, refData, ftResult, fundChars, ftStats] = await Promise.all([
-    fetchSupabaseHistory(ticker),
-    fetchFTReference(ticker),
-    fetchFTHistory(ticker),  // only used for fund name
-    fetchFundChars(ticker),
-    fetchFTStats(ticker, BENCHMARKS[ticker] || 'BBG-')
-  ]);
-  
-  const ftName = ftResult.name || null;
+  try {
+    const withTimeout = (promise, ms, fallback) => Promise.race([
+      promise,
+      new Promise(resolve => setTimeout(() => resolve(fallback), ms))
+    ]);
 
-  // Only use Supabase history (built from daily refreshes = unadjusted prices)
-  let history = histData;
-  
-  // Only keep data points where we have both price AND nav
-  history = history.filter(h => h.price != null && h.nav != null);
-  console.log('Detail history for', ticker, ':', history.length, 'clean rows from Supabase');
+    const [histData, refData, ftResult, fundChars, ftStats] = await Promise.all([
+      withTimeout(fetchSupabaseHistory(ticker), 15000, []),
+      withTimeout(fetchFTReference(ticker), 15000, {}),
+      withTimeout(fetchFTHistory(ticker), 15000, {history:[], name:null}),
+      withTimeout(fetchFundChars(ticker), 15000, {}),
+      withTimeout(fetchFTStats(ticker, BENCHMARKS[ticker] || 'BBG-'), 15000, {})
+    ]);
 
-  // Compute maxdraw from price history BEFORE rendering (FT API returns it inconsistently)
-  const md1y = calcMaxDrawdown(history, 1);
-  const md3y = calcMaxDrawdown(history, 3);
-  if (md1y !== null) ftStats.maxdraw1y = md1y;
-  if (md3y !== null) ftStats.maxdraw3y = md3y;
+    const ftName = ftResult.name || null;
+    let history = histData;
+    history = history.filter(h => h.price != null && h.nav != null);
+    console.log('Detail history for', ticker, ':', history.length, 'clean rows from Supabase');
 
-  // Build the detail content - reference has no name, get it from /data response
-  if (!refData.name) refData.name = ftName;
-  console.log('Final name:', refData.name);
-  console.log('maxdraw computed — 1y:', md1y, '3y:', md3y);
-  content.innerHTML = buildDetailHTML(ticker, d, refData, history, fundChars, ftStats);
+    if (!refData.name) refData.name = ftName;
+    console.log('Final name:', refData.name);
+    content.innerHTML = buildDetailHTML(ticker, d, refData, history, fundChars, ftStats);
 
-  // Store globals for period button re-renders
-  window._detailHistory = history;
-  window._detailInception = refData.inception || null;
-  detailPeriod = '3Y';  // reset to default on each open
-
-  // Render charts via unified renderer (respects detailPeriod)
-  if (history.length > 0) {
-    renderDetailCharts(ticker, history, window._detailInception);
+    if (history.length > 0) {
+      renderPriceNavChart(history, ticker);
+      renderDiscountChart(history, ticker);
+    }
+  } catch(e) {
+    console.error('openDetail error for', ticker, ':', e);
+    content.innerHTML = '<div class="detail-loading" style="color:#ef4444">Error loading ' + ticker + ': ' + e.message + '</div>';
   }
 }
 
@@ -3524,6 +3514,17 @@ function calcMaxDrawdown(history, years) {
   return maxDD; // negative number, e.g. -0.183
 }
 
+// Safe formatter — handles strings like "-Infinity", "NaN", and non-finite numbers from FastTrack
+function safeFix(v, decimals = 2) {
+  if (v == null) return null;
+  const n = typeof v === 'string' ? parseFloat(v) : v;
+  if (!isFinite(n)) return null;
+  return n;
+}
+function sF(v, decimals = 2) { const n = safeFix(v); return n != null ? n.toFixed(decimals) : '—'; }
+function sPct(v, decimals = 2) { const n = safeFix(v); return n != null ? (n * 100).toFixed(decimals) + '%' : '—'; }
+function sPctClass(v) { const n = safeFix(v); return n != null ? (n < 0 ? 'neg' : 'pos') : ''; }
+
 function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
   const name = ref.name || ticker;
   const pct = v => v != null ? (v * 100).toFixed(2) + '%' : '—';
@@ -3590,21 +3591,19 @@ function buildDetailHTML(ticker, d, ref, history, fc = {}, stats = {}) {
       ${zScoreCard('10 Yr', d.z10y)}
     </div>
 
-    ${stats ? `
-    <div class="detail-section">Risk Metrics (1Y vs AGG)</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0">
-      <div class="detail-card"><div class="detail-card-label">1Y Return</div><div class="detail-card-value ${stats.ret1y!=null?(stats.ret1y<0?'neg':'pos'):''}">${stats.ret1y != null ? (stats.ret1y * 100).toFixed(2) + '%' : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">3Y Ann Return</div><div class="detail-card-value ${stats.ret3y!=null?(stats.ret3y<0?'neg':'pos'):''}">${stats.ret3y != null ? (stats.ret3y * 100).toFixed(2) + '%' : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Sharpe (1Y)</div><div class="detail-card-value">${stats.sharpe1y != null ? stats.sharpe1y.toFixed(2) : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Sortino (1Y)</div><div class="detail-card-value">${stats.sortino1y != null ? stats.sortino1y.toFixed(2) : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Beta (1Y)</div><div class="detail-card-value">${stats.beta1y != null ? stats.beta1y.toFixed(2) : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Alpha (1Y)</div><div class="detail-card-value ${stats.alpha1y!=null?(stats.alpha1y<0?'neg':'pos'):''}">${stats.alpha1y != null ? (stats.alpha1y * 100).toFixed(2) + '%' : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Correlation</div><div class="detail-card-value">${stats.correlation1y != null ? stats.correlation1y.toFixed(2) : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Vol (Ann)</div><div class="detail-card-value">${stats.sdAnn1y != null ? (stats.sdAnn1y * 100).toFixed(1) + '%' : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Max Draw (1Y)</div><div class="detail-card-value neg">${stats.maxdraw1y != null ? (-Math.abs(stats.maxdraw1y) * 100).toFixed(2) + '%' : '—'}</div></div>
-      <div class="detail-card"><div class="detail-card-label">Max Draw (3Y)</div><div class="detail-card-value neg">${stats.maxdraw3y != null ? (-Math.abs(stats.maxdraw3y) * 100).toFixed(2) + '%' : '—'}</div></div>
-      <div class="detail-card" style="opacity:0"></div>
-      <div class="detail-card" style="opacity:0"></div>
+    ${stats && (safeFix(stats.sharpe1y) != null || safeFix(stats.ret1y) != null) ? `
+    <div class="detail-section">Risk & Performance (vs AGG)</div>
+    <div class="detail-grid">
+      <div class="detail-card"><div class="detail-card-label">1Y Return</div><div class="detail-card-value ${sPctClass(stats.ret1y)}">${sPct(stats.ret1y)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">3Y Ann Return</div><div class="detail-card-value ${sPctClass(stats.ret3y)}">${sPct(stats.ret3y)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Sharpe (1Y)</div><div class="detail-card-value">${sF(stats.sharpe1y)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Sortino (1Y)</div><div class="detail-card-value">${sF(stats.sortino1y)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Beta (1Y)</div><div class="detail-card-value">${sF(stats.beta1y)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Alpha (1Y)</div><div class="detail-card-value ${sPctClass(stats.alpha1y)}">${sPct(stats.alpha1y)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Correlation</div><div class="detail-card-value">${sF(stats.correlation1y)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Vol (Ann)</div><div class="detail-card-value">${sPct(stats.sdAnn1y, 1)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Max Draw (1Y)</div><div class="detail-card-value neg">${sPct(stats.maxdraw1y)}</div></div>
+      <div class="detail-card"><div class="detail-card-label">Max Draw (3Y)</div><div class="detail-card-value neg">${sPct(stats.maxdraw3y)}</div></div>
     </div>
     ` : ''}
 

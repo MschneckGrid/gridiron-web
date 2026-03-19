@@ -3187,9 +3187,14 @@ async function openDetail(ticker) {
     console.log('Final name:', refData.name);
     content.innerHTML = buildDetailHTML(ticker, d, refData, history, fundChars, ftStats);
 
+    // Store globals for period button re-renders
+    window._detailHistory = history;
+    window._detailInception = refData.inception || null;
+    detailPeriod = '3Y';  // reset to default on each open
+
+    // Render charts via unified renderer (respects detailPeriod)
     if (history.length > 0) {
-      renderPriceNavChart(history, ticker);
-      renderDiscountChart(history, ticker);
+      renderDetailCharts(ticker, history, window._detailInception);
     }
   } catch(e) {
     console.error('openDetail error for', ticker, ':', e);

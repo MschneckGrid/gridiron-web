@@ -1054,7 +1054,7 @@ async function generateSlides() {
       perfIframe = document.createElement('iframe');
       perfIframe.id = 'perf-iframe';
       perfIframe.style.cssText = 'position:fixed;left:-9999px;top:0;width:1920px;height:1200px;border:none;';
-      perfIframe.src = 'gridiron-dashboard-with-fasttrack.html';
+      perfIframe.src = '../dashboard/gridiron-dashboard-with-fasttrack.html';
       document.body.appendChild(perfIframe);
       
       await new Promise(r => perfIframe.onload = r);

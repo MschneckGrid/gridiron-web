@@ -1,0 +1,18 @@
+# Static HTML site — no build step
+[build]
+  command = ""
+  publish = "."
+
+# Default route → main dashboard
+[[redirects]]
+  from = "/"
+  to = "/dashboard/gridiron-dashboard-with-fasttrack.html"
+  status = 302
+  force = false
+
+# Security headers on all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"

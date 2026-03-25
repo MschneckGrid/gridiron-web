@@ -4098,7 +4098,8 @@
 
       // CLIENT_DEFS: n=display name, m=manual input (no Supabase), f=default fees per month
       // s=search terms to match client_name in Supabase
-      // CLIENT_DEFS updated 2026-03-25: Q1=Q4'25 invoice totals (mgmt+perf), Q2-Q4=mgmt only est
+      // CLIENT_DEFS updated 2026-03-25: Q1=Q4'25 invoice totals (mgmt+perf via accrued_perf_fee), Q2-Q4=mgmt est
+      // Clients with perf_fee=0 in Q1 may need Statement viewed to populate accrued_perf_fee, then Refresh
       var CLIENT_DEFS = [
         { n:"Schwab Accounts", m:true, f:[22712,0,0,22000,0,0,22000,0,0,22000,0,0], s:[] },
         { n:"JATC", m:true, f:[11665,0,0,11871,0,0,11871,0,0,11871,0,0], s:["journeymen"] },
@@ -4108,30 +4109,30 @@
         { n:"Steamfitters Local 449 Building", f:[5247,0,0,5350,0,0,5350,0,0,5350,0,0], s:["steamfitter","449","building"] },
         { n:"Steamfitters Local 449 General", f:[5790,0,0,5890,0,0,5890,0,0,5890,0,0], s:["steamfitter","449","general"] },
         { n:"MCA", f:[94,0,0,287,0,0,287,0,0,287,0,0], s:["mechanical contractor"] },
-        { n:"Insulators 2 Pension", f:[20392,0,0,2780,0,0,2780,0,0,2780,0,0], s:["insulator","pension"] },
+        { n:"Insulators 2 Pension", f:[2748,0,0,2780,0,0,2780,0,0,2780,0,0], s:["insulator","pension"] },
         { n:"Insulators 2 General", f:[7355,0,0,7757,0,0,7757,0,0,7757,0,0], s:["insulator","general"] },
-        { n:"WPSD", f:[42463,0,0,10463,0,0,10463,0,0,10463,0,0], s:["western pa school"] },
-        { n:"City of Washington", f:[27034,0,0,4904,0,0,4904,0,0,4904,0,0], s:["city","washington"] },
+        { n:"WPSD", f:[10992,0,0,10463,0,0,10463,0,0,10463,0,0], s:["western pa school"] },
+        { n:"City of Washington", f:[4832,0,0,4904,0,0,4904,0,0,4904,0,0], s:["city","washington"] },
         { n:"354 H&W", f:[7803,0,0,6648,0,0,6648,0,0,6648,0,0], s:["354"] },
-        { n:"449 Pension", f:[38661,0,0,9468,0,0,9468,0,0,9468,0,0], s:["steamfitter","449","pension"] },
+        { n:"449 Pension", f:[54981,0,0,9468,0,0,9468,0,0,9468,0,0], s:["steamfitter","449","pension"] },
         { n:"Beaver Co", f:[11713,0,0,11796,0,0,11796,0,0,11796,0,0], s:["beaver"] },
         { n:"Allegheny Co GTFI", f:[32012,0,0,32453,0,0,32453,0,0,32453,0,0], s:["allegheny"] },
-        { n:"W PA Teamsters H&W", f:[107549,0,0,8543,0,0,8543,0,0,8543,0,0], s:["employment","partners"] },
-        { n:"ATU 85 GMA", f:[275921,0,0,61379,0,0,61379,0,0,61379,0,0], s:["atu","85"] },
-        { n:"Keystone Carpenters", f:[729890,0,0,21657,0,0,21657,0,0,21657,0,0], s:["carpenter"] },
-        { n:"W PA Teamsters Pen", f:[1876688,0,0,31439,0,0,31439,0,0,31439,0,0], s:["teamster","pension"] },
-        { n:"Westmoreland", f:[118036,0,0,26151,0,0,26151,0,0,26151,0,0], s:["westmoreland"] },
-        { n:"City of Pittsburgh", f:[225079,0,0,5621,0,0,5621,0,0,5621,0,0], s:["pittsburgh"] },
-        { n:"BAC General", f:[1658,0,0,170,0,0,170,0,0,170,0,0], s:["bac","general"] },
-        { n:"BAC Welfare", f:[4737,0,0,498,0,0,498,0,0,498,0,0], s:["bac","welfare"] },
-        { n:"BAC Pension", f:[395459,0,0,5589,0,0,5589,0,0,5589,0,0], s:["bac","pension"] },
-        { n:"B&CT Pension", f:[203073,0,0,4385,0,0,4385,0,0,4385,0,0], s:["trades","pension"] },
-        { n:"Ironworkers 3", f:[96994,0,0,3757,0,0,3757,0,0,3757,0,0], s:["ironworker"] },
-        { n:"Cement Masons 806/404", f:[467124,0,0,3120,0,0,3120,0,0,3120,0,0], s:["cement","mason"] },
+        { n:"W PA Teamsters H&W", f:[180281,0,0,8543,0,0,8543,0,0,8543,0,0], s:["employment","partners"] },
+        { n:"ATU 85 GMA", f:[323877,0,0,61379,0,0,61379,0,0,61379,0,0], s:["atu","85"] },
+        { n:"Keystone Carpenters", f:[21351,0,0,21657,0,0,21657,0,0,21657,0,0], s:["carpenter"] },
+        { n:"W PA Teamsters Pen", f:[520504,0,0,31439,0,0,31439,0,0,31439,0,0], s:["teamster","pension"] },
+        { n:"Westmoreland", f:[148112,0,0,26151,0,0,26151,0,0,26151,0,0], s:["westmoreland"] },
+        { n:"City of Pittsburgh", f:[5593,0,0,5621,0,0,5621,0,0,5621,0,0], s:["pittsburgh"] },
+        { n:"BAC General", f:[3032,0,0,170,0,0,170,0,0,170,0,0], s:["bac","general"] },
+        { n:"BAC Welfare", f:[8161,0,0,498,0,0,498,0,0,498,0,0], s:["bac","welfare"] },
+        { n:"BAC Pension", f:[4696,0,0,5589,0,0,5589,0,0,5589,0,0], s:["bac","pension"] },
+        { n:"B&CT Pension", f:[103442,0,0,4385,0,0,4385,0,0,4385,0,0], s:["trades","pension"] },
+        { n:"Ironworkers 3", f:[3723,0,0,3757,0,0,3757,0,0,3757,0,0], s:["ironworker"] },
+        { n:"Cement Masons 806/404", f:[3094,0,0,3120,0,0,3120,0,0,3120,0,0], s:["cement","mason"] },
         { n:"Washington County 75bps", f:[4135,0,0,4151,0,0,4151,0,0,4151,0,0], s:["washington","county"] },
-        { n:"Watson Institute", f:[510759,0,0,1700,0,0,1700,0,0,1700,0,0], s:["watson"] },
+        { n:"Watson Institute", f:[15394,0,0,1700,0,0,1700,0,0,1700,0,0], s:["watson"] },
         { n:"Sheet Metal 12 General", f:[4981,0,0,6300,0,0,6300,0,0,6300,0,0], s:["sheet metal","12","general"] },
-        { n:"Sheet Metal 12 Welfare", f:[199219,0,0,3449,0,0,3449,0,0,3449,0,0], s:["sheet metal","12","welfare"] },
+        { n:"Sheet Metal 12 Welfare", f:[50518,0,0,3449,0,0,3449,0,0,3449,0,0], s:["sheet metal","12","welfare"] },
         { n:"Pirate Game", m:true, f:[0,0,0,0,0,0,0,0,0,0,0,0], s:[] }
       ];
 
@@ -4182,7 +4183,7 @@
         };
       }
 
-      var SK = "gridiron_comp_v6";
+      var SK = "gridiron_comp_v7";
       const [years, setYears] = useState(null);
       const [sy, setSy] = useState(2026);
       const [ek, setEk] = useState(null);
@@ -4264,7 +4265,7 @@
           // Fetch monthly_data for relevant period
           var startDate = (sy - 1) + '-10-01';
           var endDate = sy + '-12-31';
-          var mdData = await supabaseFetch('monthly_data', '?select=client_id,month_end_date,management_fee&month_end_date=gte.' + startDate + '&month_end_date=lte.' + endDate + '&order=month_end_date');
+          var mdData = await supabaseFetch('monthly_data', '?select=client_id,month_end_date,management_fee,accrued_perf_fee&month_end_date=gte.' + startDate + '&month_end_date=lte.' + endDate + '&order=month_end_date');
           if (!mdData) { setRefreshing(false); return; }
 
           upd(function(y) {
@@ -4298,6 +4299,16 @@
 
                   if (monthsFound > 0 && totalFee > 0) {
                     if (monthsFound < 3) totalFee = totalFee * 3 / monthsFound;
+                    // For Q4 calc quarters, add performance fee from December accrued_perf_fee
+                    // (perf fees are annual, billed with Q4 invoice)
+                    if (calc.q === 4) {
+                      var decRec = clientMd.find(function(d) {
+                        return d.month_end_date && d.month_end_date.startsWith(calc.y + '-12');
+                      });
+                      if (decRec && decRec.accrued_perf_fee > 0) {
+                        totalFee += decRec.accrued_perf_fee;
+                      }
+                    }
                     actualFees[pq] = { fee: Math.round(totalFee), months: monthsFound };
                   }
                 }

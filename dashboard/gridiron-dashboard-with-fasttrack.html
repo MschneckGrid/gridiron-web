@@ -4364,8 +4364,8 @@
       var davidDist = partnerDist;
       var mikeWageCalc = yr.mikeSalary.map(function(v, i) { return v - partnerDist[i]; });
       var davidWageCalc = yr.davidSalary.map(function(v, i) { return v - partnerDist[i]; });
-      var msPlusMandy = yr.mikeSalary.map(function(v, i) { return v + (yr.mandySalary[i]||0) + (yr.autoMike[i]||0); });
-      var dkTotal = yr.davidSalary.map(function(v, i) { return v + (yr.autoDavid[i]||0); });
+      var msPlusMandy = yr.mikeSalary.map(function(v, i) { return v + (yr.mandySalary[i]||0); });
+      var dkTotal = yr.davidSalary.map(function(v, i) { return v; });
       var retTotal = yr.ret401kEE.map(function(v, i) { return v + (yr.ret401kER[i]||0) + (yr.retCB[i]||0); });
       var autoTotal = yr.autoMike.map(function(v, i) { return v + (yr.autoDavid[i]||0); });
 

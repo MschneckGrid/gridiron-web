@@ -4098,7 +4098,7 @@
 
       // CLIENT_DEFS: n=display name, m=manual input (no Supabase), f=default fees per month
       // s=search terms to match client_name in Supabase
-      // CLIENT_DEFS updated 2026-03-24: Q1=Q4'25 actuals, Q2=Q1'26 extrap, Q3/Q4=Q2 est
+      // CLIENT_DEFS updated 2026-03-25: Q1=Q4'25 invoice totals (mgmt+perf), Q2-Q4=mgmt only est
       var CLIENT_DEFS = [
         { n:"Schwab Accounts", m:true, f:[22712,0,0,22000,0,0,22000,0,0,22000,0,0], s:[] },
         { n:"JATC", m:true, f:[11665,0,0,11871,0,0,11871,0,0,11871,0,0], s:["journeymen"] },
@@ -4108,30 +4108,30 @@
         { n:"Steamfitters Local 449 Building", f:[5247,0,0,5350,0,0,5350,0,0,5350,0,0], s:["steamfitter","449","building"] },
         { n:"Steamfitters Local 449 General", f:[5790,0,0,5890,0,0,5890,0,0,5890,0,0], s:["steamfitter","449","general"] },
         { n:"MCA", f:[94,0,0,287,0,0,287,0,0,287,0,0], s:["mechanical contractor"] },
-        { n:"Insulators 2 Pension", f:[2748,0,0,2780,0,0,2780,0,0,2780,0,0], s:["insulator","pension"] },
+        { n:"Insulators 2 Pension", f:[20392,0,0,2780,0,0,2780,0,0,2780,0,0], s:["insulator","pension"] },
         { n:"Insulators 2 General", f:[7355,0,0,7757,0,0,7757,0,0,7757,0,0], s:["insulator","general"] },
-        { n:"WPSD", f:[10992,0,0,10463,0,0,10463,0,0,10463,0,0], s:["western pa school"] },
-        { n:"City of Washington", f:[4832,0,0,4904,0,0,4904,0,0,4904,0,0], s:["city","washington"] },
+        { n:"WPSD", f:[42463,0,0,10463,0,0,10463,0,0,10463,0,0], s:["western pa school"] },
+        { n:"City of Washington", f:[27034,0,0,4904,0,0,4904,0,0,4904,0,0], s:["city","washington"] },
         { n:"354 H&W", f:[7803,0,0,6648,0,0,6648,0,0,6648,0,0], s:["354"] },
-        { n:"449 Pension", f:[9432,0,0,9468,0,0,9468,0,0,9468,0,0], s:["steamfitter","449","pension"] },
+        { n:"449 Pension", f:[38661,0,0,9468,0,0,9468,0,0,9468,0,0], s:["steamfitter","449","pension"] },
         { n:"Beaver Co", f:[11713,0,0,11796,0,0,11796,0,0,11796,0,0], s:["beaver"] },
         { n:"Allegheny Co GTFI", f:[32012,0,0,32453,0,0,32453,0,0,32453,0,0], s:["allegheny"] },
-        { n:"W PA Teamsters H&W", f:[8411,0,0,8543,0,0,8543,0,0,8543,0,0], s:["employment","partners"] },
-        { n:"ATU 85 GMA", f:[60654,0,0,61379,0,0,61379,0,0,61379,0,0], s:["atu","85"] },
-        { n:"Keystone Carpenters", f:[21351,0,0,21657,0,0,21657,0,0,21657,0,0], s:["carpenter"] },
-        { n:"W PA Teamsters Pen", f:[31058,0,0,31439,0,0,31439,0,0,31439,0,0], s:["teamster","pension"] },
-        { n:"Westmoreland", f:[25852,0,0,26151,0,0,26151,0,0,26151,0,0], s:["westmoreland"] },
-        { n:"City of Pittsburgh", f:[5593,0,0,5621,0,0,5621,0,0,5621,0,0], s:["pittsburgh"] },
-        { n:"BAC General", f:[168,0,0,170,0,0,170,0,0,170,0,0], s:["bac","general"] },
-        { n:"BAC Welfare", f:[430,0,0,498,0,0,498,0,0,498,0,0], s:["bac","welfare"] },
-        { n:"BAC Pension", f:[4696,0,0,5589,0,0,5589,0,0,5589,0,0], s:["bac","pension"] },
-        { n:"B&CT Pension", f:[4319,0,0,4385,0,0,4385,0,0,4385,0,0], s:["trades","pension"] },
-        { n:"Ironworkers 3", f:[3723,0,0,3757,0,0,3757,0,0,3757,0,0], s:["ironworker"] },
-        { n:"Cement Masons 806/404", f:[3094,0,0,3120,0,0,3120,0,0,3120,0,0], s:["cement","mason"] },
+        { n:"W PA Teamsters H&W", f:[107549,0,0,8543,0,0,8543,0,0,8543,0,0], s:["employment","partners"] },
+        { n:"ATU 85 GMA", f:[275921,0,0,61379,0,0,61379,0,0,61379,0,0], s:["atu","85"] },
+        { n:"Keystone Carpenters", f:[729890,0,0,21657,0,0,21657,0,0,21657,0,0], s:["carpenter"] },
+        { n:"W PA Teamsters Pen", f:[1876688,0,0,31439,0,0,31439,0,0,31439,0,0], s:["teamster","pension"] },
+        { n:"Westmoreland", f:[118036,0,0,26151,0,0,26151,0,0,26151,0,0], s:["westmoreland"] },
+        { n:"City of Pittsburgh", f:[225079,0,0,5621,0,0,5621,0,0,5621,0,0], s:["pittsburgh"] },
+        { n:"BAC General", f:[1658,0,0,170,0,0,170,0,0,170,0,0], s:["bac","general"] },
+        { n:"BAC Welfare", f:[4737,0,0,498,0,0,498,0,0,498,0,0], s:["bac","welfare"] },
+        { n:"BAC Pension", f:[395459,0,0,5589,0,0,5589,0,0,5589,0,0], s:["bac","pension"] },
+        { n:"B&CT Pension", f:[203073,0,0,4385,0,0,4385,0,0,4385,0,0], s:["trades","pension"] },
+        { n:"Ironworkers 3", f:[96994,0,0,3757,0,0,3757,0,0,3757,0,0], s:["ironworker"] },
+        { n:"Cement Masons 806/404", f:[467124,0,0,3120,0,0,3120,0,0,3120,0,0], s:["cement","mason"] },
         { n:"Washington County 75bps", f:[4135,0,0,4151,0,0,4151,0,0,4151,0,0], s:["washington","county"] },
-        { n:"Watson Institute", f:[1696,0,0,1700,0,0,1700,0,0,1700,0,0], s:["watson"] },
+        { n:"Watson Institute", f:[510759,0,0,1700,0,0,1700,0,0,1700,0,0], s:["watson"] },
         { n:"Sheet Metal 12 General", f:[4981,0,0,6300,0,0,6300,0,0,6300,0,0], s:["sheet metal","12","general"] },
-        { n:"Sheet Metal 12 Welfare", f:[3278,0,0,3449,0,0,3449,0,0,3449,0,0], s:["sheet metal","12","welfare"] },
+        { n:"Sheet Metal 12 Welfare", f:[199219,0,0,3449,0,0,3449,0,0,3449,0,0], s:["sheet metal","12","welfare"] },
         { n:"Pirate Game", m:true, f:[0,0,0,0,0,0,0,0,0,0,0,0], s:[] }
       ];
 
@@ -4147,7 +4147,7 @@
       function makeDefault() {
         return {
           clients: CLIENT_DEFS.map(function(d) { return { name:d.n, manual:!!d.m, values:[].concat(d.f), statuses:n12(), src:z12() }; }),
-          perfFees: [5138409,0,0,0,0,0,0,0,0,0,0,0], perfStatuses: n12(),
+          perfFees: z12(), perfStatuses: n12(),
           budgetedExp: [17952,49723,19745,30304,23107,13493,12000,28315,17847,11831,10763,23000],
           actualExp: [17952,0,0,0,0,0,0,0,0,0,0,0],
           mandySalary: [3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000],
@@ -4182,7 +4182,7 @@
         };
       }
 
-      var SK = "gridiron_comp_v5";
+      var SK = "gridiron_comp_v6";
       const [years, setYears] = useState(null);
       const [sy, setSy] = useState(2026);
       const [ek, setEk] = useState(null);
@@ -4343,7 +4343,6 @@
       for (var mi = 0; mi < 12; mi++) {
         var rv = 0;
         for (var ci2 = 0; ci2 < yr.clients.length; ci2++) rv += yr.clients[ci2].values[mi] || 0;
-        rv += (yr.perfFees || [])[mi] || 0;
         monthlyRev.push(rv);
       }
 
@@ -4579,7 +4578,6 @@
                   <td style={ytdS}></td>
                 </tr>
                 {yr.clients.map(function(c,i){ return clientRow(c,i); })}
-                {editableRow("Performance Fees", yr.perfFees || z12(), "perf", function(d){return d.perfFees;}, "#FDF2F8")}
                 {calcRow("Fee Revenue", monthlyRev, "#ECFDF5")}
                 {calcRow("Total Revenue", totalRevWithCash, "#D1FAE5", true)}
                 {spacer("sp2")}

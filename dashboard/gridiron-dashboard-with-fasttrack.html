@@ -4147,7 +4147,7 @@
       function makeDefault() {
         return {
           clients: CLIENT_DEFS.map(function(d) { return { name:d.n, manual:!!d.m, values:[].concat(d.f), statuses:n12(), src:z12() }; }),
-          perfFees: z12(), perfStatuses: n12(),
+          perfFees: [5138409,0,0,0,0,0,0,0,0,0,0,0], perfStatuses: n12(),
           budgetedExp: [17952,49723,19745,30304,23107,13493,12000,28315,17847,11831,10763,23000],
           actualExp: [17952,0,0,0,0,0,0,0,0,0,0,0],
           mandySalary: [3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000,3000],
@@ -4182,7 +4182,7 @@
         };
       }
 
-      var SK = "gridiron_comp_v4";
+      var SK = "gridiron_comp_v5";
       const [years, setYears] = useState(null);
       const [sy, setSy] = useState(2026);
       const [ek, setEk] = useState(null);
@@ -4343,6 +4343,7 @@
       for (var mi = 0; mi < 12; mi++) {
         var rv = 0;
         for (var ci2 = 0; ci2 < yr.clients.length; ci2++) rv += yr.clients[ci2].values[mi] || 0;
+        rv += (yr.perfFees || [])[mi] || 0;
         monthlyRev.push(rv);
       }
 
@@ -4578,6 +4579,7 @@
                   <td style={ytdS}></td>
                 </tr>
                 {yr.clients.map(function(c,i){ return clientRow(c,i); })}
+                {editableRow("Performance Fees", yr.perfFees || z12(), "perf", function(d){return d.perfFees;}, "#FDF2F8")}
                 {calcRow("Fee Revenue", monthlyRev, "#ECFDF5")}
                 {calcRow("Total Revenue", totalRevWithCash, "#D1FAE5", true)}
                 {spacer("sp2")}

@@ -1328,7 +1328,8 @@
               }
               
               // Calculate gain above HWM
-              // No fee_payment adjustment needed: dynamicHWM already excludes fee_payment withdrawals
+              // fee_payment withdrawals do NOT inflate the gain — the ending balance
+              // already reflects the payment out, and the HWM already excludes fee payments.
               const gainAboveHWM = d.ending_balance - dynamicHWM[i];
               
               // Total gain = gain above HWM + (-cumulative hurdle)
@@ -1387,7 +1388,7 @@
                 }
               }
               
-              // No fee_payment adjustment needed: dynamicHWM already excludes fee_payment withdrawals
+              // fee_payment withdrawals do NOT inflate the gain
               const gainAboveHWM = d.ending_balance - dynamicHWM[i];
               const totalGain = gainAboveHWM + (-tempCumulativeHurdle);
               
@@ -1424,8 +1425,9 @@
               ? hwmStartData.beginning_balance 
               : (hwmStartData.contributions || 0);
             
-            // No fee_payment adjustment needed on HWM: the dynamicHWM first pass already
-            // excludes fee_payment withdrawals from the HWM waterfall, so currentHWM is correct as-is.
+            // HWM is NOT reduced by fee_payment withdrawals — dynamicHWM already
+            // excludes them in first pass. Fee payments reduce ending balance but the
+            // HWM (the bar the manager must clear) stays at start + contributions + mgmt fees.
             const adjustedHWM = currentHWM;
             
             // Check if above the adjusted HWM
@@ -1439,9 +1441,10 @@
               const mData = data[j];
               const mRates = getFeeRatesForMonth(mData.month_end_date);
               
-              // Gross change in value — only add back normal withdrawals, not fee_payment
-              // (fee_payment withdrawals are mgmt fee debits, not client withdrawals)
-              const normalWithdrawals = mData.withdrawal_type !== 'fee_payment' ? Math.abs(mData.withdrawals || 0) : 0;
+              // Gross change in value
+              // Exclude fee_payment withdrawals — they are not investment activity
+              const normalWithdrawals = mData.withdrawal_type !== 'fee_payment'
+                ? Math.abs(mData.withdrawals || 0) : 0;
               const monthChange = mData.ending_balance - mData.beginning_balance
                 - (mData.contributions || 0)
                 + normalWithdrawals;

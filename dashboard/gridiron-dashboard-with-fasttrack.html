@@ -1328,10 +1328,8 @@
               }
               
               // Calculate gain above HWM
-              // Add back fee_payment withdrawals for gain calculation
-              const firstPassFeePaymentWithdrawal = d.withdrawal_type === 'fee_payment' ? Math.abs(d.withdrawals || 0) : 0;
-              const firstPassAdjustedEndingBalance = d.ending_balance + firstPassFeePaymentWithdrawal;
-              const gainAboveHWM = firstPassAdjustedEndingBalance - dynamicHWM[i];
+              // No fee_payment adjustment needed: dynamicHWM already excludes fee_payment withdrawals
+              const gainAboveHWM = d.ending_balance - dynamicHWM[i];
               
               // Total gain = gain above HWM + (-cumulative hurdle)
               const totalGain = gainAboveHWM + (-cumulativeHurdle);
@@ -1340,8 +1338,6 @@
                 hwmStartIdx,
                 dynamicHWM: dynamicHWM[i],
                 endingBalance: d.ending_balance,
-                adjustedEndingBalance: firstPassAdjustedEndingBalance,
-                feePaymentWithdrawal: firstPassFeePaymentWithdrawal,
                 gainAboveHWM,
                 cumulativeHurdle,
                 totalGain,
@@ -1391,10 +1387,8 @@
                 }
               }
               
-              // Add back fee_payment withdrawals for gain calculation
-              const decFeePaymentWithdrawal = d.withdrawal_type === 'fee_payment' ? Math.abs(d.withdrawals || 0) : 0;
-              const decAdjustedEndingBalance = d.ending_balance + decFeePaymentWithdrawal;
-              const gainAboveHWM = decAdjustedEndingBalance - dynamicHWM[i];
+              // No fee_payment adjustment needed: dynamicHWM already excludes fee_payment withdrawals
+              const gainAboveHWM = d.ending_balance - dynamicHWM[i];
               const totalGain = gainAboveHWM + (-tempCumulativeHurdle);
               
               if (gainAboveHWM > 0 && totalGain > 0) {
@@ -1430,18 +1424,9 @@
               ? hwmStartData.beginning_balance 
               : (hwmStartData.contributions || 0);
             
-            // Calculate total fee_payment withdrawals since HWM was set
-            // These represent perf fees paid from the prior period
-            let totalFeePaymentWithdrawals = 0;
-            for (let j = hwmStartIdxForCalc; j <= i; j++) {
-              const mData = data[j];
-              if (mData.withdrawal_type === 'fee_payment') {
-                totalFeePaymentWithdrawals += Math.abs(mData.withdrawals || 0);
-              }
-            }
-            
-            // Adjusted HWM = Original HWM - fee withdrawals (fee withdrawals reduce the starting capital)
-            const adjustedHWM = currentHWM - totalFeePaymentWithdrawals;
+            // No fee_payment adjustment needed on HWM: the dynamicHWM first pass already
+            // excludes fee_payment withdrawals from the HWM waterfall, so currentHWM is correct as-is.
+            const adjustedHWM = currentHWM;
             
             // Check if above the adjusted HWM
             const gainAboveHWM = d.ending_balance - adjustedHWM;
@@ -1454,10 +1439,12 @@
               const mData = data[j];
               const mRates = getFeeRatesForMonth(mData.month_end_date);
               
-              // Gross change in value
-              const monthChange = mData.ending_balance - mData.beginning_balance 
-                - (mData.contributions || 0) 
-                + Math.abs(mData.withdrawals || 0);
+              // Gross change in value — only add back normal withdrawals, not fee_payment
+              // (fee_payment withdrawals are mgmt fee debits, not client withdrawals)
+              const normalWithdrawals = mData.withdrawal_type !== 'fee_payment' ? Math.abs(mData.withdrawals || 0) : 0;
+              const monthChange = mData.ending_balance - mData.beginning_balance
+                - (mData.contributions || 0)
+                + normalWithdrawals;
               
               // Calculate management fee for this month (simple ending_balance * rate/12 for perf fee spread calc)
               const monthMgmtFeeForSpread = mData.ending_balance * (mRates.annualMgmtFeeRate / 12);
@@ -1524,7 +1511,6 @@
                 hwmStartIdxForCalc,
                 originalHWMBase,
                 currentHWM,
-                totalFeePaymentWithdrawals,
                 adjustedHWM,
                 dataSinceHWMLength: i - hwmStartIdxForCalc + 1
               });
@@ -3254,7 +3240,12 @@
                           const hwmStartData = sortedData[hwmStartIdx >= 0 ? hwmStartIdx : 0];
                           const hwmStartBalance = hwmStartData?.beginning_balance || hwmStartData?.contributions || 0;
                           
-                          for (let j = Math.max(0, hwmStartIdx); j <= decIdx && decIdx >= 0; j++) {
+                          // If inception month (beginning_balance === 0), its contribution is already shown
+                          // as "Beginning Balance", so start from hwmStartIdx + 1 to avoid double-counting
+                          const contribStart = (hwmStartData?.beginning_balance === 0)
+                            ? Math.max(0, hwmStartIdx) + 1
+                            : Math.max(0, hwmStartIdx);
+                          for (let j = contribStart; j <= decIdx && decIdx >= 0; j++) {
                             totalContributions += (sortedData[j].contributions || 0);
                           }
                           

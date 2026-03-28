@@ -23,14 +23,15 @@ Provide exact, copy-pasteable strings. Multiple replacements in one prompt are f
 | `MschneckGrid/gridiron-reporting` | Reporting tools | Netlify |
 | `MschneckGrid/gridiron-engine` | IronSignal frontend, newsletter templates, active scripts | Netlify |
 | `MschneckGrid/ironsignal-ai` | IronSignal frontend (alternate/future repo) | Netlify (not deployed yet) |
-| `MschneckGrid/weekly-options` | Options strategy | TBD |
+| `MschneckGrid/ironsignal` | IronSignal Options Income — React 18 + Vite + Tailwind frontend, Python engines | Netlify (ironsignal-options.netlify.app) |
+| `MschneckGrid/weekly-options` | Options strategy (archived — migrated to ironsignal) | — |
 | `MschneckGrid/gridiron-core` | Core/shared code | N/A |
 | `Gridiron-Partners/sidebet` | SideBet golf fantasy | Netlify |
 | `MschneckGrid/gridiron-statement-watcher` | PDF parser script | Local (Windows Task Scheduler) |
 | `MschneckGrid/gridiron-13f-py` | 13F filing tools | Local |
 | `MschneckGrid/barbell-tracker` | Barbell strategy tracker | TBD |
 
-**Note:** The CEF Command Center lives in `gridiron-web`, not `gridiron-engine`. The `gridiron-engine` repo was reorganized and now holds IronSignal HTML files (`ironsignal/`), newsletter templates (`newsletters/`), and two active Python scripts (`scripts/`).
+**Note:** The CEF Command Center lives in `gridiron-web`, not `gridiron-engine`. The `gridiron-engine` repo is archived — gridiron-core is canonical. The `ironsignal` repo is a React + Vite app (build: `npm run build`, publish: `dist/`). Data refresh via GitHub Action daily 8:30 AM ET.
 
 ## Frontend architecture
 

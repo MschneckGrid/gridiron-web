@@ -39,22 +39,35 @@ All projects share one Supabase instance (nzinvxticgyjobkqxxhl). Knowledge files
 ## Project 2: Command Center + IronSignal
 
 **Claude project:** Command Center + IronSignal
-**Repos:** gridiron-engine, ironsignal-ai, weekly-options, gridiron-core
+**Repos:** gridiron-core (canonical), ironsignal (options module), weekly-options (archived)
 **Attached file:** cef_command_center.html
 
 | File | Purpose | Update when... |
 |------|---------|---------------|
 | `SIGNAL_ENGINE.md` | Unified signal engine core — z-score calculation, calibration, buy/sell thresholds, split detection, asset class routing | You change how signals are generated, add a new signal type, or modify the z-score methodology |
 | `DATA_PIPELINE_MKT.md` | FastTrack API integration, prices_unadjusted strategy, cef_daily table, cef_daily_clean view, cef_splits table, split detection function, daily pipeline chain | You change the data ingestion, add a new data source, modify the clean view, or fix a split detection issue |
-| `ASSET_CLASSES.md` | CEF ticker universe (170 tickers by sector), BDC tables and 8K parsing, MLP/REIT structure, fund characteristics | You add/remove tickers, add a new asset class, or change sector mappings |
-| `IRONSIGNAL_PRODUCT.md` | IronSignal product definition, newsletter generation workflow, subscriber delivery, which tables IronSignal reads from | You build newsletter features, add subscriber management, or change the product scope |
-| `OPTIONS_STRATEGY.md` | Income options strategy — architecture, connection to signal engine, weekly-options repo | You design or build any part of the options strategy |
+| `ASSET_CLASSES.md` | CEF ticker universe (170 tickers by sector), BDC tables and 8K parsing, MLP/REIT structure, options universe (51 stocks), fund characteristics | You add/remove tickers, add a new asset class, change sector mappings, or update the options universe |
+| `IRONSIGNAL_PRODUCT.md` | IronSignal product definition, four-pillar platform architecture, modules, tiering, newsletter workflow, signal tables | You build newsletter features, add subscriber management, change the product scope, or add a new module |
+| `OPTIONS_STRATEGY.md` | Options Income module — four strategies, scoring models, ironsignal repo, Black-Scholes engine, FastTrack integration | You design or build any part of the options strategy |
 | `CRON_SCHEDULE.md` | All 25+ pg_cron jobs with UTC/ET times, edge function endpoints, daily pipeline execution order | You add, modify, or remove any cron job or edge function |
 
 **When to create a new file in this project:**
 - Adding a completely new asset class with its own pipeline (e.g., commodities, crypto)
 - Building out the newsletter into a complex system that outgrows `IRONSIGNAL_PRODUCT.md`
 - The options strategy grows complex enough to need multiple files (e.g., `OPTIONS_TRADES.md` for trade history, `OPTIONS_STRATEGY.md` for logic)
+
+### ironsignal (Options Income Module)
+
+**Repo:** `MschneckGrid/ironsignal` (React 18 + Vite + Tailwind)
+**Canonical docs:** gridiron-core/docs/ (this repo)
+
+| File | Purpose | Update when... |
+|------|---------|---------------|
+| `CLAUDE.md` (in ironsignal repo) | Project context, build instructions, architecture | You change the ironsignal build, add features, or modify the frontend |
+| `OPTIONS_STRATEGY.md` (this repo) | Canonical strategy spec — scoring models, data flow, Black-Scholes engine | You change any strategy logic, scoring weights, or the options universe |
+| `IRONSIGNAL_PRODUCT.md` (this repo) | Product overview — four pillars, modules, tiering | You add modules, change product scope, or update the tiering model |
+
+**Note:** Options strategy knowledge lives in gridiron-core (canonical). The ironsignal repo's `CLAUDE.md` references it. weekly-options is archived.
 
 ---
 

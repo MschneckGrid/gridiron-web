@@ -14,6 +14,12 @@ Project ID: `nzinvxticgyjobkqxxhl` · Org ID: `dbutqecscvbguljulzxy` · Pro plan
 
 **RLS diagnosis pattern:** Check `pg_tables` for `rowsecurity = true`, then `pg_policies` for that table — if only a SELECT `cmd` policy exists, writes are blocked. Batch remediation across all under-protected tables at once rather than one at a time.
 
+**PostgREST returns numeric view columns as strings.** All numeric fields from views require explicit `parseFloat()` in JavaScript before arithmetic or `.toFixed()` calls.
+
+**PostgREST batch upserts require identical key sets.** Rows with different column shapes in a single batch cause null injection into existing non-null values. Fix: split into separate upsert groups per key shape.
+
+**Materialized views must be explicitly refreshed.** Writes to underlying tables do not trigger auto-refresh. Pattern: `SECURITY DEFINER` RPC function called after data writes.
+
 ## Column and table discovery
 
 Always run `information_schema.columns` before constructing detail queries on unfamiliar tables:
@@ -30,6 +36,7 @@ SELECT * FROM information_schema.triggers WHERE event_object_table = 'monthly_da
 
 ## Key tables (shared across all projects)
 
+### Client & performance
 | Table | Purpose |
 |-------|---------|
 | `clients` | Master client list with categories, fee types |
@@ -41,14 +48,39 @@ SELECT * FROM information_schema.triggers WHERE event_object_table = 'monthly_da
 | `invoices` | Fee invoice records |
 | `high_water_marks` | HWM tracking for performance fees |
 | `fee_schedule` | Client fee structures |
+| `account_performance_daily` | Modified Dietz DTD/MTD/YTD returns |
+| `schwab_custody` | Schwab custody account data |
+
+### CEF / signal engine
+| Table | Purpose |
+|-------|---------|
 | `cef_daily` | CEF daily price/NAV data |
-| `cef_tickers` | CEF universe metadata |
+| `cef_tickers` | CEF universe metadata (incl. canonical sector assignment) |
 | `cef_zscore_cache` | Pre-calculated z-scores |
 | `cef_splits` | Stock split records with split_factor |
 | `cef_distributions` | Distribution/dividend records |
+| `cef_fund_info` | Sponsor, leverage, expense ratio, distribution rate |
+| `cef_nport_data` | SEC N-PORT filing data |
+| `signal_log` | Every signal with full context (asset_class, sector fields) |
+| `outcome_tracker` | Forward returns at 30/60/90/180d horizons |
+| `parameter_history` | Versioned parameter snapshots per asset class |
+
+### BDC / equity income
+| Table | Purpose |
+|-------|---------|
 | `bdc_daily` | BDC daily price/NAV data |
 | `equity_income_daily` | Equity income (MLPs, REITs) daily data |
-| `schwab_custody` | Schwab custody account data |
+| `cef_bdc_8k_events` | SEC 8-K filings parsed for material events |
+| `cef_bdc_sentiment_summary` | Sentiment analysis on BDC news |
+
+### Monthly letter / macro
+| Table | Purpose |
+|-------|---------|
+| `macro_indicators` | Latest FRED data (HY spreads, 10Y yield, VIX, CPI, etc.) with direction |
+| `macro_news_log` | Daily scraped news/macro events, relevance-tagged per CEF sector |
+| `sector_writeups` | Monthly AI-generated verdict + narrative per sector, approval workflow |
+| `macro_regime_snapshots` | Periodic cycle label snapshot (EARLY/MID/LATE/STRESSED) |
+| `cef_news_alerts` | News alerts from cef_news_scanner.py |
 
 ## Key views and functions
 
@@ -63,6 +95,16 @@ SELECT * FROM information_schema.triggers WHERE event_object_table = 'monthly_da
 | `refresh_zscore_cache` | Function | Refreshes cef_zscore_cache from cef_daily_clean |
 | `detect_splits` | Function | Auto-detects stock splits from price jumps |
 | `cef_daily_post_load` | Function | Chains: detect splits → refresh mat view → refresh cache |
+
+## Edge Functions
+
+| Function | Purpose | Auth |
+|----------|---------|------|
+| `generate-sector-writeup` | Claude API proxy for monthly letter. Voice spec baked into system prompt. | `ANTHROPIC_API_KEY` secret |
+| `run-signal-engine` | Daily signal generation | Cron secret |
+| `detect-manager-trades` | David trade detection → Telegram | Telegram token |
+| `telegram-poller` | Polls Telegram for David's responses | Telegram token |
+| `compute-account-performance` | Modified Dietz returns | Cron secret |
 
 ## pg_cron
 

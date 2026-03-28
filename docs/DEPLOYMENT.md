@@ -21,17 +21,16 @@ Provide exact, copy-pasteable strings. Multiple replacements in one prompt are f
 |------|---------|---------------|
 | `MschneckGrid/gridiron-web` | Main dashboard HTML + CEF Command Center (`command-center/cef_command_center.html`) | Netlify (gridiron-partners.netlify.app) |
 | `MschneckGrid/gridiron-reporting` | Reporting tools | Netlify |
-| `MschneckGrid/gridiron-engine` | IronSignal frontend, newsletter templates, active scripts | Netlify |
+| `MschneckGrid/gridiron-engine` | ARCHIVED — consolidated into gridiron-core | Archived |
 | `MschneckGrid/ironsignal-ai` | IronSignal frontend (alternate/future repo) | Netlify (not deployed yet) |
-| `MschneckGrid/ironsignal` | IronSignal Options Income — React 18 + Vite + Tailwind frontend, Python engines | Netlify (ironsignal-options.netlify.app) |
-| `MschneckGrid/weekly-options` | Options strategy (archived — migrated to ironsignal) | — |
-| `MschneckGrid/gridiron-core` | Core/shared code | N/A |
+| `MschneckGrid/weekly-options` | Options strategy | TBD |
+| `MschneckGrid/gridiron-core` | Canonical monorepo — signal engine, IronSignal frontend, newsletter templates, scripts, parsers, SQL, Supabase functions | Netlify |
 | `Gridiron-Partners/sidebet` | SideBet golf fantasy | Netlify |
 | `MschneckGrid/gridiron-statement-watcher` | PDF parser script | Local (Windows Task Scheduler) |
 | `MschneckGrid/gridiron-13f-py` | 13F filing tools | Local |
 | `MschneckGrid/barbell-tracker` | Barbell strategy tracker | TBD |
 
-**Note:** The CEF Command Center lives in `gridiron-web`, not `gridiron-engine`. The `gridiron-engine` repo is archived — gridiron-core is canonical. The `ironsignal` repo is a React + Vite app (build: `npm run build`, publish: `dist/`). Data refresh via GitHub Action daily 8:30 AM ET.
+**Note:** The CEF Command Center lives in `gridiron-web/command-center/`, not in a separate repo. The `gridiron-core` repo is the canonical monorepo for the signal engine, IronSignal frontend (`ironsignal/`), newsletter templates (`newsletters/`), Python scripts (`scripts/`), parsers, SQL schemas, and Supabase functions. `gridiron-engine` has been archived — all its contents were consolidated into `gridiron-core`.
 
 ## Frontend architecture
 

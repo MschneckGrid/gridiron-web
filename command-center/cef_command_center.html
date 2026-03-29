@@ -4726,6 +4726,8 @@ document.addEventListener('drop', e => {
 
 let NEWS_DATA = [];
 let NEWS_LOADED = false;
+let PORTFOLIO_TICKERS = [];   // from holdings_matrix
+let ADDED_TICKERS = [];       // manually added by user
 
 const NEWS_TYPE_COLORS = {
   MERGER:          { color: '#6a1b9a', label: 'MERGER' },

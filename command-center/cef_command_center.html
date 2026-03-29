@@ -787,6 +787,26 @@ thead th.f-hdr { background:#fdf8ec; border-bottom-color:#92700a; }
 
 <div class="master-panel" id="panel-engine-news">
   <div class="body" style="padding:18px 28px;">
+
+    <!-- ══════ PORTFOLIO NEWS SUMMARY ══════ -->
+    <div class="pn-section" id="portfolioNewsSection">
+      <div class="pn-header">
+        <h3>📋 Portfolio News <span class="pn-badge" id="pnCount">0</span></h3>
+        <div class="pn-add-ticker">
+          <input type="text" id="pnAddInput" placeholder="Add ticker..." maxlength="10"
+            onkeydown="if(event.key==='Enter'){addPortfolioTicker();event.preventDefault()}">
+          <button onclick="addPortfolioTicker()">+ Add</button>
+        </div>
+      </div>
+      <div class="pn-chips" id="pnChips"></div>
+      <div id="pnContent">
+        <div class="pn-no-news">Loading portfolio holdings...</div>
+      </div>
+    </div>
+
+    <!-- ══════ ALL NEWS (existing) ══════ -->
+    <div class="pn-divider-label">All News Alerts</div>
+
     <!-- Stats row -->
     <div class="news-stats" id="newsStats"></div>
 

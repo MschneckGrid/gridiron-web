@@ -4747,6 +4747,147 @@ const NEWS_TYPE_COLORS = {
 };
 
 var NEWS_FUND_NAMES = {};
+
+// ══════ Portfolio News Summary Functions ══════
+
+async function loadPortfolioTickers() {
+  try {
+    // Get latest recon_date
+    const dateRows = await sf('holdings_matrix?select=recon_date&order=recon_date.desc&limit=1');
+    if (!dateRows || !dateRows.length) return;
+    const latestDate = dateRows[0].recon_date;
+
+    // Get all holdings for that date
+    const rows = await sf('holdings_matrix?select=holdings&recon_date=eq.' + latestDate);
+    const tickerSet = new Set();
+    for (const row of rows) {
+      if (row.holdings && Array.isArray(row.holdings)) {
+        for (const h of row.holdings) {
+          if (h.ticker && h.ticker.length <= 6 && !/MUNEX|AGG|BND|EMB|^[A-Z]{5,}EX$/i.test(h.ticker)) {
+            tickerSet.add(h.ticker.toUpperCase());
+          }
+        }
+      }
+    }
+    PORTFOLIO_TICKERS = [...tickerSet].sort();
+    renderPortfolioChips();
+  } catch (e) {
+    console.warn('Portfolio ticker load failed:', e.message);
+  }
+}
+
+function addPortfolioTicker() {
+  const input = document.getElementById('pnAddInput');
+  const tk = (input.value || '').toUpperCase().trim();
+  if (!tk) return;
+  input.value = '';
+  if (PORTFOLIO_TICKERS.includes(tk) || ADDED_TICKERS.includes(tk)) return;
+  ADDED_TICKERS.push(tk);
+  renderPortfolioChips();
+  renderPortfolioNews();
+}
+
+function removeAddedTicker(tk) {
+  ADDED_TICKERS = ADDED_TICKERS.filter(t => t !== tk);
+  renderPortfolioChips();
+  renderPortfolioNews();
+}
+
+function renderPortfolioChips() {
+  const el = document.getElementById('pnChips');
+  if (!el) return;
+  const allTickers = [...PORTFOLIO_TICKERS, ...ADDED_TICKERS];
+  if (!allTickers.length) { el.innerHTML = ''; return; }
+
+  let html = '';
+  for (const tk of PORTFOLIO_TICKERS) {
+    html += '<span class="pn-chip">' + tk + '</span>';
+  }
+  for (const tk of ADDED_TICKERS) {
+    html += '<span class="pn-chip pn-added">' + tk +
+      ' <span class="pn-remove" onclick="removeAddedTicker(\'' + tk + '\')" title="Remove">✕</span></span>';
+  }
+  el.innerHTML = html;
+}
+
+function renderPortfolioNews() {
+  const el = document.getElementById('pnContent');
+  const countEl = document.getElementById('pnCount');
+  if (!el) return;
+
+  const allTickers = new Set([...PORTFOLIO_TICKERS, ...ADDED_TICKERS]);
+  if (!allTickers.size) {
+    el.innerHTML = '<div class="pn-no-news">No portfolio tickers loaded.</div>';
+    if (countEl) countEl.textContent = '0';
+    return;
+  }
+
+  // Filter news to portfolio tickers, undismissed only, last 30 days
+  const portNews = NEWS_DATA.filter(n => n.ticker && allTickers.has(n.ticker.toUpperCase()) && !n.dismissed);
+
+  if (!portNews.length) {
+    el.innerHTML = '<div class="pn-no-news">No recent news for your ' + allTickers.size + ' portfolio holdings. All clear.</div>';
+    if (countEl) countEl.textContent = '0';
+    return;
+  }
+
+  if (countEl) countEl.textContent = portNews.length;
+
+  // Group by ticker, sort each group by materiality desc
+  const grouped = {};
+  for (const n of portNews) {
+    const tk = n.ticker.toUpperCase();
+    if (!grouped[tk]) grouped[tk] = [];
+    grouped[tk].push(n);
+  }
+
+  // Sort tickers: those with high-priority news first, then alphabetical
+  const sortedTickers = Object.keys(grouped).sort((a, b) => {
+    const aMax = Math.max(...grouped[a].map(n => n.materiality || 0));
+    const bMax = Math.max(...grouped[b].map(n => n.materiality || 0));
+    if (aMax !== bMax) return bMax - aMax;
+    return a.localeCompare(b);
+  });
+
+  let html = '';
+  for (const tk of sortedTickers) {
+    const items = grouped[tk].sort((a, b) => (b.materiality || 0) - (a.materiality || 0));
+    const fundName = NEWS_FUND_NAMES[tk] || '';
+
+    html += '<div class="pn-ticker-group">';
+    html += '<div class="pn-ticker-header">';
+    html += '<span class="pn-tk" onclick="if(typeof openDetail===\'function\')openDetail(\'' + tk + '\')">' + tk + '</span>';
+    if (fundName) html += '<span class="pn-fn">' + escNewsHtml(fundName) + '</span>';
+    html += '<span class="pn-count">' + items.length + ' alert' + (items.length !== 1 ? 's' : '') + '</span>';
+    html += '</div>';
+
+    for (const n of items) {
+      const tc = NEWS_TYPE_COLORS[n.event_type] || NEWS_TYPE_COLORS.OTHER;
+      const isHigh = (n.materiality || 0) >= 70;
+
+      html += '<div class="pn-alert' + (isHigh ? ' pn-high' : '') + '" style="border-left-color:' + tc.color + '">';
+      html += '<span class="pn-type-tag" style="color:' + tc.color + ';background:' + tc.color + '18">' + tc.label + '</span>';
+      html += '<div class="pn-alert-body">';
+      html += '<div class="pn-alert-hl">' + escNewsHtml(n.headline) + '</div>';
+      if (n.summary) {
+        // Show first ~200 chars of summary for quick read
+        const shortSum = n.summary.length > 200 ? n.summary.substring(0, 200).trim() + '...' : n.summary;
+        html += '<div class="pn-alert-sum">' + escNewsHtml(shortSum) + '</div>';
+      }
+      html += '<div class="pn-alert-meta">' + (n.event_date || '') + (n.source_name ? ' · ' + n.source_name : '') +
+        ' · Priority ' + (n.materiality || 0) + '</div>';
+      html += '</div>';
+      if (n.source_url) {
+        html += '<a href="' + n.source_url + '" target="_blank" rel="noopener" class="pn-alert-link">Open ↗</a>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+}
+
 async function loadNewsAlerts() {
   const el = document.getElementById('newsList');
   el.innerHTML = '<div class="news-loading"><div class="spinner"></div><div style="margin-top:10px">Loading news alerts from Supabase...</div></div>';

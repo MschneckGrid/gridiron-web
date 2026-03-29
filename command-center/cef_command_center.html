@@ -4916,6 +4916,9 @@ async function loadNewsAlerts() {
 
     renderNewsStats();
     renderNews();
+
+    // Render portfolio news (tickers may already be loaded)
+    renderPortfolioNews();
   } catch(e) {
     el.innerHTML = '<div class="news-empty">Error loading news: ' + e.message + '</div>';
     console.error('News load error:', e);
